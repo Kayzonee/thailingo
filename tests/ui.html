@@ -1,0 +1,208 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>ThaiLingo — tests d'interface</title>
+<style>
+ body{font-family:system-ui,sans-serif;padding:24px;max-width:760px;margin:auto}
+ li{margin:6px 0} .ok{color:#2e7d32} .ko{color:#c62828}
+ iframe{width:420px;height:640px;border:1px solid #ccc;border-radius:8px;margin-top:20px}
+ h1{font-size:20px} #sum{font-weight:700;margin-top:14px}
+</style>
+<h1>Tests d’interface — ThaiLingo</h1>
+<p>Les scénarios sont joués dans l’application réelle chargée ci-dessous.</p>
+<ul id="out"></ul>
+<div id="sum">exécution…</div>
+<iframe id="app" src="../index.html"></iframe>
+<script>
+const out = document.getElementById('out');
+let pass=0, fail=0;
+const log=(name,err)=>{ const li=document.createElement('li');
+  li.className = err?'ko':'ok'; li.textContent = (err?'✗ ':'✓ ')+name+(err?' → '+err.message:'');
+  out.appendChild(li); err?fail++:pass++; };
+const t=(name,fn)=>{ try{ const r=fn(); if(r&&r.then) return r.then(()=>log(name),e=>log(name,e)); log(name); }catch(e){ log(name,e); } };
+const ok=(c,m)=>{ if(!c) throw new Error(m||'condition fausse'); };
+const eq=(a,b,m)=>{ if(a!==b) throw new Error((m||'')+`attendu ${JSON.stringify(b)}, reçu ${JSON.stringify(a)}`); };
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+/* avance jusqu'à un exercice à choix multiples et y répond ; renvoie false s'il n'y en a plus */
+function repondre(F, D, juste){
+  while(F.L && F.L.idx < F.L.ex.length && !F.L.ex[F.L.idx].options){ F.L.idx++; F.renderLesson(); }
+  if(!F.L || F.L.idx >= F.L.ex.length) return false;
+  const e = F.L.ex[F.L.idx];
+  const i = juste ? e.options.findIndex(o=>o.correct) : e.options.findIndex(o=>!o.correct);
+  D.querySelectorAll('#ch .choice')[i].click();
+  D.getElementById('check').click();
+  return true;
+}
+
+document.getElementById('app').onload = async ()=>{
+  const W = document.getElementById('app').contentWindow;
+  const F = W.ThaiLingo;                 // surface de test exposée par l'application
+  const D = W.document;
+  W.localStorage.clear(); F.Store.reset(); F.render();
+  await sleep(60);
+
+  t('le parcours de langue n’affiche pas les unités d’écriture', ()=>{
+    F.go('path');
+    eq(D.querySelectorAll('.unit-header').length, F.UNITES_LANGUE.length);
+    ok(F.UNITES_LANGUE.length < F.CURRICULUM.length, 'écriture non séparée : ');
+  });
+  t('l’onglet Écriture contient l’alphabet et les tons', ()=>{
+    F.go('ecriture');
+    eq(D.querySelectorAll('.unit-header').length, F.UNITES_ECRITURE.length);
+    ok(D.querySelectorAll('.node[data-lecon]').length >= 10);
+    F.go('path');
+  });
+  t('le mode découverte ouvre toutes les leçons, sinon une seule', ()=>{
+    F.Store.get().toutDebloque = true; F.go('path');
+    const toutes = D.querySelectorAll('.node[data-lecon]').length;
+    eq([...D.querySelectorAll('.node[data-lecon]')].filter(b=>!b.disabled).length, toutes);
+    F.Store.get().toutDebloque = false; F.go('path');
+    eq([...D.querySelectorAll('.node[data-lecon]')].filter(b=>!b.disabled).length, 1);
+    F.Store.get().toutDebloque = true; F.go('path');
+  });
+  t('la barre de navigation est masquée pendant une leçon', ()=>{
+    F.startLeconId('u1l1');
+    ok(D.getElementById('nav').classList.contains('hidden'));
+  });
+  t('le bouton Vérifier est inactif tant qu’on n’a pas répondu', ()=>{
+    ok(D.getElementById('check').disabled);
+  });
+  t('une bonne réponse déclenche le retour vert sans perdre de vie', ()=>{
+    const vies = F.Store.get().hearts;
+    ok(repondre(F, D, true), 'aucun exercice à choix : ');
+    ok(D.getElementById('footer').classList.contains('ok'), 'retour non vert : ');
+    eq(F.Store.get().hearts, vies);
+  });
+  t('une leçon démarre toujours avec trois vies', ()=>{
+    F.Store.loseHeart(); F.startLeconId('u1l1');
+    eq(F.Store.get().hearts, 3);
+  });
+  t('trois erreurs font échouer la leçon', ()=>{
+    F.startLeconId('u1l1');
+    for(let i=0; i<3 && F.Store.get().hearts>0; i++){
+      ok(repondre(F, D, false), 'plus d’exercice à choix : ');
+      const c = D.getElementById('cont'); if(c) c.click();
+    }
+    eq(F.Store.get().hearts, 0);
+    ok(D.body.textContent.includes('Leçon échouée'), 'écran d’échec absent : ');
+    D.getElementById('back').click();
+    eq(F.Store.get().hearts, 3, 'les vies doivent repartir à trois : ');
+  });
+  t('une mauvaise réponse coûte une vie et remet l’exercice en file', ()=>{
+    F.startLeconId('u1l1');
+    const vies = F.Store.get().hearts;
+    ok(repondre(F, D, false), 'aucun exercice à choix : ');
+    eq(F.Store.get().hearts, vies-1);
+    eq(F.L.requeue.length, 1, 'exercice non remis en file : ');
+    ok(D.getElementById('footer').classList.contains('ko'));
+  });
+  t('la fin de leçon accorde une couronne et des XP', ()=>{
+    const xp = F.Store.get().xp;
+    F.L.idx = F.L.ex.length; F.L.requeue = []; F.finish();
+    eq(F.Store.crowns('u1l1'), 1);
+    ok(F.Store.get().xp > xp);
+    ok(D.querySelector('.end h1'), 'écran de fin absent : ');
+  });
+  t('le thème sombre s’applique à la racine du document', ()=>{
+    F.Store.get().theme='sombre'; F.applyTheme();
+    eq(D.documentElement.dataset.appTheme, 'sombre');
+    F.Store.get().theme='auto'; F.applyTheme();
+  });
+  t('la progression est relue après rechargement', ()=>{
+    const brut = W.localStorage.getItem('thailingo.save');
+    ok(brut && JSON.parse(brut).progress.u1l1.crowns === 1);
+  });
+  t('le défi chronométré ne fait pas perdre de vie', ()=>{
+    F.go('path'); F.startTimed();
+    const vies = F.Store.get().hearts;
+    const e = F.L.ex[F.L.idx];
+    if(e.options){
+      D.querySelectorAll('#ch .choice')[e.options.findIndex(o=>!o.correct)].click();
+      D.getElementById('check').click();
+      eq(F.Store.get().hearts, vies);
+    }
+    W.clearInterval(W.__timer); F.go('path');
+  });
+
+  t('les sections structurent le chemin', ()=>{
+    W.ThaiLingo.go('path');
+    eq(D.querySelectorAll('.section-head').length, F.SECTIONS.length);
+  });
+  t('la 5e couronne déclenche le mode légendaire', ()=>{
+    F.Store.get().progress.u1l1 = {crowns:4}; F.Store.save();
+    F.startLeconId('u1l1');
+    ok(F.L.legendaire, 'mode légendaire non activé : ');
+    eq(F.Store.get().hearts, 3);
+    F.go('path');
+  });
+  t('la croix de sortie ouvre une confirmation, sans fenêtre native', ()=>{
+    F.startLeconId('u1l1');
+    D.getElementById('quit').click();
+    const modale = D.querySelector('.overlay .modal');
+    ok(modale, 'aucune modale de confirmation : ');
+    ok(modale.textContent.includes('Quitter'), 'texte inattendu : ');
+    [...modale.querySelectorAll('button')].find(b=>/Continuer/.test(b.textContent)).click();
+    ok(!D.querySelector('.overlay'), 'la modale ne se referme pas : ');
+    F.go('path');
+  });
+  t('chaque mot thaï affiché porte sa romanisation', ()=>{
+    F.startLeconId('u1l1');
+    let vus = 0;
+    for(let i=0; i<F.L.ex.length; i++){
+      F.L.idx = i; F.renderLesson();
+      D.querySelectorAll('.tile.empile, .pair.empile, .choice').forEach(el=>{
+        const th = el.querySelector('.thai');
+        if(th && F.romDe(th.textContent)){ vus++; ok(el.querySelector('.rom'), `« ${th.textContent} » sans romanisation`); }
+      });
+    }
+    ok(vus > 5, 'trop peu de mots thaïs vérifiés : '+vus);
+    F.go('path');
+  });
+  t('le clavier thaï complet peut être activé', ()=>{
+    F.Store.get().progress.u1l1 = {crowns:2}; F.Store.save();
+    let trouve = false;
+    for(let i=0;i<30 && !trouve;i++){
+      F.startLeconId('u1l1');
+      const k = F.L.ex.findIndex(e=>e.type==='spell');
+      if(k>=0){ F.L = Object.assign(F.L,{idx:k}); F.renderLesson(); trouve = true; }
+    }
+    ok(trouve, 'aucun exercice d’écriture généré : ');
+    const avant = D.querySelectorAll('#keys .key').length;
+    D.getElementById('full').click();
+    ok(D.querySelectorAll('#keys .key').length > avant + 20, 'clavier complet non affiché : ');
+    D.getElementById('full').click();
+    F.go('path');
+  });
+
+  await t('une progression en ligne est reprise quand l’appareil est vierge', async ()=>{
+    F.Store.reset();
+    F.Store.completeLesson('u6l1', 8, false);
+    const etat = JSON.parse(JSON.stringify(F.Store.get()));
+    W.localStorage.clear(); F.Store.reset();
+    D.getElementById('thailingo-etat').textContent = JSON.stringify(etat);
+    eq(F.Cloud.etatEmbarque().progress.u6l1.crowns, 1, 'état embarqué illisible : ');
+    await F.synchroniserDepuisLeCloud();
+    eq(F.Store.crowns('u6l1'), 1, 'progression non reprise : ');
+    D.getElementById('thailingo-etat').textContent = '';
+  });
+  t('un lien de sauvegarde rétablit la progression', ()=>{
+    F.Store.reset();
+    F.Store.completeLesson('u5l1', 9, false);
+    const code = F.Store.codeSauvegarde();
+    F.Store.reset();
+    eq(F.Store.crowns('u5l1'), 0, 'remise à zéro : ');
+    const issue = F.restaurerDepuisLien('#sauvegarde=' + encodeURIComponent(code), ()=>true, ()=>{});
+    eq(issue, 'restauré');
+    eq(JSON.parse(W.localStorage.getItem('thailingo.save')).progress.u5l1.crowns, 1);
+  });
+  t('un lien de sauvegarde refusé ne touche à rien', ()=>{
+    F.Store.reset();
+    const issue = F.restaurerDepuisLien('#sauvegarde=peu-importe', ()=>false, ()=>{});
+    eq(issue, 'refusé');
+    eq(F.Store.crowns('u5l1'), 0);
+  });
+
+  document.getElementById('sum').textContent = `${pass} test(s) OK, ${fail} échec(s)`;
+  document.getElementById('sum').className = fail ? 'ko' : 'ok';
+  window.__result = {pass, fail};
+};
+</script>
