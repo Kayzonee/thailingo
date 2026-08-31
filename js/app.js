@@ -641,7 +641,8 @@ function exTransUI(body, e){
       ${t2f?'<button class="speaker small" id="sp" aria-label="Écouter">🔊</button>':''}
       <div id="shown">${t2f ? hintable(e.chunks) : `<div class="fr-shown">${esc(e.shown)}</div>`}</div>
     </div>
-    <div class="answer-area" id="ans"></div>
+    <div class="zone-reponse"><span class="etiquette">Ta réponse</span>
+      <div class="answer-area" id="ans"></div></div>
     <div class="bank" id="bank"></div>
     <div class="kbd-hint">${t2f?'Touche un mot thaï pour voir sa traduction · ':''}⏎ pour valider</div>`;
   wireBank(e, !t2f);
@@ -654,7 +655,9 @@ function exBuildUI(body, e){
   body.innerHTML = `<div class="prompt">${esc(e.prompt)}</div>
     <div class="head-row"><button class="speaker" id="sp" aria-label="Écouter">🔊</button>
       <button class="speaker small" id="spslow" aria-label="Écouter lentement">🐢</button></div>
-    <div class="answer-area" id="ans"></div><div class="bank" id="bank"></div>`;
+    <div class="zone-reponse"><span class="etiquette">Ta réponse</span>
+      <div class="answer-area" id="ans"></div></div>
+    <div class="bank" id="bank"></div>`;
   wireBank(e, true);
   document.getElementById('sp').onclick=()=>Audio_.speak(e.speak);
   document.getElementById('spslow').onclick=()=>Audio_.speak(e.speak,0.45);

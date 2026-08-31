@@ -358,3 +358,10 @@ button, .choice, .tile, .pair, .key, .node{touch-action:manipulation}
 }
 .fb-sub .donnee{opacity:.75;margin-top:4px}
 .fb-sub .donnee .thai{font-size:15px}
+
+/* la zone de réponse ne doit pas se confondre avec la banque de mots */
+.zone-reponse{position:relative;background:var(--card);border-radius:16px;padding:22px 10px 10px;margin-bottom:22px}
+.zone-reponse .etiquette{position:absolute;top:6px;left:14px;font-size:11px;letter-spacing:.6px;
+  text-transform:uppercase;color:var(--ink-soft)}
+.zone-reponse .answer-area{border:none;margin:0;min-height:64px;padding:0}
+:root[data-app-theme="sombre"] .zone-reponse{background:#20272E}
