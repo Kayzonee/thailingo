@@ -18,6 +18,9 @@ const isThaiText = s => /[\u0E00-\u0E7F]/.test(s);   // plage thaïe, en échapp
    retombe alors proprement sur le stockage du navigateur.
    ============================================================ */
 const CHEMIN_SAUVEGARDE = 'data/progression.json';
+/* Dans la page hébergée par Claude, la page est en cadre et aucun téléchargement
+   ne lui est accordé : on n'y propose pas la sauvegarde en fichier. */
+const TELECHARGEMENT_POSSIBLE = !(window.claude && window.claude.use);
 const NAV_HTML = `<nav class="nav" id="nav">
   <button data-r="path" class="on" title="Apprendre" aria-label="Apprendre">🏠</button>
   <button data-r="ecriture" title="Écriture" aria-label="Écriture">✍️</button>
@@ -344,11 +347,11 @@ function renderProfile(){
         <button class="btn ghost" id="partage" style="flex:1">Envoyer dans une note</button>
         <button class="btn ghost" id="copier" style="flex:1">Copier</button>
       </div>
-      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      ${TELECHARGEMENT_POSSIBLE ? `<div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
         <button class="btn ghost" id="fichier" style="flex:1">Enregistrer dans Fichiers</button>
         <label class="btn ghost" style="flex:1;cursor:pointer">Ouvrir un fichier
           <input type="file" id="depuis-fichier" accept=".json,application/json" hidden></label>
-      </div>
+      </div>` : ''}
       <p class="sub">Garde ce texte : collé dans « Restaurer », il rétablit toute ta
       progression, sur ce téléphone comme sur un autre.</p>
     </div>
@@ -409,6 +412,7 @@ function renderProfile(){
       if(navigator.share) navigator.share(donnees).catch(()=>{});
       else copierCode(code);
     };
+    if(TELECHARGEMENT_POSSIBLE){
     document.getElementById('fichier').onclick = ()=>{
       const nom = `thailingo-${Store.get().profil||'moi'}-${Store.get().derniereSauvegarde}.json`;
       const blob = new Blob([JSON.stringify(Store.get(), null, 2)], {type:'application/json'});
@@ -430,6 +434,7 @@ function renderProfile(){
       };
       lecteur.readAsText(f);
     };
+    }
     zone.scrollIntoView({behavior:'smooth', block:'center'});
   };
   document.getElementById('imp').onclick = async ()=>{
