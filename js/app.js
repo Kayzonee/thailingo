@@ -65,6 +65,7 @@ ${NAV_HTML}
       catch(e){ return null; }
     },
     async lire(){
+      if(!(window.claude && window.claude.use)) return null;   // pas de sauvegarde en ligne ici
       try{
         const r = await fetch(CHEMIN_SAUVEGARDE, {cache:'no-store'});
         if(!r.ok) return null;
