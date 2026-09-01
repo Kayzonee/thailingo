@@ -10,9 +10,11 @@ et lancer l'app par son icône (une app installée a son propre stockage).
 
 ## Ce qu'elle contient
 
-- 10 unités de langue (29 leçons) et un parcours d'écriture séparé
-  (alphabet complet — 44 consonnes avec leur classe de ton, voyelles, signes de ton —
-  puis les règles de ton) ;
+- **Deux cours** au choix dans le profil : thaï depuis le français, thaï depuis l'anglais.
+  Chacun garde sa propre progression.
+- **Trois paliers** — Débutant, Élémentaire, Intermédiaire : 463 mots, 143 phrases,
+  30 unités de langue et un parcours d'écriture séparé (alphabet complet — 44 consonnes
+  avec leur classe de ton, voyelles, signes de ton — puis les règles de ton) ;
 - 12 types d'exercices : reconnaissance, sens inverse, écoute, dictée, paires,
   traduction avec banque de mots dans les deux sens, texte à trous, alphabet,
   épellation au clavier thaï, prononciation au micro, règles de ton ;

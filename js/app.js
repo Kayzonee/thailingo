@@ -112,11 +112,11 @@ async function synchroniserDepuisLeCloud(){
   const vide = !Object.keys(local.progress || {}).length && !local.xp;
   if(vide){
     Store.adopter(distant); render();
-    toast('Progression récupérée en ligne');
+    toast(T('en_ligne_recuperee'));
   } else if((distant.xp||0) > (local.xp||0)){
-    const oui = await dialogue({ titre:'Progression trouvée en ligne',
-      texte:`Elle est plus avancée que celle de cet appareil (${distant.xp} XP contre ${local.xp}). L’utiliser à la place ?`,
-      ok:'Utiliser celle en ligne', annuler:'Garder celle-ci' });
+    const oui = await dialogue({ titre:T('en_ligne_titre'),
+      texte:T('en_ligne_detail',{distant:distant.xp||0, local:local.xp||0}),
+      ok:T('en_ligne_oui'), annuler:T('en_ligne_non') });
     if(oui){
       Store.adopter(distant); render();
     }
@@ -153,33 +153,33 @@ function parcoursHTML(liste, avecSections){
   let bulleMise = false;      // « Commencer » ne marque que la prochaine leçon à faire
   liste.forEach((u,ui)=>{
     if(avecSections){
-      const sec = SECTIONS.find(x=>x.unites[0]===u.id);
+      const sec = SECTIONS.find(x=>x.unites && x.unites[0]===u.id);
       if(sec){
         const faites = sec.unites.filter(id=>{
           const k = liste.findIndex(z=>z.id===id); return k>=0 && uniteFinie(liste,k);
         }).length;
         html += `<div class="section-head" style="color:${sec.couleur};border-color:${sec.couleur}">
-          <b>${esc(sec.titre)}</b><small>${faites}/${sec.unites.length} unités terminées</small></div>`;
+          <b>${esc(txt(sec.titre))}</b><small>${T('unites_terminees',{a:faites,b:sec.unites.length})}</small></div>`;
       }
     }
     html += `<div class="unit-header" style="background:${u.color}">
-      <div class="ic">${u.icon}</div><div><h2>${esc(u.title)} · ${esc(u.subtitle)}</h2>
-      <p>${u.lessons.length} leçons</p></div></div><div class="path">`;
+      <div class="ic">${u.icon}</div><div><h2>${esc(txt(u.title))} · ${esc(txt(u.subtitle))}</h2>
+      <p>${T('lecons_n',{n:u.lessons.length})}</p></div></div><div class="path">`;
     u.lessons.forEach((l,li)=>{
       const st = etatLecon(liste,ui,li), c = Store.crowns(l.id);
       const bulle = st==='active' && !bulleMise;
       if(bulle) bulleMise = true;
       html += `<div class="node-wrap ${bulle?'has-bubble':''}" style="margin-left:${[0,60,-60,40,-40][li%5]}px">
-        ${bulle?'<div class="start-bubble">Commencer</div>':''}
-        <button class="node ${st}" data-lecon="${l.id}" ${st==='locked'?'disabled':''} aria-label="${esc(l.title)}"
+        ${bulle?`<div class="start-bubble">${T('commencer')}</div>`:''}
+        <button class="node ${st}" data-lecon="${l.id}" ${st==='locked'?'disabled':''} aria-label="${esc(txt(l.title))}"
           style="${st==='locked'?'':(c>=5?'background:#FFC800;box-shadow:0 7px 0 #E0A800':`background:${u.color};box-shadow:0 7px 0 ${shade(u.color)}`)}">
           ${st==='locked'?'🔒':(c>=5?'🏅':c>=3?'👑':'⭐')}${c?`<span class="crowns">👑${c}</span>`:''}
-        </button><div class="node-label">${esc(l.title)}</div></div>`;
+        </button><div class="node-label">${esc(txt(l.title))}</div></div>`;
     });
     const chestId = 'chest_'+u.id, got = Store.crowns(chestId)>0;
     if(uniteFinie(liste,ui)) html += `<div class="node-wrap"><button class="node ${got?'done':'active'}" data-chest="${u.id}"
         style="background:${got?'#DDD':'#FFC800'};box-shadow:0 7px 0 ${got?'#BBB':'#E0A800'}">${got?'📭':'🎁'}</button>
-      <div class="node-label">${got?'Coffre ouvert':'Coffre d’unité'}</div></div>`;
+      <div class="node-label">${got?T('coffre_ouvert'):T('coffre')}</div></div>`;
     html += '</div>';
   });
   return html;
@@ -193,7 +193,7 @@ function brancherParcours(){
     const id = 'chest_'+ch.dataset.chest;
     if(Store.crowns(id)>0) return;
     Store.completeLesson(id, 15); Audio_.win();
-    toast('🎁 +15 XP'); render();
+    toast(T('coffre_gagne')); render();
   };
 }
 
@@ -201,14 +201,14 @@ function renderPath(){
   const s = Store.get();
   let html = topbar() + '<div class="screen">';
   if(s.resume){
-    html += `<div class="banner blue"><div><b>Leçon en cours</b><small>Reprendre là où tu t’es arrêté</small></div>
-      <button class="btn blue" id="resume">Reprendre</button></div>`;
+    html += `<div class="banner blue"><div><b>${T('lecon_en_cours')}</b><small>${T('reprendre_ou')}</small></div>
+      <button class="btn blue" id="resume">${T('reprendre')}</button></div>`;
   }
   if(!Audio_.hasThaiVoice()){
-    html += `<div class="banner grey"><div><b>Pas de voix thaïe détectée</b>
-      <small>Les exercices d’écoute sont remplacés par leur version écrite. Installe une voix thaïe dans les réglages du système pour les activer.</small></div></div>`;
+    html += `<div class="banner grey"><div><b>${T('pas_de_voix')}</b>
+      <small>${T('pas_de_voix_detail')}</small></div></div>`;
   }
-  html += `<div class="quests"><h3>Quêtes du jour</h3>` +
+  html += `<div class="quests"><h3>${T('quetes_du_jour')}</h3>` +
     Store.questsToday().map(q=>{
       const pct = Math.round(100*q.cur/q.goal);
       return `<div class="quest"><span class="qi">${q.icon}</span>
@@ -223,9 +223,8 @@ function renderPath(){
 
 function renderEcriture(){
   app.innerHTML = topbar() + `<div class="screen">
-    <h2 class="h-page">✍️ L’écriture thaïe</h2>
-    <p class="sub">L’alphabet complet et les règles de ton, séparés des leçons de langue.
-    Rien n’oblige à les faire dans l’ordre.</p>
+    <h2 class="h-page">✍️ ${T('titre_ecriture')}</h2>
+    <p class="sub">${T('sous_titre_ecriture')}</p>
     ${parcoursHTML(UNITES_ECRITURE, false)}</div>`;
   brancherParcours();
 }
@@ -253,15 +252,16 @@ function copierCode(code){
   if(zone){ zone.focus(); zone.setSelectionRange(0, code.length); }
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(code)
-      .then(()=>toast('Code copié — colle-le dans une note'))
-      .catch(()=>toast('Sélectionne le texte puis « Copier »'));
-  } else toast('Sélectionne le texte puis « Copier »');
+      .then(()=>toast(T('code_copie')))
+      .catch(()=>toast(T('code_selection')));
+  } else toast(T('code_selection'));
 }
 
 /* Les fenêtres natives (confirm / prompt / alert) sont bloquées dans une page
    hébergée en cadre : la croix de sortie ne répondait plus. Tout passe par nos
    propres modales. */
-function dialogue({titre, texte='', ok='Confirmer', annuler='Annuler', danger=false}){
+function dialogue({titre, texte='', ok, annuler, danger=false}){
+  ok = ok || T('confirmer'); annuler = annuler || T('annuler');
   return new Promise(res=>{
     const ov = h(`<div class="overlay"><div class="modal">
       <h3>${esc(titre)}</h3>${texte?`<p>${esc(texte)}</p>`:''}
@@ -276,18 +276,19 @@ function info(titre, texte=''){
   return new Promise(res=>{
     const ov = h(`<div class="overlay"><div class="modal">
       <h3>${esc(titre)}</h3>${texte?`<p>${esc(texte)}</p>`:''}
-      <button class="btn" id="d-ok">J’ai compris</button></div></div>`);
+      <button class="btn" id="d-ok">${T('compris')}</button></div></div>`);
     document.body.appendChild(ov);
     ov.querySelector('#d-ok').onclick = ()=>{ ov.remove(); res(); };
   });
 }
-function saisie({titre, texte='', valeur='', ok='Valider'}){
+function saisie({titre, texte='', valeur='', ok}){
+  ok = ok || T('valider');
   return new Promise(res=>{
     const ov = h(`<div class="overlay"><div class="modal">
       <h3>${esc(titre)}</h3>${texte?`<p>${esc(texte)}</p>`:''}
       <textarea class="save-code" id="d-val" rows="4" autocapitalize="off" spellcheck="false">${esc(valeur)}</textarea>
       <button class="btn" id="d-ok">${esc(ok)}</button>
-      <button class="btn ghost" id="d-non">Annuler</button></div></div>`);
+      <button class="btn ghost" id="d-non">${T('annuler')}</button></div></div>`);
     document.body.appendChild(ov);
     ov.querySelector('#d-ok').onclick  = ()=>{ const v = ov.querySelector('#d-val').value; ov.remove(); res(v); };
     ov.querySelector('#d-non').onclick = ()=>{ ov.remove(); res(null); };
@@ -314,62 +315,81 @@ function renderProfile(){
   const known = Store.Words.known(), due = Store.Words.dueCount();
   const totalLessons = CURRICULUM.reduce((a,u)=>a+u.lessons.length,0);
   app.innerHTML = topbar() + `<div class="screen">
-    <h2 class="h-page">Mon profil</h2>
-    <div class="card"><div class="ic">⚡</div><div><h4>${s.xp} XP au total</h4><small>Aujourd’hui : ${s.dailyXp}/${s.dailyGoal} XP</small></div></div>
-    <div class="card"><div class="ic">🔥</div><div><h4>Série de ${s.streak} jour${s.streak>1?'s':''}</h4><small>Reviens demain pour la prolonger</small></div></div>
-    <div class="card"><div class="ic">👑</div><div><h4>${Store.totalCrowns()} couronne${Store.totalCrowns()>1?'s':''}</h4><small>sur ${totalLessons*5} possibles · ${totalLessons} leçons</small></div></div>
-    <div class="card"><div class="ic">🧠</div><div><h4>${known} mot${known>1?'s':''} rencontré${known>1?'s':''}</h4><small>${due} à revoir aujourd’hui</small></div></div>
-    <div class="card"><div class="ic">🔊</div><div><h4>Voix thaïe : ${Audio_.hasThaiVoice()?'disponible':'non installée'}</h4>
-      <small>${Audio_.hasThaiVoice()?'Prononciation en th-TH':'Exercices d’écoute désactivés automatiquement'}</small></div></div>
-    <div class="card"><div class="ic">🐢</div><div style="flex:1"><h4>Audio ralenti</h4><small>Prononcer plus lentement</small></div>
-      <button class="btn ${s.slowAudio?'':'ghost'}" id="slow">${s.slowAudio?'Activé':'Désactivé'}</button></div>
-    <div class="card"><div class="ic">🔔</div><div style="flex:1"><h4>Effets sonores</h4><small>Sons de réussite / erreur</small></div>
-      <button class="btn ${s.soundOn?'':'ghost'}" id="snd">${s.soundOn?'Activé':'Désactivé'}</button></div>
-    <div class="card"><div class="ic">🎨</div><div style="flex:1"><h4>Thème</h4><small>Clair, sombre ou automatique</small></div>
-      <button class="btn ghost" id="theme">${s.theme==='auto'?'Auto':s.theme==='sombre'?'Sombre':'Clair'}</button></div>
-    <div class="card"><div class="ic">🎯</div><div style="flex:1"><h4>Objectif du jour</h4><small>${s.dailyGoal} XP par jour</small></div>
-      <button class="btn ghost" id="objectif">Modifier</button></div>
-    <div class="card"><div class="ic">🔓</div><div style="flex:1"><h4>Toutes les leçons ouvertes</h4>
-      <small>${s.toutDebloque?'Tu peux ouvrir n’importe quelle leçon' : 'Les leçons se débloquent l’une après l’autre'}</small></div>
-      <button class="btn ${s.toutDebloque?'':'ghost'}" id="debloc">${s.toutDebloque?'Activé':'Désactivé'}</button></div>
+    <h2 class="h-page">${T('titre_profil')}</h2>
+    <div class="card"><div class="ic">🎓</div><div style="flex:1"><h4>${T('langue_cours')}</h4>
+      <small>${esc(txt((COURS[Store.coursActif()]||{}).nom))}</small></div>
+      <button class="btn ghost" id="cours">${T('changer')}</button></div>
+    <div class="card"><div class="ic">⚡</div><div><h4>${T('xp_total',{n:Store.xp()})}</h4><small>${T('xp_aujourdhui',{a:s.dailyXp,b:s.dailyGoal})}</small></div></div>
+    <div class="card"><div class="ic">🔥</div><div><h4>${T('serie_jours',{n:s.streak})}</h4><small>${T('serie_detail')}</small></div></div>
+    <div class="card"><div class="ic">👑</div><div><h4>${T('couronnes_n',{n:Store.totalCrowns()})}</h4><small>${T('couronnes_detail',{max:totalLessons*5, lecons:totalLessons})}</small></div></div>
+    <div class="card"><div class="ic">🧠</div><div><h4>${T('mots_rencontres',{n:known})}</h4><small>${T('mots_a_revoir',{n:due})}</small></div></div>
+    <div class="card"><div class="ic">🔊</div><div><h4>${T('voix_thaie',{etat:Audio_.hasThaiVoice()?T('voix_dispo'):T('voix_absente')})}</h4>
+      <small>${Audio_.hasThaiVoice()?T('voix_detail_ok'):T('voix_detail_ko')}</small></div></div>
+    <div class="card"><div class="ic">🐢</div><div style="flex:1"><h4>${T('audio_lent')}</h4><small>${T('audio_lent_detail')}</small></div>
+      <button class="btn ${s.slowAudio?'':'ghost'}" id="slow">${s.slowAudio?T('active'):T('desactive')}</button></div>
+    <div class="card"><div class="ic">🔔</div><div style="flex:1"><h4>${T('effets_sonores')}</h4><small>${T('effets_detail')}</small></div>
+      <button class="btn ${s.soundOn?'':'ghost'}" id="snd">${s.soundOn?T('active'):T('desactive')}</button></div>
+    <div class="card"><div class="ic">🎨</div><div style="flex:1"><h4>${T('theme')}</h4><small>${T('theme_detail')}</small></div>
+      <button class="btn ghost" id="theme">${s.theme==='auto'?T('theme_auto'):s.theme==='sombre'?T('theme_sombre'):T('theme_clair')}</button></div>
+    <div class="card"><div class="ic">🎯</div><div style="flex:1"><h4>${T('objectif_du_jour')}</h4><small>${T('objectif_detail',{n:s.dailyGoal})}</small></div>
+      <button class="btn ghost" id="objectif">${T('modifier')}</button></div>
+    <div class="card"><div class="ic">🔓</div><div style="flex:1"><h4>${T('tout_ouvert')}</h4>
+      <small>${s.toutDebloque?T('tout_ouvert_oui'):T('tout_ouvert_non')}</small></div>
+      <button class="btn ${s.toutDebloque?'':'ghost'}" id="debloc">${s.toutDebloque?T('active'):T('desactive')}</button></div>
 
-    <div class="card"><div class="ic">💾</div><div style="flex:1"><h4>Sauvegarde</h4>
-      <small>${s.derniereSauvegarde ? 'Dernière sauvegarde le '+s.derniereSauvegarde
-        : 'Jamais sauvegardée — mets ton code à l’abri dans une note'}</small></div></div>
+    <div class="card"><div class="ic">💾</div><div style="flex:1"><h4>${T('sauvegarde')}</h4>
+      <small>${s.derniereSauvegarde ? T('sauvegarde_le',{date:s.derniereSauvegarde}) : T('sauvegarde_jamais')}</small></div></div>
     <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-      <button class="btn" id="exp" style="flex:1">Sauvegarder</button>
-      <button class="btn ghost" id="imp" style="flex:1">Restaurer</button>
+      <button class="btn" id="exp" style="flex:1">${T('sauvegarder')}</button>
+      <button class="btn ghost" id="imp" style="flex:1">${T('restaurer')}</button>
     </div>
-    <button class="btn blue hidden" id="cloud" style="width:100%;margin-bottom:14px">Sauvegarder en ligne</button>
+    <button class="btn blue hidden" id="cloud" style="width:100%;margin-bottom:14px">${T('sauver_en_ligne')}</button>
     <div id="zone-code" class="hidden">
       <textarea id="code" class="save-code" readonly rows="3"></textarea>
       <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn ghost" id="partage" style="flex:1">Envoyer dans une note</button>
-        <button class="btn ghost" id="copier" style="flex:1">Copier</button>
+        <button class="btn ghost" id="partage" style="flex:1">${T('envoyer_note')}</button>
+        <button class="btn ghost" id="copier" style="flex:1">${T('copier')}</button>
       </div>
       ${TELECHARGEMENT_POSSIBLE ? `<div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn ghost" id="fichier" style="flex:1">Enregistrer dans Fichiers</button>
-        <label class="btn ghost" style="flex:1;cursor:pointer">Ouvrir un fichier
+        <button class="btn ghost" id="fichier" style="flex:1">${T('enregistrer_fichier')}</button>
+        <label class="btn ghost" style="flex:1;cursor:pointer">${T('ouvrir_fichier')}
           <input type="file" id="depuis-fichier" accept=".json,application/json" hidden></label>
       </div>` : ''}
-      <p class="sub">Garde ce texte : collé dans « Restaurer », il rétablit toute ta
-      progression, sur ce téléphone comme sur un autre.</p>
+      <p class="sub">${T('sauvegarde_explication')}</p>
     </div>
 
-    <h3 style="margin:22px 0 10px">7 derniers jours</h3>
+    <h3 style="margin:22px 0 10px">${T('sept_jours')}</h3>
     ${chart7()}
-    <h3 style="margin:22px 0 10px">Mémorisation (boîtes de révision)</h3>
+    <h3 style="margin:22px 0 10px">${T('memorisation')}</h3>
     ${boxesView()}
-    <h3 style="margin:22px 0 10px">Mots les plus difficiles</h3>
+    <h3 style="margin:22px 0 10px">${T('mots_fragiles')}</h3>
     ${weakList()}
-    <button class="btn red" id="reset" style="width:100%;margin-top:18px">Réinitialiser ma progression</button>
+    <button class="btn red" id="reset" style="width:100%;margin-top:18px">${T('reinitialiser')}</button>
   </div>`;
+  document.getElementById('cours').onclick = async ()=>{
+    const ids = Object.keys(COURS);
+    const ov = h(`<div class="overlay"><div class="modal">
+      <h3>${T('choisir_cours')}</h3>
+      ${ids.map(id=>`<button class="btn ${id===Store.coursActif()?'':'ghost'}" data-c="${id}"
+          style="width:100%;margin-bottom:10px">${COURS[id].drapeau} ${esc(txt(COURS[id].nom))}</button>`).join('')}
+      <button class="btn ghost" id="d-non" style="width:100%">${T('annuler')}</button></div></div>`);
+    document.body.appendChild(ov);
+    ov.querySelector('#d-non').onclick = ()=>ov.remove();
+    ov.querySelectorAll('[data-c]').forEach(b=> b.onclick = async ()=>{
+      const id = b.dataset.c;
+      ov.remove();
+      if(id === Store.coursActif()) return;
+      Store.changerCours(id);
+      await chargerCours(id);
+      render();
+    });
+  };
   document.getElementById('debloc').onclick = ()=>{
     s.toutDebloque = !s.toutDebloque; Store.save(); renderProfile();
   };
   document.getElementById('objectif').onclick = async ()=>{
-    const v = await saisie({ titre:'Objectif du jour', texte:'Combien d’XP par jour ?',
-      valeur:String(s.dailyGoal), ok:'Enregistrer' });
+    const v = await saisie({ titre:T('objectif_du_jour'), texte:T('objectif_question'),
+      valeur:String(s.dailyGoal), ok:T('valider') });
     const n = parseInt(v, 10);
     if(n > 0){ s.dailyGoal = Math.min(200, n); Store.save(); renderProfile(); }
   };
@@ -384,16 +404,12 @@ function renderProfile(){
     if(!oui || !b) return;
     b.classList.remove('hidden');
     b.onclick = async ()=>{
-      b.disabled = true; b.textContent = 'Sauvegarde en cours…';
+      b.disabled = true; b.textContent = T('sauvegarde_en_cours');
       const issue = await Cloud.ecrire();
-      b.disabled = false; b.textContent = 'Sauvegarder en ligne';
-      toast({ 'ok':'☁️ Progression enregistrée en ligne',
-              'ok-page':'☁️ Enregistrée en ligne (la page va se recharger)',
-              'conflit':'Une version plus récente existe déjà en ligne',
-              'trop-souvent':'Sauvegardes trop rapprochées, réessaie dans un instant',
-              'lecture-seule':'Cette copie est en lecture seule',
-              'indisponible':'Sauvegarde en ligne indisponible ici',
-              'erreur':'Échec de la sauvegarde en ligne' }[issue] || 'Échec de la sauvegarde en ligne');
+      b.disabled = false; b.textContent = T('sauver_en_ligne');
+      toast({ 'ok':T('en_ligne_ok'), 'ok-page':T('en_ligne_ok_page'), 'conflit':T('en_ligne_conflit'),
+              'trop-souvent':T('en_ligne_souvent'), 'lecture-seule':T('en_ligne_lecture'),
+              'indisponible':T('en_ligne_indispo'), 'erreur':T('en_ligne_erreur') }[issue] || T('en_ligne_erreur'));
     };
   });
 
@@ -420,7 +436,7 @@ function renderProfile(){
       a.href = URL.createObjectURL(blob); a.download = nom;
       document.body.appendChild(a); a.click();
       setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-      toast('Choisis « Enregistrer dans Fichiers »');
+      toast(T('choisis_fichiers'));
     };
     document.getElementById('depuis-fichier').onchange = ev=>{
       const f = ev.target.files && ev.target.files[0];
@@ -429,8 +445,8 @@ function renderProfile(){
       lecteur.onload = ()=>{
         try{
           if(!Store.adopter(JSON.parse(lecteur.result))) throw new Error('format');
-          toast('Progression restaurée'); setTimeout(()=>location.reload(), 900);
-        }catch(e){ info('Fichier illisible', 'Ce fichier n’est pas une sauvegarde ThaiLingo.'); }
+          toast(T('progression_restauree')); setTimeout(()=>location.reload(), 900);
+        }catch(e){ info(T('fichier_illisible'), T('fichier_illisible_detail')); }
       };
       lecteur.readAsText(f);
     };
@@ -438,16 +454,14 @@ function renderProfile(){
     zone.scrollIntoView({behavior:'smooth', block:'center'});
   };
   document.getElementById('imp').onclick = async ()=>{
-    const code = await saisie({ titre:'Restaurer une sauvegarde',
-      texte:'Colle ici ton code de sauvegarde.', ok:'Restaurer' });
+    const code = await saisie({ titre:T('restaurer_titre'), texte:T('restaurer_detail'), ok:T('restaurer') });
     if(!code) return;
-    try{ Store.restaurer(code); toast('Progression restaurée'); setTimeout(()=>location.reload(), 900); }
-    catch(e){ info('Code illisible', 'Vérifie que tu l’as collé en entier, sans rien ajouter autour.'); }
+    try{ Store.restaurer(code); toast(T('progression_restauree')); setTimeout(()=>location.reload(), 900); }
+    catch(e){ info(T('code_illisible'), T('code_illisible_detail')); }
   };
   document.getElementById('reset').onclick = async ()=>{
-    if(await dialogue({ titre:'Tout effacer ?',
-      texte:'XP, séries, couronnes et mots mémorisés seront perdus sur cet appareil.',
-      ok:'Effacer', annuler:'Annuler', danger:true })){ Store.reset(); go('path'); }
+    if(await dialogue({ titre:T('tout_effacer'), texte:T('tout_effacer_detail'),
+      ok:T('effacer'), annuler:T('annuler'), danger:true })){ Store.reset(); go('path'); }
   };
 }
 function chart7(){
@@ -461,16 +475,16 @@ function chart7(){
 }
 function boxesView(){
   const b = Store.boxes(), tot = b.reduce((a,c)=>a+c,0);
-  if(!tot) return `<p class="sub">Aucun mot mémorisé pour l’instant.</p>`;
-  const noms = ['nouveau','1 jour','2 jours','4 jours','1 semaine','2 semaines'];
+  if(!tot) return `<p class="sub">${T('aucun_mot_memorise')}</p>`;
+  const noms = [T('boite_nouveau'),T('boite_1j'),T('boite_2j'),T('boite_4j'),T('boite_1s'),T('boite_2s')];
   return `<div class="boxes">` + b.map((n,i)=>`<div class="box"><b>${n}</b><small>${noms[i]}</small></div>`).join('') + `</div>`;
 }
 function weakList(){
   const ids = Store.Words.weakest(5);
-  if(!ids.length) return `<p class="sub">Aucun mot en difficulté pour l’instant.</p>`;
-  return ids.map(id=>{ const w=LEX[id], st=Store.get().words[id];
-    return `<div class="card"><div class="ic thai">${w.th}</div><div style="flex:1"><h4>${esc(w.fr)}</h4>
-      <small>${esc(w.rom)} · ${st.wrong} erreur(s) / ${st.seen} vue(s)</small></div></div>`; }).join('');
+  if(!ids.length) return `<p class="sub">${T('aucun_mot_difficile')}</p>`;
+  return ids.map(id=>{ const w=LEX[id], st=Store.Words.tous()[id] || {wrong:0,seen:0};
+    return `<div class="card"><div class="ic thai">${w.th}</div><div style="flex:1"><h4>${esc(glose(w))}</h4>
+      <small>${T('erreurs_vues',{rom:w.rom, erreurs:st.wrong, vues:st.seen})}</small></div></div>`; }).join('');
 }
 
 /* ---------------- révision ---------------- */
@@ -478,22 +492,21 @@ function renderRevision(){
   const dus = Store.Words.dueCount(), connus = Store.Words.known();
   const faites = CURRICULUM.reduce((a,u)=>a+u.lessons.filter(l=>Store.crowns(l.id)>0).length, 0);
   app.innerHTML = topbar() + `<div class="screen">
-    <h2 class="h-page">🔁 Révision</h2>
-    <p class="sub">Elle ne pioche que dans ce que tu as déjà rencontré : ${connus} mot${connus>1?'s':''}
-    vus sur ${faites} leçon${faites>1?'s':''} terminée${faites>1?'s':''}.</p>
+    <h2 class="h-page">🔁 ${T('titre_revision')}</h2>
+    <p class="sub">${T('revision_portee',{mots:connus, lecons:faites})}</p>
     ${connus ? `
-      <div class="banner green"><div><b>Séance de révision</b>
-        <small>${dus ? dus+' mot'+(dus>1?'s':'')+' arrivé'+(dus>1?'s':'')+' à échéance' : 'Rien d’urgent — les mots les plus fragiles d’abord'}</small></div>
-        <button class="btn" id="practice">Réviser</button></div>
-      <div class="banner blue"><div><b>⏱️ Défi 60 secondes</b>
-        <small>Enchaîne un maximum de bonnes réponses, sans perdre de vie</small></div>
-        <button class="btn blue" id="timed">Lancer</button></div>
-      <h3 style="margin:22px 0 10px">Mémorisation</h3>
+      <div class="banner green"><div><b>${T('seance_revision')}</b>
+        <small>${dus ? T('mots_echeance',{n:dus}) : T('rien_urgent')}</small></div>
+        <button class="btn" id="practice">${T('reviser')}</button></div>
+      <div class="banner blue"><div><b>${T('defi_60')}</b>
+        <small>${T('defi_60_detail')}</small></div>
+        <button class="btn blue" id="timed">${T('lancer')}</button></div>
+      <h3 style="margin:22px 0 10px">${T('memorisation')}</h3>
       ${boxesView()}
-      <h3 style="margin:22px 0 10px">Mots les plus fragiles</h3>
+      <h3 style="margin:22px 0 10px">${T('mots_fragiles')}</h3>
       ${weakList()}`
-    : `<div class="banner grey"><div><b>Rien à réviser pour l’instant</b>
-        <small>Termine une leçon : ses mots entreront aussitôt dans la révision.</small></div></div>`}
+    : `<div class="banner grey"><div><b>${T('rien_a_reviser')}</b>
+        <small>${T('rien_a_reviser_detail')}</small></div></div>`}
   </div>`;
   const pr = document.getElementById('practice'); if(pr) pr.onclick = ()=>startPractice();
   const td = document.getElementById('timed');    if(td) td.onclick = ()=>startTimed();
@@ -517,7 +530,7 @@ function startLesson(unit, lesson){
   L = { unit, lesson, level, legendaire,
         title:lesson.title, ex, idx:0, correct:0, answered:0,
         combo:0, bestCombo:0, t0:Date.now(), state:'ask', sel:null, built:[], requeue:[], practice:false };
-  if(legendaire) toast('🏅 Leçon légendaire : aucun indice');
+  if(legendaire) toast(T('legendaire'));
   Store.setResume(lesson.id);
   go('lesson');
 }
@@ -565,7 +578,7 @@ function renderLesson(){
     </div>
     <div class="lesson" id="body"></div>
     <div class="footer" id="footer"><div class="inner">
-      <div class="spacer"></div><button class="btn" id="check" disabled>Vérifier</button>
+      <div class="spacer"></div><button class="btn" id="check" disabled>${T('verifier')}</button>
     </div></div>`;
   document.getElementById('quit').onclick = quitLesson;
   document.getElementById('check').onclick = check;
@@ -577,9 +590,8 @@ function renderLesson(){
   body.classList.add('fade-in');
 }
 async function quitLesson(){
-  if(await dialogue({ titre:'Quitter la leçon ?',
-    texte:'Ta progression dans cette leçon sera perdue et tu devras la reprendre depuis le début.',
-    ok:'Quitter', annuler:'Continuer la leçon', danger:true })) go('path');
+  if(await dialogue({ titre:T('quitter_lecon'), texte:T('quitter_detail'),
+    ok:T('quitter'), annuler:T('continuer_lecon'), danger:true })) go('path');
 }
 function setCheck(on){ const c=document.getElementById('check'); if(c) c.disabled=!on; }
 
@@ -597,7 +609,7 @@ function exChoiceUI(body, e){
       <div><div class="thai big-thai">${e.syll.th}</div><div class="rom">${e.syll.rom}</div></div></div>`;
   }
   body.innerHTML = `<div class="prompt">${esc(e.prompt)}</div>${head}<div class="choices" id="ch"></div>
-    <div class="kbd-hint">Astuce : touches 1–${e.options.length} pour choisir, ⏎ pour valider</div>`;
+    <div class="kbd-hint">${T('astuce_clavier',{n:e.options.length})}</div>`;
   const wrap = document.getElementById('ch');
   e.options.forEach((o,i)=>{
     const thaiCls = (e.thai || isThaiText(o.label)) ? 'thai' : '';
@@ -646,10 +658,10 @@ function exTransUI(body, e){
       ${t2f?'<button class="speaker small" id="sp" aria-label="Écouter">🔊</button>':''}
       <div id="shown">${t2f ? hintable(e.chunks) : `<div class="fr-shown">${esc(e.shown)}</div>`}</div>
     </div>
-    <div class="zone-reponse"><span class="etiquette">Ta réponse</span>
+    <div class="zone-reponse"><span class="etiquette">${T('ta_reponse')}</span>
       <div class="answer-area" id="ans"></div></div>
     <div class="bank" id="bank"></div>
-    <div class="kbd-hint">${t2f?'Touche un mot thaï pour voir sa traduction · ':''}⏎ pour valider</div>`;
+    <div class="kbd-hint">${t2f?T('astuce_mot'):T('astuce_clavier',{n:9})}</div>`;
   wireBank(e, !t2f);
   const sp=document.getElementById('sp');
   if(sp){ sp.onclick=()=>Audio_.speak(e.speak); setTimeout(()=>Audio_.speak(e.speak),250); }
@@ -660,7 +672,7 @@ function exBuildUI(body, e){
   body.innerHTML = `<div class="prompt">${esc(e.prompt)}</div>
     <div class="head-row"><button class="speaker" id="sp" aria-label="Écouter">🔊</button>
       <button class="speaker small" id="spslow" aria-label="Écouter lentement">🐢</button></div>
-    <div class="zone-reponse"><span class="etiquette">Ta réponse</span>
+    <div class="zone-reponse"><span class="etiquette">${T('ta_reponse')}</span>
       <div class="answer-area" id="ans"></div></div>
     <div class="bank" id="bank"></div>`;
   wireBank(e, true);
@@ -689,7 +701,7 @@ function wireBank(e, thaiBank){
 function hintable(chunks){
   return `<div class="thai big-thai">` + chunks.map(c=>{
     const id = Object.keys(LEX).find(k=>LEX[k].th===c);
-    const info = id ? `${LEX[id].rom} — ${LEX[id].fr}` : '';
+    const info = id ? `${LEX[id].rom} — ${glose(LEX[id])}` : '';
     return `<span class="hintable" data-info="${esc(info)}" data-th="${esc(c)}">${esc(c)}</span>`;
   }).join('') + `</div>`;
 }
@@ -715,8 +727,8 @@ function exSpellUI(body, e){
     <div class="spell-line thai" id="line"><span class="caret"></span></div>
     <div class="keys" id="keys"></div>
     <button class="btn ghost" id="full" style="margin-top:16px">
-      ${Store.get().clavierComplet ? 'Revenir aux lettres proposées' : '⌨️ Clavier thaï complet'}</button>
-    <div class="kbd-hint">Compose le mot lettre par lettre · ⌫ pour effacer</div>`;
+      ${Store.get().clavierComplet ? T('clavier_propose') : T('clavier_complet')}</button>
+    <div class="kbd-hint">${T('astuce_epeler')}</div>`;
   const line = document.getElementById('line'), keys = document.getElementById('keys');
   const draw = ()=>{ line.innerHTML = L.built.map(x=>`<span>${esc(x.w)}</span>`).join('') + '<span class="caret"></span>'; };
   document.getElementById('full').onclick = ()=>{
@@ -754,23 +766,23 @@ function exSpeakUI(body, e){
     <div class="head-row"><button class="speaker" id="sp" aria-label="Écouter le modèle">🔊</button>
       <div><div class="thai big-thai">${esc(e.target)}</div><div class="rom">${esc(e.hint)}</div></div></div>
     <div class="mic-zone"><button class="mic" id="mic" aria-label="Parler">🎤</button>
-      <div class="mic-status" id="st">Touche le micro puis prononce le mot</div></div>
-    <button class="btn ghost" id="skip" style="margin-top:18px">Je ne peux pas parler maintenant</button>`;
+      <div class="mic-status" id="st">${T('micro_invite')}</div></div>
+    <button class="btn ghost" id="skip" style="margin-top:18px">${T('micro_passer')}</button>`;
   document.getElementById('sp').onclick = ()=>Audio_.speak(e.speak);
   const mic = document.getElementById('mic'), st = document.getElementById('st');
   L.heard = null;
   mic.onclick = ()=>{
     if(L.state!=='ask') return;
-    mic.classList.add('rec'); st.textContent = 'À toi… je t’écoute';
+    mic.classList.add('rec'); st.textContent = T('micro_ecoute');
     const rec = Audio_.listen(alts=>{
       L.heard = alts;
-      st.textContent = 'Entendu : ' + alts[0];
+      st.textContent = T('micro_entendu',{texte:alts[0]});
       setCheck(true);
     }, why=>{
       mic.classList.remove('rec');
-      if(!L.heard) st.textContent = (why==='error') ? 'Micro indisponible — utilise « je ne peux pas parler »' : 'Rien entendu, réessaie';
+      if(!L.heard) st.textContent = (why==='error') ? T('micro_indispo') : T('micro_rien');
     });
-    if(!rec){ mic.classList.remove('rec'); st.textContent = 'Reconnaissance vocale indisponible sur ce navigateur'; }
+    if(!rec){ mic.classList.remove('rec'); st.textContent = T('micro_absent'); }
   };
   document.getElementById('skip').onclick = ()=>{ L.skipped = true; L.state='ask'; setCheck(true); check(); };
 }
@@ -784,7 +796,7 @@ function exPairsUI(body, e){
   pw.append(colL,colR);
   let sel=null, left=e.items.length;
   const mk=(item,side)=>{
-    const el=h(`<button class="pair ${side==='l'?'empile':''}">${side==='l'?thaiAvecRom(item.th):esc(item.fr)}</button>`);
+    const el=h(`<button class="pair ${side==='l'?'empile':''}">${side==='l'?thaiAvecRom(item.th):esc(glose(item))}</button>`);
     el.onclick=()=>{
       if(el.classList.contains('gone')||L.state!=='ask') return;
       side==='l' ? Audio_.speak(item.th) : Audio_.tap();
@@ -862,15 +874,15 @@ function check(){
   f.innerHTML=`<div class="inner">
     <div class="fb-mascot">${mascotSVG(ok?'content':'triste')}</div>
     <div style="flex:1">
-      <div class="fb-title">${ok?(L.combo>=3?`Combo x${L.combo} !`:'Excellent !'):'Bonne réponse :'}</div>
+      <div class="fb-title">${ok?(L.combo>=3?T('combo',{n:L.combo}):T('excellent')):T('bonne_reponse')}</div>
       ${ok?'':`<div class="fb-sub">
         <span class="${isThaiText(expected)?'thai':''}">${esc(expected)}</span>
         ${expectedRom?`<span class="rom">${esc(expectedRom)}</span>`:''}
-        ${donnee?`<span class="rom donnee">Ta réponse : <span class="${isThaiText(donnee)?'thai':''}">${esc(donnee)}</span></span>`:''}
+        ${donnee?`<span class="rom donnee">${T('ta_reponse')} : <span class="${isThaiText(donnee)?'thai':''}">${esc(donnee)}</span></span>`:''}
       </div>`}
       ${e.explain?`<div class="fb-rule">📘 ${esc(e.explain)}</div>`:''}
     </div>
-    <button class="btn ${ok?'':'red'}" id="cont">Continuer</button></div>`;
+    <button class="btn ${ok?'':'red'}" id="cont">${T('continuer')}</button></div>`;
   document.getElementById('cont').onclick=next;
   if(!L.timed && Store.get().hearts<=0 && !ok) setTimeout(echecLecon, 700);
 }
@@ -878,9 +890,9 @@ function check(){
 function skipSpeak(e){
   const f=document.getElementById('footer');
   f.className='footer';
-  f.innerHTML=`<div class="inner"><div style="flex:1"><div class="fb-title">Exercice passé</div>
-    <div class="fb-sub">Aucune vie perdue — tu pourras le refaire plus tard.</div></div>
-    <button class="btn" id="cont">Continuer</button></div>`;
+  f.innerHTML=`<div class="inner"><div style="flex:1"><div class="fb-title">${T('exercice_passe')}</div>
+    <div class="fb-sub">${T('exercice_passe_detail')}</div></div>
+    <button class="btn" id="cont">${T('continuer')}</button></div>`;
   document.getElementById('cont').onclick = next;
   L.correct++;   // non pénalisé
 }
@@ -892,7 +904,7 @@ function next(){
   if(L.idx >= L.ex.length){
     if(L.requeue.length){                    // rejouer les exercices ratés
       L.ex = L.ex.concat(shuffle(L.requeue)); L.requeue = [];
-      toast('On revoit tes erreurs 👀');
+      toast(T('on_revoit'));
     } else return finish();
   }
   renderLesson();
@@ -911,15 +923,15 @@ function finish(){
   route='end'; document.getElementById('nav').classList.add('hidden');
   const goalDone = Store.get().dailyXp >= Store.get().dailyGoal;
   app.innerHTML=`<div class="screen end">
-    <h1>${perfect?'Sans faute !':(L.timed?'Défi terminé !':'Leçon terminée !')}</h1>
+    <h1>${perfect?T('sans_faute'):(L.timed?T('defi_termine'):T('lecon_terminee'))}</h1>
     ${mascotSVG(acc>=60?'content':'neutre')}
     <div class="end-stats">
-      <div class="end-stat"><div class="h">XP gagnés</div><div class="v">${xp}</div></div>
-      <div class="end-stat blue"><div class="h">Temps</div><div class="v">${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}</div></div>
-      <div class="end-stat green"><div class="h">Précision</div><div class="v">${acc}%</div></div>
+      <div class="end-stat"><div class="h">${T('xp_gagnes')}</div><div class="v">${xp}</div></div>
+      <div class="end-stat blue"><div class="h">${T('temps')}</div><div class="v">${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}</div></div>
+      <div class="end-stat green"><div class="h">${T('precision')}</div><div class="v">${acc}%</div></div>
     </div>
-    ${goalDone?'<p class="sub">🎯 Objectif du jour atteint — série sécurisée !</p>':''}
-    <button class="btn" id="cont" style="width:100%;max-width:340px">Continuer</button>
+    ${goalDone?`<p class="sub">${T('objectif_atteint')}</p>`:''}
+    <button class="btn" id="cont" style="width:100%;max-width:340px">${T('continuer')}</button>
   </div>`;
   document.getElementById('cont').onclick=()=>go('path');
   if(perfect || acc>=80) confettis();
@@ -955,10 +967,10 @@ function echecLecon(){
   const relance = L.practice ? null : L.lesson.id;
   route='end'; document.getElementById('nav').classList.add('hidden');
   app.innerHTML = `<div class="screen end">
-    <h1 style="color:var(--red)">Leçon échouée</h1>${mascotSVG('triste')}
-    <p class="sub">Tu as perdu tes trois vies. La leçon reprend au début, avec trois vies neuves.</p>
-    <button class="btn" id="retry" style="width:100%;max-width:340px">Recommencer</button>
-    <button class="btn ghost" id="back" style="width:100%;max-width:340px;margin-top:10px">Plus tard</button>
+    <h1 style="color:var(--red)">${T('lecon_echouee')}</h1>${mascotSVG('triste')}
+    <p class="sub">${T('lecon_echouee_detail')}</p>
+    <button class="btn" id="retry" style="width:100%;max-width:340px">${T('recommencer')}</button>
+    <button class="btn ghost" id="back" style="width:100%;max-width:340px;margin-top:10px">${T('plus_tard')}</button>
   </div>`;
   document.getElementById('retry').onclick = ()=> relance ? startLeconId(relance) : startPractice();
   document.getElementById('back').onclick  = ()=>{ Store.resetHearts(); go('path'); };
@@ -996,6 +1008,13 @@ function go(r){ route=r; render(); }
 function render(){
   ({path:renderPath, ecriture:renderEcriture, revision:renderRevision, profile:renderProfile, lesson:renderLesson})[route]?.();
   app.classList.remove('screen-in'); void app.offsetWidth; app.classList.add('screen-in');
+  /* les libellés de la barre de navigation suivent la langue du cours */
+  const libelles = { path:T('nav_apprendre'), ecriture:T('nav_ecriture'),
+                     revision:T('nav_revision'), profile:T('nav_profil') };
+  document.querySelectorAll('#nav button').forEach(b=>{
+    const l = libelles[b.dataset.r];
+    if(l){ b.title = l; b.setAttribute('aria-label', l); }
+  });
   const nav=document.getElementById('nav');
   nav.classList.toggle('hidden', route==='lesson'||route==='end');
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.r===route));
@@ -1008,14 +1027,19 @@ window.onThaiVoiceChange = ()=>{ if(route==='path'||route==='profile') render();
 function restaurerDepuisLien(hash, demander, prevenir){
   const m = /[#&]sauvegarde=([^&]+)/.exec(hash || '');
   if(!m) return 'aucun';
-  if(!demander('Ce lien contient une sauvegarde ThaiLingo. Rétablir cette progression ?')) return 'refusé';
+  if(!demander(T('lien_sauvegarde'))) return 'refusé';
   try{ Store.restaurer(decodeURIComponent(m[1])); return 'restauré'; }
-  catch(e){ prevenir('La sauvegarde de ce lien est illisible.'); return 'illisible'; }
+  catch(e){ prevenir(T('lien_illisible')); return 'illisible'; }
 }
 
 /* surface exposée pour les tests d'interface (tests/ui.html) */
 window.ThaiLingo = {
-  Store, LEX, SENT, SCRIPT, CURRICULUM, SECTIONS, UNITES_LANGUE, UNITES_ECRITURE, romDe,
+  Store, romDe, glose, txt, COURS, chargerCours,
+  /* le contenu est rechargé à chaque changement de cours : des accesseurs, pas des copies */
+  get LEX(){ return LEX; }, get SENT(){ return SENT; }, get SCRIPT(){ return SCRIPT; },
+  get CURRICULUM(){ return CURRICULUM; }, get SECTIONS(){ return SECTIONS; },
+  get UNITES_LANGUE(){ return UNITES_LANGUE; }, get UNITES_ECRITURE(){ return UNITES_ECRITURE; },
+  get LANGUE(){ return LANGUE; },
   get L(){ return L; }, set L(v){ L = v; },
   get route(){ return route; },
   startLesson, startLeconId, startPractice, startTimed, finish, renderLesson, render, go, applyTheme, check, next,
@@ -1030,21 +1054,22 @@ window.ThaiLingo = {
     ()=>true,                                   // la confirmation est demandée juste après
     m=>info('Sauvegarde illisible', m));
   if(issue === 'restauré'){
-    if(await dialogue({ titre:'Sauvegarde rétablie', texte:'La progression du lien a remplacé celle de cet appareil.',
-                        ok:'Recharger', annuler:'Rester ici' })) location.reload();
+    if(await dialogue({ titre:T('sauvegarde_retablie'), texte:T('sauvegarde_retablie_detail'),
+                        ok:T('recharger'), annuler:T('rester') })) location.reload();
     else render();
   }
 })();
 
-applyTheme();
+/* ---------------- amorçage ---------------- */
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 new MutationObserver(applyTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
-Store.touchDay();
-if(Store.get().streakFrozen){ delete Store.get().streakFrozen; Store.save(); setTimeout(()=>toast('🛡️ Un gel a sauvé ta série'), 600); }
-render();
 
-/* mise en cache hors-ligne (ignorée si le navigateur ne le permet pas) */
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+async function demarrer(){
+  applyTheme();
+  try{ await chargerCours(Store.coursActif()); }
+  catch(e){ console.warn('contenu du cours indisponible', e); }
+  Store.touchDay();
+  render();
+  synchroniserDepuisLeCloud();
 }
-synchroniserDepuisLeCloud();   // reprend la progression en ligne si l'appareil est vierge
+demarrer();
