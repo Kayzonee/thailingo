@@ -152,6 +152,20 @@ t('le module expose ce dont l’application a besoin', ()=>{
   ['auth','lire','ecrire','envoyerLien','terminerConnexion','oublier','lienDansUrl']
     .forEach(f=>ok(new RegExp('\\b'+f+'\\b').test(sourceNuage), `${f} absent`));
 });
+t('un lien reçu par courriel peut être collé à la main', ()=>{
+  /* le module est chargé à part : on l'évalue dans un contexte minimal */
+  const ctx2 = { localStorage:ctx.localStorage, fetch:()=>{}, console,
+                 location:{origin:'https://exemple.fr', pathname:'/', href:'https://exemple.fr/'},
+                 URL, URLSearchParams, JSON, Date, Object, String, Math, Promise, decodeURIComponent, encodeURIComponent };
+  ctx2.window = ctx2;
+  vm.createContext(ctx2);
+  vm.runInContext(sourceNuage, ctx2, {filename:'js/nuage.js'});
+  const code = expr => vm.runInContext(expr, ctx2);
+  eq(code(`Nuage.codeDansLien('https://kayzonee.github.io/thailingo/?mode=signIn&oobCode=ABC123&lang=fr')`), 'ABC123');
+  eq(code(`Nuage.codeDansLien('https://thailingo-44a2b.firebaseapp.com/__/auth/action?apiKey=K&mode=signIn&oobCode=XYZ789&continueUrl=https%3A%2F%2Fkayzonee.github.io%2Fthailingo%2F')`), 'XYZ789');
+  eq(code(`Nuage.codeDansLien('https://exemple.fr/sans-code')`), null);
+  eq(code(`Nuage.codeDansLien('')`), null);
+});
 t('l’application sauvegarde en ligne après chaque leçon', ()=>{
   ok(/Nuage\.ecrire\(Store\.get\(\)\)/.test(sourceApp), 'pas d’écriture en fin de leçon');
   ok(/Nuage\.lire\(\)/.test(sourceApp), 'pas de lecture au démarrage');

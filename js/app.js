@@ -343,6 +343,7 @@ function renderProfile(){
       <small id="etat-nuage">${Nuage.email() ? T('nuage_liee',{email:Nuage.email()}) : T('nuage_anonyme')}</small></div>
       ${Nuage.email() ? `<button class="btn ghost" id="detacher">${T('nuage_detacher')}</button>`
                       : `<button class="btn blue" id="securiser">${T('nuage_securiser')}</button>`}</div>
+    ${Nuage.email() ? '' : `<button class="btn ghost" id="coller-lien" style="width:100%;margin-bottom:14px">${T('nuage_coller')}</button>`}
     <p class="sub">${Nuage.email() ? T('nuage_liee_detail') : T('nuage_anonyme_detail')}</p>
 
     <div class="card"><div class="ic">💾</div><div style="flex:1"><h4>${T('sauvegarde')}</h4>
@@ -420,6 +421,24 @@ function renderProfile(){
       info(T('nuage_titre'), T('nuage_email_erreur',{raison:String(e.message||e)}));
     }
     bSecu.disabled = false;
+  };
+  const bColler = document.getElementById('coller-lien');
+  if(bColler) bColler.onclick = async ()=>{
+    const lien = await saisie({ titre:T('nuage_coller_titre'), texte:T('nuage_coller_detail'), ok:T('valider') });
+    if(!lien) return;
+    const code = Nuage.codeDansLien(lien);
+    if(!code){ info(T('nuage_titre'), T('nuage_coller_invalide')); return; }
+    let email = Nuage.emailEnAttente();
+    if(!email){
+      email = await saisie({ titre:T('nuage_email_titre'), texte:T('nuage_email_detail'), ok:T('valider') });
+      if(!email) return;
+    }
+    try{
+      const s = await Nuage.terminerConnexion(email.trim(), code);
+      toast(T('nuage_connexion_ok',{email:s.email}));
+      await synchroniserDepuisLeCloud();
+      renderProfile();
+    }catch(e){ info(T('nuage_titre'), T('nuage_connexion_erreur')); }
   };
   const bDet = document.getElementById('detacher');
   if(bDet) bDet.onclick = async ()=>{

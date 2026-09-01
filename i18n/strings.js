@@ -134,6 +134,10 @@ const I18N = {
     nuage_connexion_ok:'Progression rattachée à {email}',
     nuage_connexion_erreur:'Ce lien n’est plus valable — redemandes-en un',
     nuage_hors_ligne:'Hors ligne — la sauvegarde en ligne reprendra plus tard',
+    nuage_coller:'J’ai reçu le lien',
+    nuage_coller_titre:'Coller le lien reçu',
+    nuage_coller_detail:'Le courriel s’ouvre dans Safari, pas dans l’app installée. Copie le lien du message (appui long → Copier le lien) et colle-le ici pour rattacher CET appareil.',
+    nuage_coller_invalide:'Ce lien ne contient pas de code de connexion',
     nuage_detacher:'Détacher cet appareil',
     nuage_detacher_titre:'Détacher cet appareil ?',
     nuage_detacher_detail:'La progression restera sur le téléphone, mais ne sera plus enregistrée en ligne sous ton adresse.'
@@ -259,6 +263,10 @@ const I18N = {
     nuage_connexion_ok:'Progress linked to {email}',
     nuage_connexion_erreur:'This link is no longer valid — ask for a new one',
     nuage_hors_ligne:'Offline — online backup will resume later',
+    nuage_coller:'I got the link',
+    nuage_coller_titre:'Paste the link you received',
+    nuage_coller_detail:'The email opens in Safari, not in the installed app. Copy the link from the message (long press → Copy link) and paste it here to link THIS device.',
+    nuage_coller_invalide:'This link carries no sign-in code',
     nuage_detacher:'Unlink this device',
     nuage_detacher_titre:'Unlink this device?',
     nuage_detacher_detail:'Your progress stays on the phone, but is no longer saved online under your address.'

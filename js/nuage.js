@@ -146,16 +146,33 @@ const Nuage = (()=>{
     return true;
   }
 
+  /* le lien peut être celui de Firebase (avec continueUrl encodée) ou l'adresse finale */
+  function codeDansLien(lien){
+    if(!lien) return null;
+    try{
+      const u = new URL(String(lien).trim());
+      const p = u.searchParams;
+      if(p.get('oobCode')) return p.get('oobCode');
+      const suite = p.get('continueUrl');
+      if(suite) return codeDansLien(decodeURIComponent(suite));
+    }catch(e){
+      const m = /[?&]oobCode=([^&\s]+)/.exec(String(lien));
+      if(m) return decodeURIComponent(m[1]);
+    }
+    return null;
+  }
+
   return {
     auth, lire, ecrire, envoyerLien, terminerConnexion, oublier, effacer, supprimerCompte,
     session(){ return session; },
     email(){ return session && session.email; },
     uid(){ return session && session.uid; },
     /* un lien de connexion est-il présent dans l'adresse ? */
-    lienDansUrl(){
-      const p = new URLSearchParams(location.search);
-      return (p.get('mode') === 'signIn' && p.get('oobCode')) ? p.get('oobCode') : null;
-    },
+    lienDansUrl(){ return codeDansLien(location.href); },
+    /* extrait le code d'un lien collé à la main (l'app installée et Safari
+       ont des stockages séparés : le courriel s'ouvre dans Safari, et le lien
+       doit pouvoir être rapporté dans l'app) */
+    codeDansLien,
     emailEnAttente(){ try{ return localStorage.getItem('thailingo.email'); }catch(e){ return null; } }
   };
 })();
