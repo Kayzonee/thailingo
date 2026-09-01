@@ -166,6 +166,13 @@ t('un lien reçu par courriel peut être collé à la main', ()=>{
   eq(code(`Nuage.codeDansLien('https://exemple.fr/sans-code')`), null);
   eq(code(`Nuage.codeDansLien('')`), null);
 });
+t('le transfert d’appareil est exposé et documenté comme sensible', ()=>{
+  ['codeTransfert','reprendreAvecCode'].forEach(f=>ok(new RegExp('\\b'+f+'\\b').test(sourceNuage), `${f} absent`));
+  ok(/vaut mot de passe/.test(sourceNuage), 'la nature sensible du code n’est pas signalée dans le source');
+  ok(/nuage_transfert_detail/.test(fs.readFileSync(path.join(root,'js/app.js'),'utf8')) ||
+     /nuage_transfert_detail/.test(fs.readFileSync(path.join(root,'i18n/strings.js'),'utf8')),
+     'aucun avertissement affiché à l’utilisateur');
+});
 t('l’application sauvegarde en ligne après chaque leçon', ()=>{
   ok(/Nuage\.ecrire\(Store\.get\(\)\)/.test(sourceApp), 'pas d’écriture en fin de leçon');
   ok(/Nuage\.lire\(\)/.test(sourceApp), 'pas de lecture au démarrage');

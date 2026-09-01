@@ -343,6 +343,10 @@ function renderProfile(){
       <small id="etat-nuage">${Nuage.email() ? T('nuage_liee',{email:Nuage.email()}) : T('nuage_anonyme')}</small></div>
       ${Nuage.email() ? `<button class="btn ghost" id="detacher">${T('nuage_detacher')}</button>`
                       : `<button class="btn blue" id="securiser">${T('nuage_securiser')}</button>`}</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn ghost" id="transfert" style="flex:1">${T('nuage_transfert')}</button>
+      <button class="btn ghost" id="reprendre" style="flex:1">${T('nuage_reprendre')}</button>
+    </div>
     ${Nuage.email() ? '' : `<button class="btn ghost" id="coller-lien" style="width:100%;margin-bottom:14px">${T('nuage_coller')}</button>`}
     <p class="sub">${Nuage.email() ? T('nuage_liee_detail') : T('nuage_anonyme_detail')}</p>
 
@@ -421,6 +425,39 @@ function renderProfile(){
       info(T('nuage_titre'), T('nuage_email_erreur',{raison:String(e.message||e)}));
     }
     bSecu.disabled = false;
+  };
+  const bTransf = document.getElementById('transfert');
+  if(bTransf) bTransf.onclick = async ()=>{
+    const code = await Nuage.codeTransfert();
+    if(!code){ info(T('nuage_titre'), T('en_ligne_indispo')); return; }
+    const ov = h(`<div class="overlay"><div class="modal">
+      <h3>${T('nuage_transfert_titre')}</h3><p>${T('nuage_transfert_detail')}</p>
+      <textarea class="save-code" id="d-val" rows="4" readonly></textarea>
+      <button class="btn" id="d-cop">${T('copier')}</button>
+      <button class="btn ghost" id="d-non">${T('annuler')}</button></div></div>`);
+    document.body.appendChild(ov);
+    const zone = ov.querySelector('#d-val');
+    zone.value = code; zone.focus(); zone.setSelectionRange(0, code.length);
+    ov.querySelector('#d-cop').onclick = ()=>{
+      if(navigator.clipboard) navigator.clipboard.writeText(code)
+        .then(()=>toast(T('code_copie'))).catch(()=>toast(T('code_selection')));
+      else toast(T('code_selection'));
+    };
+    ov.querySelector('#d-non').onclick = ()=>ov.remove();
+  };
+  const bRepr = document.getElementById('reprendre');
+  if(bRepr) bRepr.onclick = async ()=>{
+    const code = await saisie({ titre:T('nuage_reprendre_titre'), texte:T('nuage_reprendre_detail'), ok:T('valider') });
+    if(!code) return;
+    try{
+      await Nuage.reprendreAvecCode(code);
+      const distant = await Nuage.lire();
+      if(distant) Store.adopter(distant);
+      toast(T('nuage_reprise_ok'));
+      render();
+    }catch(e){
+      info(T('nuage_titre'), String(e.message)==='CODE_ILLISIBLE' ? T('nuage_code_illisible') : T('nuage_code_refuse'));
+    }
   };
   const bColler = document.getElementById('coller-lien');
   if(bColler) bColler.onclick = async ()=>{

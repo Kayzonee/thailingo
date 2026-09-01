@@ -19,7 +19,14 @@ const Nuage = (()=>{
   const cle = '?key=' + FIREBASE.apiKey;
 
   let session = charger();          // {idToken, refreshToken, uid, email, expire}
-  let enCours = null;               // promesse d'authentification partagée
+  /* Toutes les opérations qui touchent la session passent par cette file :
+     sans elle, une sauvegarde de fond peut annuler une reprise en cours. */
+  let file = Promise.resolve();
+  function serialiser(fn){
+    const suite = file.then(fn, fn);
+    file = suite.then(()=>{}, ()=>{});
+    return suite;
+  }
 
   function charger(){
     try{ return JSON.parse(localStorage.getItem(CLE_AUTH)) || null; }catch(e){ return null; }
@@ -47,27 +54,26 @@ const Nuage = (()=>{
               expire: Date.now() + (+d.expiresIn - 60)*1000 });
     return session;
   }
-  async function rafraichir(){
+  async function rafraichir(strict){
     const r = await fetch(JETON+cle, { method:'POST',
       headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(session.refreshToken) });
     const d = await r.json();
-    if(d.error){ oublier(); return creerAnonyme(); }
+    if(d.error){
+      if(strict) throw new Error(d.error.message || 'jeton refusé');
+      oublier(); return creerAnonyme();
+    }
     retenir(Object.assign({}, session, { idToken:d.id_token, refreshToken:d.refresh_token,
       uid:d.user_id, expire: Date.now() + (+d.expires_in - 60)*1000 }));
     return session;
   }
-  /* garantit une session valide ; une seule demande à la fois */
+  /* garantit une session valide, une opération à la fois */
   function auth(){
-    if(enCours) return enCours;
-    enCours = (async ()=>{
-      try{
-        if(!session || !session.refreshToken) return await creerAnonyme();
-        if(Date.now() >= (session.expire||0)) return await rafraichir();
-        return session;
-      } finally { enCours = null; }
-    })();
-    return enCours;
+    return serialiser(async ()=>{
+      if(!session || !session.refreshToken) return await creerAnonyme();
+      if(Date.now() >= (session.expire||0)) return await rafraichir();
+      return session;
+    });
   }
 
   /* --- document de sauvegarde --- */
@@ -138,12 +144,14 @@ const Nuage = (()=>{
     return true;
   }
   /* supprime l'identité elle-même — utilisé par les tests */
-  async function supprimerCompte(){
-    const s = session;
-    if(!s || !s.idToken) return false;
-    await poster(IDENT+':delete'+cle, {idToken:s.idToken});
-    oublier();
-    return true;
+  function supprimerCompte(){
+    return serialiser(async ()=>{
+      const s = session;
+      if(!s || !s.idToken) return false;
+      await poster(IDENT+':delete'+cle, {idToken:s.idToken});
+      oublier();
+      return true;
+    });
   }
 
   /* le lien peut être celui de Firebase (avec continueUrl encodée) ou l'adresse finale */
@@ -162,8 +170,32 @@ const Nuage = (()=>{
     return null;
   }
 
+  /* --- transfert d'appareil à appareil, sans passer par la messagerie ---
+     Le code porte le jeton de rafraîchissement : il vaut mot de passe.
+     À traiter comme tel, et à ne transmettre qu'à soi-même. */
+  async function codeTransfert(){
+    const s = await auth();
+    if(!s || !s.refreshToken) return null;
+    return btoa(unescape(encodeURIComponent(JSON.stringify(
+      { v:1, rt:s.refreshToken, em:s.email || null }))));
+  }
+  function reprendreAvecCode(code){
+    let d;
+    try{ d = JSON.parse(decodeURIComponent(escape(atob(String(code).trim())))); }
+    catch(e){ return Promise.reject(new Error('CODE_ILLISIBLE')); }
+    if(!d || !d.rt) return Promise.reject(new Error('CODE_ILLISIBLE'));
+    return serialiser(async ()=>{
+      const precedente = session;
+      session = { idToken:null, refreshToken:d.rt, uid:null, email:d.em || null, expire:0 };
+      try{ await rafraichir(true); }
+      catch(e){ if(precedente) retenir(precedente); else oublier(); throw new Error('CODE_REFUSE'); }
+      return session;
+    });
+  }
+
   return {
     auth, lire, ecrire, envoyerLien, terminerConnexion, oublier, effacer, supprimerCompte,
+    codeTransfert, reprendreAvecCode,
     session(){ return session; },
     email(){ return session && session.email; },
     uid(){ return session && session.uid; },

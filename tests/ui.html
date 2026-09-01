@@ -63,6 +63,7 @@ document.getElementById('app').onload = async ()=>{
     F.go('path');
   });
   await t('le mode découverte ouvre toutes les leçons, sinon une seule', ()=>{
+    F.Store.reset();                    // aucune couronne, sinon deux nœuds sont ouverts
     F.Store.get().toutDebloque = true; F.go('path');
     const toutes = D.querySelectorAll('.node[data-lecon]').length;
     eq([...D.querySelectorAll('.node[data-lecon]')].filter(b=>!b.disabled).length, toutes);
@@ -183,6 +184,39 @@ document.getElementById('app').onload = async ()=>{
     ok(distant, 'rien relu depuis le serveur : ');
     eq(distant.cours['fr-th'].progress[PREMIERE].crowns, 1);
     ok(await F.Nuage.supprimerCompte(), 'ménage impossible : ');  // on retire l'utilisateur de test
+  });
+  await t('un code de transfert emporte identité et progression', async ()=>{
+    F.Nuage.lire = lireEnLigne;
+    await F.Nuage.auth();
+    F.Store.reset();
+    F.Store.completeLesson(PREMIERE, 17, true);
+    await F.Nuage.ecrire(F.Store.get());
+    const code = await F.Nuage.codeTransfert();
+    ok(code && code.length > 50, 'code de transfert vide : ');
+    const uidA = F.Nuage.uid();
+
+    /* on simule l'autre appareil : plus d'identité, plus de progression */
+    F.Nuage.oublier(); F.Store.reset();
+    eq(F.Store.crowns(PREMIERE), 0, 'remise à zéro : ');
+    await F.Nuage.reprendreAvecCode(code);
+    eq(F.Nuage.uid(), uidA, 'identité non reprise : ');
+    const distant = await F.Nuage.lire();
+    ok(distant, 'rien relu après reprise : ');
+    F.Store.adopter(distant);
+    eq(F.Store.crowns(PREMIERE), 1, 'progression non reprise : ');
+
+    ok(await F.Nuage.supprimerCompte(), 'ménage impossible : ');
+  });
+  await t('un code de transfert abîmé est refusé sans casser la session', async ()=>{
+    await F.Nuage.auth();
+    const avant = F.Nuage.uid();
+    for(const mauvais of ['nimportequoi', W.btoa('{"v":1,"rt":"faux"}'), '']){
+      let leve = false;
+      try{ await F.Nuage.reprendreAvecCode(mauvais); }catch(e){ leve = true; }
+      ok(leve, `code « ${mauvais.slice(0,12)} » accepté à tort`);
+    }
+    eq(F.Nuage.uid(), avant, 'la session a été perdue : ');
+    await F.Nuage.supprimerCompte();
   });
   await t('un lien de sauvegarde rétablit la progression', ()=>{
     F.Store.reset();
