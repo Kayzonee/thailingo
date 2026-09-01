@@ -30,31 +30,19 @@ le code de sauvegarde si besoin.
 
 ## Conserver sa progression
 
-Elle est écrite sur le téléphone, jamais envoyée ailleurs. Trois filets, du plus
-simple au plus sûr :
+Elle est écrite sur le téléphone après chaque leçon, et **enregistrée en ligne** dans la
+foulée : chaque personne qui ouvre le lien reçoit sa propre identité et son propre
+document, invisible des autres.
 
-1. **Ouvrir l'app régulièrement.** Safari purge le stockage d'un site resté 7 jours
-   sans visite ; chaque ouverture remet ce compteur à zéro, et une app installée sur
-   l'écran d'accueil n'est pas traitée comme un site visité en passant.
-2. **Profil → Sauvegarder → Enregistrer dans Fichiers** : un fichier `.json` rangé
-   dans iCloud Drive. C'est la sauvegarde durable ; « Ouvrir un fichier » la recharge.
-3. **Le code de sauvegarde** : un texte de ~450 caractères à coller dans une note,
-   avec un lien de restauration partageable. L'app le réclame au bout de 7 jours.
+Le Profil indique la date de la dernière sauvegarde en ligne. Deux boutons suffisent :
 
-### Un profil par appareil
+- **Mon code de récupération** — un code à garder dans une note. Il rétablit la
+  progression sur un nouveau téléphone, ou après un effacement des données de Safari.
+  Il vaut mot de passe : à ne transmettre à personne.
+- **Restaurer avec un code** — sur le nouvel appareil, coller le code.
 
-La progression est propre au navigateur qui l'a créée. Si tu partages le lien, la
-personne qui l'ouvre démarre à zéro sur son propre téléphone — sans jamais voir ni
-toucher la tienne. Le code de sauvegarde ne vaut donc que pour le profil qui l'a
-produit (Profil → le nom du profil apparaît dans le fichier exporté).
-
-### Pourquoi pas le repo comme espace de sauvegarde
-
-Écrire dans un dépôt GitHub depuis la page demanderait d'y placer un jeton d'accès —
-donc de publier un secret qui donne les pleins droits sur le compte. C'est exclu.
-Un vrai stockage en ligne synchronisé entre appareils demanderait un service tiers
-(Firebase, Supabase…) avec un compte et des règles d'accès : faisable si tu veux
-un jour jouer sur plusieurs appareils, inutile pour un seul iPhone.
+Sur iPhone, mieux vaut lancer l'app par son icône : une app installée sur l'écran
+d'accueil a son propre stockage, distinct de celui de Safari.
 
 ## Mettre à jour
 
