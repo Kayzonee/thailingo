@@ -106,7 +106,9 @@ ${NAV_HTML}
 /* au démarrage : récupérer la progression en ligne si celle de l'appareil est vide
    ou visiblement en retard — jamais d'écrasement silencieux dans l'autre sens */
 async function synchroniserDepuisLeCloud(){
-  const distant = (await Cloud.lire()) || Cloud.etatEmbarque();
+  let distant = null;
+  try{ distant = await Nuage.lire(); }catch(e){ /* hors ligne : on garde l'appareil */ }
+  if(!distant) distant = (await Cloud.lire()) || Cloud.etatEmbarque();
   if(!distant) return;
   const local = Store.get();
   const vide = !Object.keys(local.progress || {}).length && !local.xp;
@@ -337,6 +339,12 @@ function renderProfile(){
       <small>${s.toutDebloque?T('tout_ouvert_oui'):T('tout_ouvert_non')}</small></div>
       <button class="btn ${s.toutDebloque?'':'ghost'}" id="debloc">${s.toutDebloque?T('active'):T('desactive')}</button></div>
 
+    <div class="card"><div class="ic">☁️</div><div style="flex:1"><h4>${T('nuage_titre')}</h4>
+      <small id="etat-nuage">${Nuage.email() ? T('nuage_liee',{email:Nuage.email()}) : T('nuage_anonyme')}</small></div>
+      ${Nuage.email() ? `<button class="btn ghost" id="detacher">${T('nuage_detacher')}</button>`
+                      : `<button class="btn blue" id="securiser">${T('nuage_securiser')}</button>`}</div>
+    <p class="sub">${Nuage.email() ? T('nuage_liee_detail') : T('nuage_anonyme_detail')}</p>
+
     <div class="card"><div class="ic">💾</div><div style="flex:1"><h4>${T('sauvegarde')}</h4>
       <small>${s.derniereSauvegarde ? T('sauvegarde_le',{date:s.derniereSauvegarde}) : T('sauvegarde_jamais')}</small></div></div>
     <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
@@ -399,6 +407,28 @@ function renderProfile(){
   };
   document.getElementById('slow').onclick = ()=>{ s.slowAudio=!s.slowAudio; Store.save(); renderProfile(); };
   document.getElementById('snd').onclick  = ()=>{ s.soundOn=!s.soundOn; Store.save(); renderProfile(); };
+  const bSecu = document.getElementById('securiser');
+  if(bSecu) bSecu.onclick = async ()=>{
+    const email = await saisie({ titre:T('nuage_email_titre'), texte:T('nuage_email_detail'),
+                                 valeur:'', ok:T('valider') });
+    if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) return;
+    bSecu.disabled = true;
+    try{
+      await Nuage.envoyerLien(email.trim());
+      info(T('nuage_email_titre'), T('nuage_email_envoye',{email:email.trim()}));
+    }catch(e){
+      info(T('nuage_titre'), T('nuage_email_erreur',{raison:String(e.message||e)}));
+    }
+    bSecu.disabled = false;
+  };
+  const bDet = document.getElementById('detacher');
+  if(bDet) bDet.onclick = async ()=>{
+    if(await dialogue({ titre:T('nuage_detacher_titre'), texte:T('nuage_detacher_detail'),
+                        ok:T('nuage_detacher'), annuler:T('annuler'), danger:true })){
+      Nuage.oublier(); renderProfile();
+    }
+  };
+
   Cloud.disponible().then(oui=>{
     const b = document.getElementById('cloud');
     if(!oui || !b) return;
@@ -461,7 +491,11 @@ function renderProfile(){
   };
   document.getElementById('reset').onclick = async ()=>{
     if(await dialogue({ titre:T('tout_effacer'), texte:T('tout_effacer_detail'),
-      ok:T('effacer'), annuler:T('annuler'), danger:true })){ Store.reset(); go('path'); }
+      ok:T('effacer'), annuler:T('annuler'), danger:true })){
+      Store.reset();
+      Nuage.effacer().catch(()=>{});     // sinon la progression reviendrait du serveur
+      go('path');
+    }
   };
 }
 function chart7(){
@@ -935,7 +969,8 @@ function finish(){
   </div>`;
   document.getElementById('cont').onclick=()=>go('path');
   if(perfect || acc>=80) confettis();
-  if(Store.get().sauvegardeEnLigne === 'fichier') Cloud.ecrire();   // silencieux, sans rechargement
+  if(Store.get().sauvegardeEnLigne === 'fichier') Cloud.ecrire();   // page hébergée : sans rechargement
+  Nuage.ecrire(Store.get()).catch(()=>{});                          // silencieux : hors ligne, on réessaiera
 }
 
 /* petite pluie de confettis sur l'écran de fin */
@@ -1043,7 +1078,7 @@ window.ThaiLingo = {
   get L(){ return L; }, set L(v){ L = v; },
   get route(){ return route; },
   startLesson, startLeconId, startPractice, startTimed, finish, renderLesson, render, go, applyTheme, check, next,
-  restaurerDepuisLien, Cloud, synchroniserDepuisLeCloud
+  restaurerDepuisLien, Cloud, Nuage, synchroniserDepuisLeCloud, traiterLienDeConnexion
 };
 
 (async ()=>{
@@ -1060,6 +1095,28 @@ window.ThaiLingo = {
   }
 })();
 
+/* Retour du lien reçu par courriel : on rattache l'identité de cet appareil
+   au compte, puis on récupère la progression qui y est enregistrée. */
+async function traiterLienDeConnexion(){
+  const code = Nuage.lienDansUrl();
+  if(!code) return false;
+  let email = Nuage.emailEnAttente();
+  if(!email){
+    email = await saisie({ titre:T('nuage_email_titre'), texte:T('nuage_email_detail'), ok:T('valider') });
+    if(!email) return false;
+  }
+  try{
+    const s = await Nuage.terminerConnexion(email.trim(), code);
+    history.replaceState(null, '', location.pathname);
+    toast(T('nuage_connexion_ok',{email:s.email}));
+    return true;
+  }catch(e){
+    history.replaceState(null, '', location.pathname);
+    info(T('nuage_titre'), T('nuage_connexion_erreur'));
+    return false;
+  }
+}
+
 /* ---------------- amorçage ---------------- */
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 new MutationObserver(applyTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
@@ -1070,6 +1127,7 @@ async function demarrer(){
   catch(e){ console.warn('contenu du cours indisponible', e); }
   Store.touchDay();
   render();
+  await traiterLienDeConnexion();
   synchroniserDepuisLeCloud();
 }
 demarrer();

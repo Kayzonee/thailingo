@@ -119,7 +119,24 @@ const I18N = {
     en_ligne_lecture:'Cette copie est en lecture seule',
     en_ligne_indispo:'Sauvegarde en ligne indisponible ici',
     en_ligne_erreur:'Échec de la sauvegarde en ligne',
-    compris:'J’ai compris', valider:'Valider', confirmer:'Confirmer'
+    compris:'J’ai compris', valider:'Valider', confirmer:'Confirmer',
+    /* sauvegarde en ligne */
+    nuage_titre:'Sauvegarde en ligne',
+    nuage_anonyme:'Active sur cet appareil',
+    nuage_anonyme_detail:'Ta progression est enregistrée en ligne après chaque leçon, mais rattachée à ce seul appareil.',
+    nuage_liee:'Rattachée à {email}',
+    nuage_liee_detail:'Tu retrouves ta progression sur n’importe quel appareil, même après un effacement.',
+    nuage_securiser:'Rattacher mon adresse',
+    nuage_email_titre:'Recevoir un lien de connexion',
+    nuage_email_detail:'Saisis ton adresse. Tu recevras un lien à ouvrir depuis cet appareil : ta progression y sera rattachée.',
+    nuage_email_envoye:'Lien envoyé à {email} — ouvre-le depuis cet appareil',
+    nuage_email_erreur:'Envoi impossible : {raison}',
+    nuage_connexion_ok:'Progression rattachée à {email}',
+    nuage_connexion_erreur:'Ce lien n’est plus valable — redemandes-en un',
+    nuage_hors_ligne:'Hors ligne — la sauvegarde en ligne reprendra plus tard',
+    nuage_detacher:'Détacher cet appareil',
+    nuage_detacher_titre:'Détacher cet appareil ?',
+    nuage_detacher_detail:'La progression restera sur le téléphone, mais ne sera plus enregistrée en ligne sous ton adresse.'
   },
 
   en: {
@@ -228,7 +245,23 @@ const I18N = {
     en_ligne_lecture:'This copy is read-only',
     en_ligne_indispo:'Online backup unavailable here',
     en_ligne_erreur:'Online backup failed',
-    compris:'Got it', valider:'Confirm', confirmer:'Confirm'
+    compris:'Got it', valider:'Confirm', confirmer:'Confirm',
+    nuage_titre:'Online backup',
+    nuage_anonyme:'On for this device',
+    nuage_anonyme_detail:'Your progress is saved online after every lesson, but tied to this device alone.',
+    nuage_liee:'Linked to {email}',
+    nuage_liee_detail:'Your progress follows you to any device, even after data is cleared.',
+    nuage_securiser:'Link my email',
+    nuage_email_titre:'Get a sign-in link',
+    nuage_email_detail:'Enter your email. You will get a link to open on this device: your progress will be linked to it.',
+    nuage_email_envoye:'Link sent to {email} — open it on this device',
+    nuage_email_erreur:'Could not send: {raison}',
+    nuage_connexion_ok:'Progress linked to {email}',
+    nuage_connexion_erreur:'This link is no longer valid — ask for a new one',
+    nuage_hors_ligne:'Offline — online backup will resume later',
+    nuage_detacher:'Unlink this device',
+    nuage_detacher_titre:'Unlink this device?',
+    nuage_detacher_detail:'Your progress stays on the phone, but is no longer saved online under your address.'
   }
 };
 

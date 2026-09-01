@@ -25,9 +25,17 @@ et lancer l'app par son icône (une app installée a son propre stockage).
 
 ## Progression
 
-Elle est écrite dans le navigateur, sur l'appareil. Rien n'est envoyé nulle part.
-Profil → **Sauvegarder** produit un code de sauvegarde (à coller dans une note),
-un lien de restauration partageable, et un fichier à ranger dans iCloud Drive.
+Trois filets, du plus automatique au plus manuel :
+
+1. **Sauvegarde en ligne**, active dès la première ouverture. Chaque personne reçoit une
+   identité anonyme et son propre document ; la progression y est écrite après chaque
+   leçon et relue au démarrage. Les règles du serveur interdisent l'accès au document
+   d'autrui. Profil → **Rattacher mon adresse** lie cette identité à une adresse e-mail
+   (lien de connexion, sans mot de passe) : la progression se retrouve alors sur
+   n'importe quel appareil.
+2. **Stockage du navigateur**, instantané, utilisé hors connexion.
+3. **Code de sauvegarde** (Profil → *Sauvegarder*) : un texte à coller dans une note,
+   un lien de restauration partageable, et un fichier à ranger dans iCloud Drive.
 
 ## Tests
 

@@ -137,6 +137,26 @@ t('les gloses entre parenthèses sortent des banques de mots', ()=>{
   eq(frWords('Bonjour (dit par un homme)').join(' '), 'Bonjour');
 });
 
+console.log('\n── Sauvegarde en ligne ──');
+const sourceNuage = fs.readFileSync(path.join(root,'js/nuage.js'),'utf8');
+t('la configuration Firebase est présente et complète', ()=>{
+  ['apiKey','projectId','authDomain'].forEach(k=>ok(new RegExp(k+":'[^']+'").test(sourceNuage), `${k} manquant`));
+  ok(/thailingo-/.test(sourceNuage), 'identifiant de projet inattendu');
+});
+t('aucun secret privé ne traîne dans le code', ()=>{
+  ok(!/private_key|BEGIN PRIVATE KEY|service_account/.test(sourceNuage), 'clé privée dans le source !');
+  const tout = ['js/app.js','js/nuage.js','js/state.js'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('');
+  ok(!/BEGIN [A-Z ]*PRIVATE KEY/.test(tout), 'clé privée trouvée');
+});
+t('le module expose ce dont l’application a besoin', ()=>{
+  ['auth','lire','ecrire','envoyerLien','terminerConnexion','oublier','lienDansUrl']
+    .forEach(f=>ok(new RegExp('\\b'+f+'\\b').test(sourceNuage), `${f} absent`));
+});
+t('l’application sauvegarde en ligne après chaque leçon', ()=>{
+  ok(/Nuage\.ecrire\(Store\.get\(\)\)/.test(sourceApp), 'pas d’écriture en fin de leçon');
+  ok(/Nuage\.lire\(\)/.test(sourceApp), 'pas de lecture au démarrage');
+});
+
 console.log('\n── Générateur d’exercices ──');
 const unite = UNITES_LANGUE[0], lecon = unite.lessons[0];
 t('une leçon produit des exercices valides', ()=>{

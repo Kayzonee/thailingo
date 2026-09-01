@@ -39,6 +39,10 @@ document.getElementById('app').onload = async ()=>{
   const F = W.ThaiLingo;
   const D = W.document;
   for(let i=0; i<80 && !D.querySelector('.node[data-lecon]'); i++) await sleep(100);
+  /* la synchronisation en ligne est neutralisée pendant les scénarios locaux :
+     elle a son propre test, plus bas, qui la rétablit le temps d'un aller-retour */
+  const lireEnLigne = F.Nuage.lire;
+  F.Nuage.lire = async ()=> null;
   W.localStorage.clear(); F.Store.reset(); F.render(); await sleep(80);
 
   const PREMIERE = D.querySelector('.node[data-lecon]').dataset.lecon;
@@ -167,6 +171,18 @@ document.getElementById('app').onload = async ()=>{
     const vies = F.Store.get().hearts;
     if(repondre(F, D, false)) eq(F.Store.get().hearts, vies);
     W.clearInterval(W.__timer); F.go('path');
+  });
+  await t('la sauvegarde en ligne fait un aller-retour réel', async ()=>{
+    F.Nuage.lire = lireEnLigne;                     // on rétablit la vraie lecture
+    const s = await F.Nuage.auth();
+    ok(s && s.uid, 'aucune identité obtenue : ');
+    F.Store.reset();
+    F.Store.completeLesson(PREMIERE, 11, true);
+    ok(await F.Nuage.ecrire(F.Store.get()), 'écriture refusée : ');
+    const distant = await F.Nuage.lire();
+    ok(distant, 'rien relu depuis le serveur : ');
+    eq(distant.cours['fr-th'].progress[PREMIERE].crowns, 1);
+    ok(await F.Nuage.supprimerCompte(), 'ménage impossible : ');  // on retire l'utilisateur de test
   });
   await t('un lien de sauvegarde rétablit la progression', ()=>{
     F.Store.reset();
