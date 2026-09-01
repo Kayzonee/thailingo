@@ -185,32 +185,30 @@ document.getElementById('app').onload = async ()=>{
     eq(distant.cours['fr-th'].progress[PREMIERE].crowns, 1);
     ok(await F.Nuage.supprimerCompte(), 'ménage impossible : ');  // on retire l'utilisateur de test
   });
-  await t('un code de transfert emporte identité et progression', async ()=>{
+  await t('le code de récupération rétablit progression et identité', async ()=>{
     F.Nuage.lire = lireEnLigne;
     await F.Nuage.auth();
     F.Store.reset();
     F.Store.completeLesson(PREMIERE, 17, true);
     await F.Nuage.ecrire(F.Store.get());
-    const code = await F.Nuage.codeTransfert();
-    ok(code && code.length > 50, 'code de transfert vide : ');
+    const code = await F.Nuage.codeRecuperation(F.Store.get());
+    ok(code && code.length > 50, 'code vide : ');
     const uidA = F.Nuage.uid();
 
-    /* on simule l'autre appareil : plus d'identité, plus de progression */
     F.Nuage.oublier(); F.Store.reset();
     eq(F.Store.crowns(PREMIERE), 0, 'remise à zéro : ');
-    await F.Nuage.reprendreAvecCode(code);
-    eq(F.Nuage.uid(), uidA, 'identité non reprise : ');
-    const distant = await F.Nuage.lire();
-    ok(distant, 'rien relu après reprise : ');
-    F.Store.adopter(distant);
+    const { etat, identite } = await F.Nuage.reprendreAvecCode(code);
+    ok(identite, 'identité non reprise : ');
+    eq(F.Nuage.uid(), uidA, 'identité différente : ');
+    ok(F.Store.adopter(etat), 'état refusé : ');
     eq(F.Store.crowns(PREMIERE), 1, 'progression non reprise : ');
 
     ok(await F.Nuage.supprimerCompte(), 'ménage impossible : ');
   });
-  await t('un code de transfert abîmé est refusé sans casser la session', async ()=>{
+  await t('un code de récupération abîmé est refusé sans casser la session', async ()=>{
     await F.Nuage.auth();
     const avant = F.Nuage.uid();
-    for(const mauvais of ['nimportequoi', W.btoa('{"v":1,"rt":"faux"}'), '']){
+    for(const mauvais of ['nimportequoi', W.btoa('{"rien":1}'), '']){
       let leve = false;
       try{ await F.Nuage.reprendreAvecCode(mauvais); }catch(e){ leve = true; }
       ok(leve, `code « ${mauvais.slice(0,12)} » accepté à tort`);

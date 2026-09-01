@@ -108,34 +108,6 @@ const Nuage = (()=>{
     return Object.values(etat.cours).reduce((a,c)=>a+(c.xp||0), 0);
   }
 
-  /* --- rattacher une adresse e-mail --- */
-  async function envoyerLien(email){
-    const s = await auth();
-    await poster(IDENT+':sendOobCode'+cle, {
-      requestType:'EMAIL_SIGNIN', email,
-      continueUrl: location.origin + location.pathname,
-      canHandleCodeInApp:true
-    });
-    try{ localStorage.setItem('thailingo.email', email); }catch(e){}
-    return true;
-  }
-  /* au retour du lien reçu par courriel : on rattache l'identité anonyme au compte */
-  async function terminerConnexion(email, oobCode){
-    const s = session;
-    const corps = { email, oobCode };
-    if(s && s.idToken && !s.email) corps.idToken = s.idToken;   // rattachement du compte anonyme
-    let d;
-    try{ d = await poster(IDENT+':signInWithEmailLink'+cle, corps); }
-    catch(e){
-      if(!corps.idToken) throw e;
-      delete corps.idToken;                       // déjà rattaché ailleurs : simple connexion
-      d = await poster(IDENT+':signInWithEmailLink'+cle, corps);
-    }
-    retenir({ idToken:d.idToken, refreshToken:d.refreshToken, uid:d.localId, email:d.email,
-              expire: Date.now() + (+d.expiresIn - 60)*1000 });
-    try{ localStorage.removeItem('thailingo.email'); }catch(e){}
-    return session;
-  }
 
   /* efface le document en ligne (réinitialisation demandée par l'utilisateur) */
   async function effacer(){
@@ -155,57 +127,52 @@ const Nuage = (()=>{
     });
   }
 
-  /* le lien peut être celui de Firebase (avec continueUrl encodée) ou l'adresse finale */
-  function codeDansLien(lien){
-    if(!lien) return null;
-    try{
-      const u = new URL(String(lien).trim());
-      const p = u.searchParams;
-      if(p.get('oobCode')) return p.get('oobCode');
-      const suite = p.get('continueUrl');
-      if(suite) return codeDansLien(decodeURIComponent(suite));
-    }catch(e){
-      const m = /[?&]oobCode=([^&\s]+)/.exec(String(lien));
-      if(m) return decodeURIComponent(m[1]);
+  /* --- code de récupération ---
+     Un seul code pour les deux situations : nouveau téléphone, ou données
+     effacées par le navigateur. Il porte le jeton d'identité — qui permet de
+     retrouver la sauvegarde en ligne, toujours à jour — ET une copie de la
+     progression, qui sert de repli si le serveur ne répond pas.
+     Ce code vaut mot de passe : qui l'a, a la progression. */
+  async function codeRecuperation(etat){
+    let rt = null;
+    try{ const s = await auth(); rt = s && s.refreshToken; }catch(e){}
+    return btoa(unescape(encodeURIComponent(JSON.stringify({ v:2, rt, sv:etat || null }))));
+  }
+  function lireCode(code){
+    try{ return JSON.parse(decodeURIComponent(escape(atob(String(code).trim())))); }
+    catch(e){ return null; }
+  }
+  /* rend {etat, identite} : l'état à adopter, et si l'identité a été reprise */
+  async function reprendreAvecCode(code){
+    const d = lireCode(code);
+    if(!d) throw new Error('CODE_ILLISIBLE');
+    /* ancien format : le code contenait directement la sauvegarde */
+    if(!d.rt && !d.sv){
+      if(d.cours || d.progress) return { etat:d, identite:false };
+      throw new Error('CODE_ILLISIBLE');
     }
-    return null;
-  }
-
-  /* --- transfert d'appareil à appareil, sans passer par la messagerie ---
-     Le code porte le jeton de rafraîchissement : il vaut mot de passe.
-     À traiter comme tel, et à ne transmettre qu'à soi-même. */
-  async function codeTransfert(){
-    const s = await auth();
-    if(!s || !s.refreshToken) return null;
-    return btoa(unescape(encodeURIComponent(JSON.stringify(
-      { v:1, rt:s.refreshToken, em:s.email || null }))));
-  }
-  function reprendreAvecCode(code){
-    let d;
-    try{ d = JSON.parse(decodeURIComponent(escape(atob(String(code).trim())))); }
-    catch(e){ return Promise.reject(new Error('CODE_ILLISIBLE')); }
-    if(!d || !d.rt) return Promise.reject(new Error('CODE_ILLISIBLE'));
-    return serialiser(async ()=>{
-      const precedente = session;
-      session = { idToken:null, refreshToken:d.rt, uid:null, email:d.em || null, expire:0 };
-      try{ await rafraichir(true); }
-      catch(e){ if(precedente) retenir(precedente); else oublier(); throw new Error('CODE_REFUSE'); }
-      return session;
-    });
+    let identite = false;
+    if(d.rt){
+      identite = await serialiser(async ()=>{
+        const precedente = session;
+        session = { idToken:null, refreshToken:d.rt, uid:null, email:null, expire:0 };
+        try{ await rafraichir(true); return true; }
+        catch(e){ if(precedente) retenir(precedente); else oublier(); return false; }
+      });
+    }
+    let etat = d.sv || null;
+    if(identite){
+      try{ const distant = await lire(); if(distant) etat = distant; }catch(e){}
+    }
+    if(!etat) throw new Error('CODE_REFUSE');
+    return { etat, identite };
   }
 
   return {
-    auth, lire, ecrire, envoyerLien, terminerConnexion, oublier, effacer, supprimerCompte,
-    codeTransfert, reprendreAvecCode,
+    auth, lire, ecrire, oublier, effacer, supprimerCompte,
+    codeRecuperation, reprendreAvecCode,
     session(){ return session; },
-    email(){ return session && session.email; },
     uid(){ return session && session.uid; },
-    /* un lien de connexion est-il présent dans l'adresse ? */
-    lienDansUrl(){ return codeDansLien(location.href); },
-    /* extrait le code d'un lien collé à la main (l'app installée et Safari
-       ont des stockages séparés : le courriel s'ouvre dans Safari, et le lien
-       doit pouvoir être rapporté dans l'app) */
-    codeDansLien,
-    emailEnAttente(){ try{ return localStorage.getItem('thailingo.email'); }catch(e){ return null; } }
+    email(){ return session && session.email; }
   };
 })();

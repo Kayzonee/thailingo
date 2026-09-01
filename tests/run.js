@@ -22,8 +22,18 @@ vm.runInContext('finaliserContenu()', ctx);
 ['js/state.js','js/engine.js'].forEach(charger);
 
 let pass=0, fail=0;
-const t = (nom, fn)=>{ try{ fn(); pass++; console.log('  ✓', nom); }
-  catch(e){ fail++; console.log('  ✗', nom, '\n     →', e.message); } };
+const enAttente = [];
+const t = (nom, fn)=>{
+  try{
+    const r = fn();
+    if(r && typeof r.then === 'function'){
+      enAttente.push(r.then(()=>{ pass++; console.log('  ✓', nom); },
+                            e=>{ fail++; console.log('  ✗', nom, '\n     →', e.message); }));
+      return;
+    }
+    pass++; console.log('  ✓', nom);
+  }catch(e){ fail++; console.log('  ✗', nom, '\n     →', e.message); }
+};
 const eq = (a,b,m)=>{ if(a!==b) throw new Error((m||'')+` attendu ${JSON.stringify(b)}, reçu ${JSON.stringify(a)}`); };
 const ok = (c,m)=>{ if(!c) throw new Error(m||'condition fausse'); };
 const g = expr => vm.runInContext(expr, ctx);
@@ -68,6 +78,27 @@ t('les deux langues ont exactement les mêmes clés', ()=>{
   const fr = Object.keys(I18N.fr), en = Object.keys(I18N.en);
   eq(fr.filter(k=>!en.includes(k)).join(','), '', 'manquantes en anglais : ');
   eq(en.filter(k=>!fr.includes(k)).join(','), '', 'en trop en anglais : ');
+});
+/* Interfaces retirées à la demande de l'utilisateur : le mécanisme reste dans le
+   code et les textes sont conservés, pour pouvoir les réafficher sans les réécrire. */
+const EN_RESERVE = ['sauvegarde','sauvegarde_jamais','sauvegarde_le','sauvegarder',
+  'sauvegarde_explication','restaurer','restaurer_titre','restaurer_detail','copier',
+  'code_illisible','code_illisible_detail','progression_restauree',
+  'nuage_transfert','nuage_transfert_titre','nuage_transfert_detail',
+  'nuage_reprendre','nuage_reprendre_titre','nuage_reprendre_detail','nuage_reprise_ok',
+  'nuage_code_illisible','nuage_code_refuse'];
+t('aucune clé de traduction n’est restée orpheline', ()=>{
+  const code = ['js/app.js','js/state.js','js/engine.js','js/nuage.js','js/contenu.js']
+    .map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
+  const mortes = Object.keys(I18N.fr)
+    .filter(k=>!EN_RESERVE.includes(k))
+    .filter(k=>!new RegExp("['\"`]"+k+"['\"`]").test(code));
+  eq(mortes.length, 0, 'clés inutilisées : '+mortes.join(', ')+' — ');
+});
+t('le profil ne montre plus qu’une carte de sauvegarde', ()=>{
+  ['id="exp"','id="imp"','id="transfert"','id="reprendre"','id="securiser"','id="coller-lien"','id="fichier"']
+    .forEach(m=>ok(!sourceApp.includes(m), `bouton retiré encore présent : ${m}`));
+  ok(sourceApp.includes('id="carte-nuage"'), 'la carte de sauvegarde en ligne a disparu');
 });
 t('aucune traduction anglaise n’est laissée en français', ()=>{
   const suspects = Object.entries(I18N.en)
@@ -161,29 +192,37 @@ t('aucun secret privé ne traîne dans le code', ()=>{
   ok(!/BEGIN [A-Z ]*PRIVATE KEY/.test(tout), 'clé privée trouvée');
 });
 t('le module expose ce dont l’application a besoin', ()=>{
-  ['auth','lire','ecrire','envoyerLien','terminerConnexion','oublier','lienDansUrl']
+  ['auth','lire','ecrire','oublier','effacer','codeRecuperation','reprendreAvecCode']
     .forEach(f=>ok(new RegExp('\\b'+f+'\\b').test(sourceNuage), `${f} absent`));
 });
-t('un lien reçu par courriel peut être collé à la main', ()=>{
-  /* le module est chargé à part : on l'évalue dans un contexte minimal */
-  const ctx2 = { localStorage:ctx.localStorage, fetch:()=>{}, console,
-                 location:{origin:'https://exemple.fr', pathname:'/', href:'https://exemple.fr/'},
-                 URL, URLSearchParams, JSON, Date, Object, String, Math, Promise, decodeURIComponent, encodeURIComponent };
+t('le code de récupération se relit, et un code abîmé est refusé', ()=>{
+  const ctx2 = { localStorage:ctx.localStorage, fetch:async()=>({json:async()=>({error:{message:'hors ligne'}})}),
+                 console, location:{origin:'https://exemple.fr', pathname:'/', href:'https://exemple.fr/'},
+                 JSON, Date, Object, String, Math, Promise, btoa, atob, escape, unescape,
+                 decodeURIComponent, encodeURIComponent };
   ctx2.window = ctx2;
   vm.createContext(ctx2);
   vm.runInContext(sourceNuage, ctx2, {filename:'js/nuage.js'});
-  const code = expr => vm.runInContext(expr, ctx2);
-  eq(code(`Nuage.codeDansLien('https://kayzonee.github.io/thailingo/?mode=signIn&oobCode=ABC123&lang=fr')`), 'ABC123');
-  eq(code(`Nuage.codeDansLien('https://thailingo-44a2b.firebaseapp.com/__/auth/action?apiKey=K&mode=signIn&oobCode=XYZ789&continueUrl=https%3A%2F%2Fkayzonee.github.io%2Fthailingo%2F')`), 'XYZ789');
-  eq(code(`Nuage.codeDansLien('https://exemple.fr/sans-code')`), null);
-  eq(code(`Nuage.codeDansLien('')`), null);
+  const lu = expr => vm.runInContext(expr, ctx2);
+  const code = lu(`btoa(unescape(encodeURIComponent(JSON.stringify({v:2, rt:null, sv:{cours:{'fr-th':{xp:9,progress:{a:{crowns:1}}}}}}))))`);
+  return lu(`Nuage.reprendreAvecCode(${JSON.stringify(code)})`).then(r=>{
+    eq(r.etat.cours['fr-th'].xp, 9, 'la copie du code n’a pas été reprise : ');
+    eq(r.identite, false, 'aucune identité ne devait être reprise hors ligne : ');
+    return lu(`Nuage.reprendreAvecCode('nimportequoi')`).then(
+      ()=>{ throw new Error('un code illisible a été accepté'); },
+      e => eq(String(e.message), 'CODE_ILLISIBLE'));
+  });
 });
-t('le transfert d’appareil est exposé et documenté comme sensible', ()=>{
-  ['codeTransfert','reprendreAvecCode'].forEach(f=>ok(new RegExp('\\b'+f+'\\b').test(sourceNuage), `${f} absent`));
-  ok(/vaut mot de passe/.test(sourceNuage), 'la nature sensible du code n’est pas signalée dans le source');
-  ok(/nuage_transfert_detail/.test(fs.readFileSync(path.join(root,'js/app.js'),'utf8')) ||
-     /nuage_transfert_detail/.test(fs.readFileSync(path.join(root,'i18n/strings.js'),'utf8')),
+t('le code de récupération est signalé comme sensible', ()=>{
+  ok(/vaut mot de passe/.test(sourceNuage), 'nature sensible non signalée dans le source');
+  ok(/Garde-le pour toi|Keep it to yourself/.test(fs.readFileSync(path.join(root,'i18n/strings.js'),'utf8')),
      'aucun avertissement affiché à l’utilisateur');
+});
+t('l’écran de sauvegarde tient en deux boutons', ()=>{
+  const profil = sourceApp.slice(sourceApp.indexOf('function renderProfile'), sourceApp.indexOf('function quandEnLigne'));
+  const boutons = (profil.match(/<button[^>]*id="[^"]+"/g) || []).map(b=>/id="([^"]+)"/.exec(b)[1]);
+  const sauvegarde = boutons.filter(id=>/recup|code|nuage|transfert|securiser|coller|fichier|exp|imp/.test(id));
+  eq(sauvegarde.sort().join(','), 'code-recup,code-restaurer', 'boutons de sauvegarde inattendus : ');
 });
 t('l’application sauvegarde en ligne après chaque leçon', ()=>{
   ok(/Nuage\.ecrire\(Store\.get\(\)\)/.test(sourceApp), 'pas d’écriture en fin de leçon');
@@ -306,5 +345,7 @@ t('une sauvegarde de l’ancien format est reprise', ()=>{
   eq(Store.get().schema, 6);
 });
 
-console.log(`\n${pass} test(s) OK, ${fail} échec(s)\n`);
-process.exit(fail ? 1 : 0);
+Promise.all(enAttente).then(()=>{
+  console.log(`\n${pass} test(s) OK, ${fail} échec(s)\n`);
+  process.exit(fail ? 1 : 0);
+});

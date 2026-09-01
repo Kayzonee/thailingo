@@ -10,119 +10,28 @@ const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&
 const isThaiText = s => /[\u0E00-\u0E7F]/.test(s);   // plage thaïe, en échappements pour ne dépendre d'aucun encodage
 
 
-/* ============================================================
-   Sauvegarde en ligne — la page enregistre la progression dans
-   l'artifact lui-même. Elle survit alors à un effacement des
-   données de Safari et suit d'un appareil à l'autre.
-   Indisponible ailleurs (fichier local, serveur perso) : tout
-   retombe alors proprement sur le stockage du navigateur.
-   ============================================================ */
-const CHEMIN_SAUVEGARDE = 'data/progression.json';
-/* Dans la page hébergée par Claude, la page est en cadre et aucun téléchargement
-   ne lui est accordé : on n'y propose pas la sauvegarde en fichier. */
-const TELECHARGEMENT_POSSIBLE = !(window.claude && window.claude.use);
-const NAV_HTML = `<nav class="nav" id="nav">
-  <button data-r="path" class="on" title="Apprendre" aria-label="Apprendre">🏠</button>
-  <button data-r="ecriture" title="Écriture" aria-label="Écriture">✍️</button>
-  <button data-r="revision" title="Révision" aria-label="Révision">🔁</button>
-  <button data-r="profile" title="Profil" aria-label="Profil">👤</button>
-</nav>`;
-
-const Cloud = (()=>{
-  let ns, demande = null;
-  async function api(){
-    if(!demande) demande = (async ()=>{
-      try{ return (window.claude && window.claude.use) ? await window.claude.use('artifact') : null; }
-      catch(e){ return null; }
-    })();
-    ns = await demande; return ns;
-  }
-
-  /* document complet régénéré depuis la source de la page, jamais depuis le DOM affiché */
-  function documentComplet(etat){
-    const style = document.getElementById('thailingo-style');
-    const source = document.getElementById('thailingo-app');
-    if(!style || !source) return null;
-    const sansBalise = t => String(t).replace(/<\/(script)/gi, '<\\/$1');
-    return `<!doctype html>
-<html lang="fr"><head>
-<meta charset="utf-8">
-<title>ThaiLingo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+Thai:wght@500;700&display=swap" rel="stylesheet">
-<style id="thailingo-style">${style.textContent}</style>
-</head><body>
-<div id="app"></div>
-${NAV_HTML}
-<script id="thailingo-etat" type="application/json">${sansBalise(JSON.stringify(etat))}<\/script>
-<script id="thailingo-app">${sansBalise(source.textContent)}<\/script>
-</body></html>`;
-  }
-
-  return {
-    /* progression déposée dans la page publiée (repli quand il n'y a pas de fichier) */
-    etatEmbarque(){
-      const el = document.getElementById('thailingo-etat');
-      if(!el || !el.textContent.trim()) return null;
-      try{ const d = JSON.parse(el.textContent); return (d && d.progress) ? d : null; }
-      catch(e){ return null; }
-    },
-    async lire(){
-      if(!(window.claude && window.claude.use)) return null;   // pas de sauvegarde en ligne ici
-      try{
-        const r = await fetch(CHEMIN_SAUVEGARDE, {cache:'no-store'});
-        if(!r.ok) return null;
-        const d = await r.json();
-        return (d && d.progress) ? d : null;
-      }catch(e){ return null; }
-    },
-    async disponible(){ return !!(await api()); },
-    async ecrire(){
-      const a = await api();
-      if(!a) return 'indisponible';
-      const etat = Store.get();
-      try{
-        await a.publish({ [CHEMIN_SAUVEGARDE]: JSON.stringify(etat) });
-        Store.get().sauvegardeEnLigne = 'fichier'; Store.save();
-        return 'ok';
-      }catch(e){
-        const code = e && e.code;
-        if(code === 'conflict')      return 'conflit';
-        if(code === 'rate_limited')  return 'trop-souvent';
-        if(code === 'not_writer' || code === 'not_granted' || code === 'not_declared') return 'lecture-seule';
-        // la forme « fichier » n'existe pas ici : on republie la page entière, état compris
-        const doc = documentComplet(etat);
-        if(!doc) return 'erreur';
-        try{
-          await a.publish(doc);
-          Store.get().sauvegardeEnLigne = 'page'; Store.save();
-          return 'ok-page';
-        }catch(e2){ return (e2 && e2.code === 'conflict') ? 'conflit' : 'erreur'; }
-      }
-    }
-  };
-})();
-
 /* au démarrage : récupérer la progression en ligne si celle de l'appareil est vide
    ou visiblement en retard — jamais d'écrasement silencieux dans l'autre sens */
-async function synchroniserDepuisLeCloud(){
+async function synchroniserEnLigne(){
   let distant = null;
-  try{ distant = await Nuage.lire(); }catch(e){ /* hors ligne : on garde l'appareil */ }
-  if(!distant) distant = (await Cloud.lire()) || Cloud.etatEmbarque();
+  try{ distant = await Nuage.lire(); }catch(e){ return; }   // hors ligne : on garde l'appareil
   if(!distant) return;
   const local = Store.get();
-  const vide = !Object.keys(local.progress || {}).length && !local.xp;
+  const vide = !Object.keys(local.cours || {}).some(c => Object.keys((local.cours[c]||{}).progress || {}).length);
   if(vide){
     Store.adopter(distant); render();
     toast(T('en_ligne_recuperee'));
-  } else if((distant.xp||0) > (local.xp||0)){
+  } else if(xpTotal(distant) > xpTotal(local)){
     const oui = await dialogue({ titre:T('en_ligne_titre'),
-      texte:T('en_ligne_detail',{distant:distant.xp||0, local:local.xp||0}),
+      texte:T('en_ligne_detail',{distant:xpTotal(distant), local:xpTotal(local)}),
       ok:T('en_ligne_oui'), annuler:T('en_ligne_non') });
-    if(oui){
-      Store.adopter(distant); render();
-    }
+    if(oui){ Store.adopter(distant); render(); }
   }
+}
+function xpTotal(etat){
+  if(!etat) return 0;
+  if(etat.cours) return Object.values(etat.cours).reduce((a,c)=>a+(c.xp||0), 0);
+  return etat.xp || 0;
 }
 
 /* ---------------- barre du haut ---------------- */
@@ -249,16 +158,6 @@ function mascotSVG(mood='content'){
     <path d="${bouche}" stroke="#5AA6D6" stroke-width="4" fill="none" stroke-linecap="round"/>
   </svg>`;
 }
-function copierCode(code){
-  const zone = document.getElementById('code');
-  if(zone){ zone.focus(); zone.setSelectionRange(0, code.length); }
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(code)
-      .then(()=>toast(T('code_copie')))
-      .catch(()=>toast(T('code_selection')));
-  } else toast(T('code_selection'));
-}
-
 /* Les fenêtres natives (confirm / prompt / alert) sont bloquées dans une page
    hébergée en cadre : la croix de sortie ne répondait plus. Tout passe par nos
    propres modales. */
@@ -339,39 +238,15 @@ function renderProfile(){
       <small>${s.toutDebloque?T('tout_ouvert_oui'):T('tout_ouvert_non')}</small></div>
       <button class="btn ${s.toutDebloque?'':'ghost'}" id="debloc">${s.toutDebloque?T('active'):T('desactive')}</button></div>
 
-    <div class="card"><div class="ic">☁️</div><div style="flex:1"><h4>${T('nuage_titre')}</h4>
-      <small id="etat-nuage">${Nuage.email() ? T('nuage_liee',{email:Nuage.email()}) : T('nuage_anonyme')}</small>
-      <small id="quand-nuage">${quandEnLigne()}</small></div>
-      ${Nuage.email() ? `<button class="btn ghost" id="detacher">${T('nuage_detacher')}</button>`
-                      : `<button class="btn blue" id="securiser">${T('nuage_securiser')}</button>`}</div>
-    <button class="btn ghost" id="verifier-nuage" style="width:100%;margin-bottom:14px">${T('nuage_verifier')}</button>
-    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-      <button class="btn ghost" id="transfert" style="flex:1">${T('nuage_transfert')}</button>
-      <button class="btn ghost" id="reprendre" style="flex:1">${T('nuage_reprendre')}</button>
+    <div class="card nuage" id="carte-nuage"><div class="ic">☁️</div><div style="flex:1">
+      <h4>${T('nuage_titre')}</h4>
+      <small id="quand-nuage">${quandEnLigne()}</small></div></div>
+    <div style="display:flex;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+      <button class="btn ghost" id="code-recup" style="flex:1">${T('recup_obtenir')}</button>
+      <button class="btn ghost" id="code-restaurer" style="flex:1">${T('recup_restaurer')}</button>
     </div>
-    ${Nuage.email() ? '' : `<button class="btn ghost" id="coller-lien" style="width:100%;margin-bottom:14px">${T('nuage_coller')}</button>`}
-    <p class="sub">${Nuage.email() ? T('nuage_liee_detail') : T('nuage_anonyme_detail')}</p>
-
-    <div class="card"><div class="ic">💾</div><div style="flex:1"><h4>${T('sauvegarde')}</h4>
-      <small>${s.derniereSauvegarde ? T('sauvegarde_le',{date:s.derniereSauvegarde}) : T('sauvegarde_jamais')}</small></div></div>
-    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-      <button class="btn" id="exp" style="flex:1">${T('sauvegarder')}</button>
-      <button class="btn ghost" id="imp" style="flex:1">${T('restaurer')}</button>
-    </div>
-    <button class="btn blue hidden" id="cloud" style="width:100%;margin-bottom:14px">${T('sauver_en_ligne')}</button>
-    <div id="zone-code" class="hidden">
-      <textarea id="code" class="save-code" readonly rows="3"></textarea>
-      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn ghost" id="partage" style="flex:1">${T('envoyer_note')}</button>
-        <button class="btn ghost" id="copier" style="flex:1">${T('copier')}</button>
-      </div>
-      ${TELECHARGEMENT_POSSIBLE ? `<div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn ghost" id="fichier" style="flex:1">${T('enregistrer_fichier')}</button>
-        <label class="btn ghost" style="flex:1;cursor:pointer">${T('ouvrir_fichier')}
-          <input type="file" id="depuis-fichier" accept=".json,application/json" hidden></label>
-      </div>` : ''}
-      <p class="sub">${T('sauvegarde_explication')}</p>
-    </div>
+    <p class="sub">${T('recup_explication')}</p>
+    <textarea id="code" class="save-code hidden" readonly rows="3"></textarea>
 
     <h3 style="margin:22px 0 10px">${T('sept_jours')}</h3>
     ${chart7()}
@@ -414,150 +289,33 @@ function renderProfile(){
   };
   document.getElementById('slow').onclick = ()=>{ s.slowAudio=!s.slowAudio; Store.save(); renderProfile(); };
   document.getElementById('snd').onclick  = ()=>{ s.soundOn=!s.soundOn; Store.save(); renderProfile(); };
-  const bSecu = document.getElementById('securiser');
-  if(bSecu) bSecu.onclick = async ()=>{
-    const email = await saisie({ titre:T('nuage_email_titre'), texte:T('nuage_email_detail'),
-                                 valeur:'', ok:T('valider') });
-    if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) return;
-    bSecu.disabled = true;
-    try{
-      await Nuage.envoyerLien(email.trim());
-      info(T('nuage_email_titre'), T('nuage_email_envoye',{email:email.trim()}));
-    }catch(e){
-      info(T('nuage_titre'), T('nuage_email_erreur',{raison:String(e.message||e)}));
-    }
-    bSecu.disabled = false;
+  document.getElementById('code-recup').onclick = async ()=>{
+    const code = await Nuage.codeRecuperation(Store.get());
+    const zone = document.getElementById('code');
+    zone.value = code; zone.classList.remove('hidden');
+    zone.focus(); zone.setSelectionRange(0, code.length);
+    if(navigator.clipboard) navigator.clipboard.writeText(code)
+      .then(()=>toast(T('code_copie'))).catch(()=>toast(T('code_selection')));
+    else toast(T('code_selection'));
+    zone.scrollIntoView({behavior:'smooth', block:'center'});
   };
-  const bVerif = document.getElementById('verifier-nuage');
-  if(bVerif) bVerif.onclick = async ()=>{
-    bVerif.disabled = true;
-    try{
-      await Nuage.ecrire(Store.get());
-      toast(T('nuage_verifie_ok'));
-      const el = document.getElementById('quand-nuage');
-      if(el) el.textContent = quandEnLigne();
-    }catch(e){ toast(T('nuage_verifie_ko')); }
-    bVerif.disabled = false;
-  };
-  const bTransf = document.getElementById('transfert');
-  if(bTransf) bTransf.onclick = async ()=>{
-    const code = await Nuage.codeTransfert();
-    if(!code){ info(T('nuage_titre'), T('en_ligne_indispo')); return; }
-    const ov = h(`<div class="overlay"><div class="modal">
-      <h3>${T('nuage_transfert_titre')}</h3><p>${T('nuage_transfert_detail')}</p>
-      <textarea class="save-code" id="d-val" rows="4" readonly></textarea>
-      <button class="btn" id="d-cop">${T('copier')}</button>
-      <button class="btn ghost" id="d-non">${T('annuler')}</button></div></div>`);
-    document.body.appendChild(ov);
-    const zone = ov.querySelector('#d-val');
-    zone.value = code; zone.focus(); zone.setSelectionRange(0, code.length);
-    ov.querySelector('#d-cop').onclick = ()=>{
-      if(navigator.clipboard) navigator.clipboard.writeText(code)
-        .then(()=>toast(T('code_copie'))).catch(()=>toast(T('code_selection')));
-      else toast(T('code_selection'));
-    };
-    ov.querySelector('#d-non').onclick = ()=>ov.remove();
-  };
-  const bRepr = document.getElementById('reprendre');
-  if(bRepr) bRepr.onclick = async ()=>{
-    const code = await saisie({ titre:T('nuage_reprendre_titre'), texte:T('nuage_reprendre_detail'), ok:T('valider') });
+  document.getElementById('code-restaurer').onclick = async ()=>{
+    const code = await saisie({ titre:T('recup_restaurer'), texte:T('recup_coller'), ok:T('valider') });
     if(!code) return;
     try{
-      await Nuage.reprendreAvecCode(code);
-      const distant = await Nuage.lire();
-      if(distant) Store.adopter(distant);
-      toast(T('nuage_reprise_ok'));
-      render();
+      const { etat } = await Nuage.reprendreAvecCode(code);
+      if(!Store.adopter(etat)) throw new Error('CODE_ILLISIBLE');
+      toast(T('progression_restauree'));
+      setTimeout(()=>location.reload(), 900);
     }catch(e){
       info(T('nuage_titre'), String(e.message)==='CODE_ILLISIBLE' ? T('nuage_code_illisible') : T('nuage_code_refuse'));
     }
   };
-  const bColler = document.getElementById('coller-lien');
-  if(bColler) bColler.onclick = async ()=>{
-    const lien = await saisie({ titre:T('nuage_coller_titre'), texte:T('nuage_coller_detail'), ok:T('valider') });
-    if(!lien) return;
-    const code = Nuage.codeDansLien(lien);
-    if(!code){ info(T('nuage_titre'), T('nuage_coller_invalide')); return; }
-    let email = Nuage.emailEnAttente();
-    if(!email){
-      email = await saisie({ titre:T('nuage_email_titre'), texte:T('nuage_email_detail'), ok:T('valider') });
-      if(!email) return;
-    }
-    try{
-      const s = await Nuage.terminerConnexion(email.trim(), code);
-      toast(T('nuage_connexion_ok',{email:s.email}));
-      await synchroniserDepuisLeCloud();
-      renderProfile();
-    }catch(e){ info(T('nuage_titre'), T('nuage_connexion_erreur')); }
-  };
-  const bDet = document.getElementById('detacher');
-  if(bDet) bDet.onclick = async ()=>{
-    if(await dialogue({ titre:T('nuage_detacher_titre'), texte:T('nuage_detacher_detail'),
-                        ok:T('nuage_detacher'), annuler:T('annuler'), danger:true })){
-      Nuage.oublier(); renderProfile();
-    }
-  };
-
-  Cloud.disponible().then(oui=>{
-    const b = document.getElementById('cloud');
-    if(!oui || !b) return;
-    b.classList.remove('hidden');
-    b.onclick = async ()=>{
-      b.disabled = true; b.textContent = T('sauvegarde_en_cours');
-      const issue = await Cloud.ecrire();
-      b.disabled = false; b.textContent = T('sauver_en_ligne');
-      toast({ 'ok':T('en_ligne_ok'), 'ok-page':T('en_ligne_ok_page'), 'conflit':T('en_ligne_conflit'),
-              'trop-souvent':T('en_ligne_souvent'), 'lecture-seule':T('en_ligne_lecture'),
-              'indisponible':T('en_ligne_indispo'), 'erreur':T('en_ligne_erreur') }[issue] || T('en_ligne_erreur'));
-    };
-  });
-
-  document.getElementById('exp').onclick = ()=>{
-    const code = Store.codeSauvegarde();
-    document.getElementById('zone-code').classList.remove('hidden');
-    const zone = document.getElementById('code');
-    zone.value = code;
-    copierCode(code);
-    document.getElementById('copier').onclick = ()=>copierCode(code);
-    document.getElementById('partage').onclick = ()=>{
-      const lien = location.origin + location.pathname + '#sauvegarde=' + code;
-      const donnees = { title:'Sauvegarde ThaiLingo',
-        text:'Sauvegarde ThaiLingo du ' + Store.get().derniereSauvegarde + '\n\n' + code,
-        url:lien };
-      if(navigator.share) navigator.share(donnees).catch(()=>{});
-      else copierCode(code);
-    };
-    if(TELECHARGEMENT_POSSIBLE){
-    document.getElementById('fichier').onclick = ()=>{
-      const nom = `thailingo-${Store.get().profil||'moi'}-${Store.get().derniereSauvegarde}.json`;
-      const blob = new Blob([JSON.stringify(Store.get(), null, 2)], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = nom;
-      document.body.appendChild(a); a.click();
-      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-      toast(T('choisis_fichiers'));
-    };
-    document.getElementById('depuis-fichier').onchange = ev=>{
-      const f = ev.target.files && ev.target.files[0];
-      if(!f) return;
-      const lecteur = new FileReader();
-      lecteur.onload = ()=>{
-        try{
-          if(!Store.adopter(JSON.parse(lecteur.result))) throw new Error('format');
-          toast(T('progression_restauree')); setTimeout(()=>location.reload(), 900);
-        }catch(e){ info(T('fichier_illisible'), T('fichier_illisible_detail')); }
-      };
-      lecteur.readAsText(f);
-    };
-    }
-    zone.scrollIntoView({behavior:'smooth', block:'center'});
-  };
-  document.getElementById('imp').onclick = async ()=>{
-    const code = await saisie({ titre:T('restaurer_titre'), texte:T('restaurer_detail'), ok:T('restaurer') });
-    if(!code) return;
-    try{ Store.restaurer(code); toast(T('progression_restauree')); setTimeout(()=>location.reload(), 900); }
-    catch(e){ info(T('code_illisible'), T('code_illisible_detail')); }
-  };
+  /* l'indicateur doit dire vrai : on écrit en arrivant sur cet écran */
+  Nuage.ecrire(Store.get()).then(()=>{
+    const el = document.getElementById('quand-nuage');
+    if(el) el.textContent = quandEnLigne();
+  }).catch(()=>{});
   document.getElementById('reset').onclick = async ()=>{
     if(await dialogue({ titre:T('tout_effacer'), texte:T('tout_effacer_detail'),
       ok:T('effacer'), annuler:T('annuler'), danger:true })){
@@ -1050,8 +808,7 @@ function finish(){
   </div>`;
   document.getElementById('cont').onclick=()=>go('path');
   if(perfect || acc>=80) confettis();
-  if(Store.get().sauvegardeEnLigne === 'fichier') Cloud.ecrire();   // page hébergée : sans rechargement
-  Nuage.ecrire(Store.get()).catch(()=>{});                          // silencieux : hors ligne, on réessaiera
+  Nuage.ecrire(Store.get()).catch(()=>{});   // silencieux : hors ligne, on réessaiera plus tard
 }
 
 /* petite pluie de confettis sur l'écran de fin */
@@ -1159,7 +916,7 @@ window.ThaiLingo = {
   get L(){ return L; }, set L(v){ L = v; },
   get route(){ return route; },
   startLesson, startLeconId, startPractice, startTimed, finish, renderLesson, render, go, applyTheme, check, next,
-  restaurerDepuisLien, Cloud, Nuage, synchroniserDepuisLeCloud, traiterLienDeConnexion
+  restaurerDepuisLien, Nuage, synchroniserEnLigne
 };
 
 (async ()=>{
@@ -1176,28 +933,6 @@ window.ThaiLingo = {
   }
 })();
 
-/* Retour du lien reçu par courriel : on rattache l'identité de cet appareil
-   au compte, puis on récupère la progression qui y est enregistrée. */
-async function traiterLienDeConnexion(){
-  const code = Nuage.lienDansUrl();
-  if(!code) return false;
-  let email = Nuage.emailEnAttente();
-  if(!email){
-    email = await saisie({ titre:T('nuage_email_titre'), texte:T('nuage_email_detail'), ok:T('valider') });
-    if(!email) return false;
-  }
-  try{
-    const s = await Nuage.terminerConnexion(email.trim(), code);
-    history.replaceState(null, '', location.pathname);
-    toast(T('nuage_connexion_ok',{email:s.email}));
-    return true;
-  }catch(e){
-    history.replaceState(null, '', location.pathname);
-    info(T('nuage_titre'), T('nuage_connexion_erreur'));
-    return false;
-  }
-}
-
 /* ---------------- amorçage ---------------- */
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 new MutationObserver(applyTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
@@ -1208,7 +943,6 @@ async function demarrer(){
   catch(e){ console.warn('contenu du cours indisponible', e); }
   Store.touchDay();
   render();
-  await traiterLienDeConnexion();
-  synchroniserDepuisLeCloud();
+  synchroniserEnLigne();
 }
 demarrer();
