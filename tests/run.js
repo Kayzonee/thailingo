@@ -51,6 +51,18 @@ t('le code d’amorçage ne s’exécute qu’une fois', ()=>{
   });
 });
 
+t('les fichiers appelés par la page portent un numéro de version', ()=>{
+  const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const appels = html.match(/(?:src|href)="(?:js|css|i18n|cours)\/[^"]+"/g) || [];
+  ok(appels.length >= 8, 'trop peu de fichiers appelés : '+appels.length);
+  appels.forEach(a=>ok(/\?v=/.test(a), `sans version : ${a}`));
+});
+t('l’état de la sauvegarde en ligne est affiché', ()=>{
+  ok(/quandEnLigne/.test(sourceApp), 'aucun indicateur de dernière sauvegarde');
+  ok(/marquerEnLigne/.test(fs.readFileSync(path.join(root,'js/nuage.js'),'utf8')),
+     'l’écriture en ligne ne date pas la sauvegarde');
+});
+
 console.log('\n── Traductions ──');
 t('les deux langues ont exactement les mêmes clés', ()=>{
   const fr = Object.keys(I18N.fr), en = Object.keys(I18N.en);

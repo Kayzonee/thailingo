@@ -19,6 +19,7 @@ const DEFAULT = {
   soundOn:true, slowAudio:false, clavierComplet:false, toutDebloque:true,
   theme:'auto',
   derniereSauvegarde:null,
+  derniereEnLigne:null,     // horodatage de la dernière écriture en ligne réussie
   sauvegardeEnLigne:null,
   coursActif:'fr-th',
   cours:{ 'fr-th': COURS_VIDE() }
@@ -130,6 +131,8 @@ const Store = {
     Store.addXp(xp); S.hearts = S.maxHearts; C().resume = null; save();
   },
   setResume(id){ C().resume = id; save(); },
+  marquerEnLigne(){ S.derniereEnLigne = new Date().toISOString(); save(); },
+  quandEnLigne(){ return S.derniereEnLigne; },
   clearResume(){ C().resume = null; save(); },
   resume(){ return C().resume; },
   /* --- sauvegarde exportable --- */

@@ -24,11 +24,18 @@ function chargerCours(idCours){
       Promise.resolve())
     .then(()=> finaliserContenu());
 }
+/* la version apposée sur index.html sert aussi aux fichiers de cours,
+   pour qu'un cache ne serve jamais un contenu périmé */
+function versionCourante(){
+  const m = /[?&]v=([^"&]+)/.exec(document.querySelector('script[src*="registre.js"]')?.src || '');
+  return m ? m[1] : '';
+}
 function charger1(fichier){
   if(DEJA_CHARGE[fichier]) return Promise.resolve();
   return new Promise((ok, ko)=>{
     const s = document.createElement('script');
-    s.src = fichier;
+    const v = versionCourante();
+    s.src = fichier + (v ? '?v='+v : '');
     s.onload = ()=>{ DEJA_CHARGE[fichier] = true; ok(); };
     s.onerror = ()=> ko(new Error('contenu introuvable : '+fichier));
     document.head.appendChild(s);

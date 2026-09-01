@@ -1,7 +1,7 @@
 /* Cache hors-ligne — stratégie « réseau d'abord, cache en repli ».
    Garantit qu'une mise à jour de l'app est toujours vue, tout en
    restant utilisable sans connexion. */
-const CACHE = 'thailingo-pages-3';
+const CACHE = 'thailingo-pages-4';
 const FILES = ['./','index.html','manifest.json','css/styles.css',
                'i18n/strings.js','js/contenu.js','cours/registre.js',
                'js/nuage.js','js/state.js','js/audio.js','js/engine.js','js/app.js',

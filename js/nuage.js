@@ -100,6 +100,7 @@ const Nuage = (()=>{
       body:JSON.stringify(corps) });
     const d = await r.json();
     if(d.error) throw new Error(d.error.message);
+    if(typeof Store !== 'undefined' && Store.marquerEnLigne) Store.marquerEnLigne();
     return true;
   }
   function totalXp(etat){

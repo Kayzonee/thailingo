@@ -340,9 +340,11 @@ function renderProfile(){
       <button class="btn ${s.toutDebloque?'':'ghost'}" id="debloc">${s.toutDebloque?T('active'):T('desactive')}</button></div>
 
     <div class="card"><div class="ic">☁️</div><div style="flex:1"><h4>${T('nuage_titre')}</h4>
-      <small id="etat-nuage">${Nuage.email() ? T('nuage_liee',{email:Nuage.email()}) : T('nuage_anonyme')}</small></div>
+      <small id="etat-nuage">${Nuage.email() ? T('nuage_liee',{email:Nuage.email()}) : T('nuage_anonyme')}</small>
+      <small id="quand-nuage">${quandEnLigne()}</small></div>
       ${Nuage.email() ? `<button class="btn ghost" id="detacher">${T('nuage_detacher')}</button>`
                       : `<button class="btn blue" id="securiser">${T('nuage_securiser')}</button>`}</div>
+    <button class="btn ghost" id="verifier-nuage" style="width:100%;margin-bottom:14px">${T('nuage_verifier')}</button>
     <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
       <button class="btn ghost" id="transfert" style="flex:1">${T('nuage_transfert')}</button>
       <button class="btn ghost" id="reprendre" style="flex:1">${T('nuage_reprendre')}</button>
@@ -425,6 +427,17 @@ function renderProfile(){
       info(T('nuage_titre'), T('nuage_email_erreur',{raison:String(e.message||e)}));
     }
     bSecu.disabled = false;
+  };
+  const bVerif = document.getElementById('verifier-nuage');
+  if(bVerif) bVerif.onclick = async ()=>{
+    bVerif.disabled = true;
+    try{
+      await Nuage.ecrire(Store.get());
+      toast(T('nuage_verifie_ok'));
+      const el = document.getElementById('quand-nuage');
+      if(el) el.textContent = quandEnLigne();
+    }catch(e){ toast(T('nuage_verifie_ko')); }
+    bVerif.disabled = false;
   };
   const bTransf = document.getElementById('transfert');
   if(bTransf) bTransf.onclick = async ()=>{
@@ -569,6 +582,18 @@ function boxesView(){
   const noms = [T('boite_nouveau'),T('boite_1j'),T('boite_2j'),T('boite_4j'),T('boite_1s'),T('boite_2s')];
   return `<div class="boxes">` + b.map((n,i)=>`<div class="box"><b>${n}</b><small>${noms[i]}</small></div>`).join('') + `</div>`;
 }
+/* depuis quand la progression est-elle en ligne ? */
+function quandEnLigne(){
+  const q = Store.quandEnLigne();
+  if(!q) return T('nuage_jamais');
+  const min = Math.round((Date.now() - new Date(q).getTime())/60000);
+  const quand = min < 2 ? T('nuage_a_linstant')
+              : min < 60 ? T('nuage_minutes',{n:min})
+              : min < 60*24 ? T('nuage_heures',{n:Math.round(min/60)})
+              : T('nuage_jours',{n:Math.round(min/1440)});
+  return T('nuage_quand',{quand});
+}
+
 function weakList(){
   const ids = Store.Words.weakest(5);
   if(!ids.length) return `<p class="sub">${T('aucun_mot_difficile')}</p>`;
