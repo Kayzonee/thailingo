@@ -20,7 +20,7 @@ statiques et l'API du navigateur.
 | Paliers | A1 Débutant, A2 Élémentaire, B1 Intermédiaire |
 | Écriture | alphabet complet (44 consonnes avec classe de ton, 10 voyelles, 4 signes) + 11 règles de ton |
 | Sauvegarde | locale + en ligne (Firebase), avec un code de récupération |
-| Tests | 47 tests Node + 23 tests d'interface, tous verts |
+| Tests | 51 tests Node + 23 tests d'interface, tous verts |
 
 **Il reste deux chantiers**, décrits en §7 : les cours `th-fr` / `th-en`, et les paliers B2 / C1.
 
@@ -239,7 +239,11 @@ lui demander serait une régression :
 - **l'écran de sauvegarde tient en trois éléments** : la date de la dernière sauvegarde en
   ligne, « Mon code de récupération », « Restaurer avec un code ». Un test échoue si
   d'autres boutons de sauvegarde réapparaissent ;
-- **toutes les leçons sont déverrouillées** par défaut (réglage dans le Profil).
+- **toutes les leçons sont déverrouillées** par défaut (réglage dans le Profil) ;
+- **la séance de révision ne pioche que dans les leçons terminées** (au moins une
+  couronne), toutes confondues, et sa longueur suit l'avancement : une leçon ordinaire
+  (15 exercices) plus 5 par leçon terminée supplémentaire, sans plafond. Voir
+  `buildPractice()` et `tailleSeanceRevision()` dans `js/engine.js`.
 
 ## 9. Pièges déjà rencontrés — ne pas les redécouvrir
 

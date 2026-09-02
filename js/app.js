@@ -362,14 +362,17 @@ function weakList(){
 
 /* ---------------- révision ---------------- */
 function renderRevision(){
-  const dus = Store.Words.dueCount(), connus = Store.Words.known();
-  const faites = CURRICULUM.reduce((a,u)=>a+u.lessons.filter(l=>Store.crowns(l.id)>0).length, 0);
+  const dus = Store.Words.dueCount();
+  const lecons = leconsTerminees();
+  const mots = [...new Set(lecons.flatMap(l=>l.words||[]))].filter(id=>LEX[id]).length;
+  const taille = tailleSeanceRevision();
   app.innerHTML = topbar() + `<div class="screen">
     <h2 class="h-page">🔁 ${T('titre_revision')}</h2>
-    <p class="sub">${T('revision_portee',{mots:connus, lecons:faites})}</p>
-    ${connus ? `
+    <p class="sub">${lecons.length === 1 ? T('revision_portee_1',{mots})
+                                            : T('revision_portee',{mots, lecons:lecons.length})}</p>
+    ${lecons.length ? `
       <div class="banner green"><div><b>${T('seance_revision')}</b>
-        <small>${dus ? T('mots_echeance',{n:dus}) : T('rien_urgent')}</small></div>
+        <small>${T('revision_taille',{n:taille})}${dus ? ' · '+T('mots_echeance',{n:dus}) : ''}</small></div>
         <button class="btn" id="practice">${T('reviser')}</button></div>
       <div class="banner blue"><div><b>${T('defi_60')}</b>
         <small>${T('defi_60_detail')}</small></div>

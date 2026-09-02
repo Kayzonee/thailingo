@@ -285,11 +285,74 @@ t('une leçon de tons ne produit que des exercices de ton, avec la règle', ()=>
 });
 
 console.log('\n── Progression, cours et sauvegarde ──');
-t('la révision ne porte que sur ce qui a été rencontré', ()=>{
+t('la révision ne pioche que dans les leçons terminées', ()=>{
   Store.reset();
-  eq(buildPractice().length, 0, 'sans historique il n’y a rien à réviser : ');
-  Store.Words.seen(Object.keys(LEX)[5], false);
-  ok(buildPractice().length >= 2, 'un mot connu doit suffire à bâtir une révision');
+  eq(buildPractice().length, 0, 'sans leçon terminée il n’y a rien à réviser : ');
+
+  const lecon = UNITES_LANGUE[0].lessons[0];
+  Store.completeLesson(lecon.id, 10, true);
+  const ex = buildPractice();
+  ok(ex.length > 0, 'une leçon terminée doit suffire');
+
+  /* aucun mot ne peut venir d'ailleurs que des leçons terminées */
+  const permis = new Set(lecon.words);
+  ex.forEach(e=>{
+    if(e.wordId) ok(permis.has(e.wordId), `${e.wordId} n'appartient à aucune leçon terminée`);
+    if(e.type === 'pairs') e.items.forEach(it=>{
+      const id = Object.keys(LEX).find(k=>LEX[k].th === it.th);
+      ok(permis.has(id), `${id} n'appartient à aucune leçon terminée`);
+    });
+  });
+});
+t('une séance fait la taille d’une leçon, plus cinq par leçon terminée', ()=>{
+  Store.reset();
+  const lecons = UNITES_LANGUE.flatMap(u=>u.lessons).filter(l=>!l.script && !l.tones);
+  Store.completeLesson(lecons[0].id, 10, true);
+  eq(buildPractice().length, 15, 'une leçon terminée : ');
+  Store.completeLesson(lecons[1].id, 10, true);
+  eq(buildPractice().length, 20, 'deux leçons terminées : ');
+  Store.completeLesson(lecons[2].id, 10, true);
+  eq(buildPractice().length, 25, 'trois leçons terminées : ');
+  for(let i=3; i<12; i++) Store.completeLesson(lecons[i].id, 10, true);
+  eq(buildPractice().length, 70, 'douze leçons terminées : ');
+});
+t('la séance mélange bien les leçons anciennes et récentes', ()=>{
+  Store.reset();
+  const lecons = UNITES_LANGUE.flatMap(u=>u.lessons).filter(l=>!l.script && !l.tones).slice(0, 6);
+  lecons.forEach(l=>Store.completeLesson(l.id, 10, true));
+  const vus = new Set();
+  buildPractice().forEach(e=>{
+    if(e.wordId) vus.add(e.wordId);
+    if(e.type === 'pairs') e.items.forEach(it=>{
+      const id = Object.keys(LEX).find(k=>LEX[k].th === it.th); if(id) vus.add(id);
+    });
+  });
+  const touchees = lecons.filter(l => (l.words||[]).some(w => vus.has(w)));
+  ok(touchees.length >= 4, `seules ${touchees.length} leçons sur 6 sont représentées`);
+  ok(vus.has(lecons[0].words[0]) || touchees.includes(lecons[0]),
+     'la première leçon n’est jamais revue');
+});
+t('une séance de révision varie les types d’exercices', ()=>{
+  Store.reset();
+  UNITES_LANGUE.flatMap(u=>u.lessons).filter(l=>!l.script && !l.tones).slice(0,12)
+    .forEach(l=>Store.completeLesson(l.id, 10, true));
+  const compte = {};
+  buildPractice().forEach(e=>compte[e.type] = (compte[e.type]||0)+1);
+  const types = Object.keys(compte);
+  ok(types.length >= 4, 'trop peu de types : '+JSON.stringify(compte));
+  const total = Object.values(compte).reduce((a,b)=>a+b,0);
+  Object.entries(compte).forEach(([t,n])=>
+    ok(n <= total * 0.6, `le type ${t} occupe ${Math.round(100*n/total)}% de la séance`));
+});
+t('une révision reste jouable : consignes, réponses et banques valides', ()=>{
+  Store.reset();
+  UNITES_LANGUE.flatMap(u=>u.lessons).filter(l=>!l.script && !l.tones).slice(0,8)
+    .forEach(l=>Store.completeLesson(l.id, 10, true));
+  buildPractice().forEach(e=>{
+    ok(e.type && e.prompt, 'exercice sans type ou sans consigne');
+    if(e.options) eq(e.options.filter(o=>o.correct).length, 1, `${e.type} : `);
+    if(e.solution && e.bank) e.solution.forEach(x=>ok(e.bank.includes(x), `${e.type} : solution hors banque`));
+  });
 });
 t('la répétition espacée avance et recule', ()=>{
   Store.reset();

@@ -189,21 +189,74 @@ function buildExercises(lesson, unit, level=0){
 }
 
 /* ---------- session de pratique (révision espacée) ---------- */
+/* ============================================================
+   Séance de révision
+   Ne pioche que dans les leçons terminées (au moins une couronne),
+   toutes confondues : la première comme la douzième. Sa longueur
+   suit l'avancement — une leçon normale, plus cinq exercices par
+   leçon terminée supplémentaire, sans plafond.
+   ============================================================ */
+const EX_PAR_SEANCE_BASE = 15;      // taille d'une leçon ordinaire
+const EX_PAR_LECON_TERMINEE = 5;
+
+/* les leçons de langue terminées ; l'écriture a son propre parcours */
+function leconsTerminees(){
+  const out = [];
+  UNITES_LANGUE.forEach(u => u.lessons.forEach(l => {
+    if(!l.script && !l.tones && Store.crowns(l.id) > 0) out.push(l);
+  }));
+  return out;
+}
+function tailleSeanceRevision(){
+  const n = leconsTerminees().length;
+  return n ? EX_PAR_SEANCE_BASE + EX_PAR_LECON_TERMINEE * (n - 1) : 0;
+}
+
 function buildPractice(){
-  const connus = Object.keys(Store.Words.tous()).filter(id=>LEX[id]);
-  let ids = Store.Words.weakest(8).filter(id=>connus.includes(id));
-  if(ids.length < 8) ids = [...new Set([...ids, ...sample(connus, 8-ids.length)])];
-  if(!ids.length) return [];          // rien de rencontré : rien à réviser
+  const lecons = leconsTerminees();
+  if(!lecons.length) return [];
+
+  const mots = [...new Set(lecons.flatMap(l => l.words || []))].filter(id => LEX[id]);
+  const phrases = [...new Set(lecons.flatMap(l => l.sentences || []))]
+                    .map(id => SENT[id]).filter(Boolean);
+  if(!mots.length) return [];
+
+  const cible = tailleSeanceRevision();
   const ex = [];
-  ids.forEach(id=>{
-    const w = LEX[id]; if(!w) return;
-    ex.push(exPick(w, null));
-    ex.push(Math.random()<0.5 ? exMeaning(w, null) : exListen(w, null));
-  });
-  if(ids.length>=4) ex.push({ type:'pairs', prompt:T('c_paires'), items: ids.slice(0,5).map(id=>LEX[id]) });
-  // seules les phrases dont tous les mots ont déjà été vus entrent en révision
-  const vus = new Set(ids.concat(connus).map(id=>LEX[id].th));
-  const phrases = Object.values(SENT).filter(p=>p.chunks.some(c=>vus.has(c)));
-  sample(phrases, 2).forEach(p=> ex.push(exTransT2F(p)) );
-  return shuffle(ex).slice(0, 14);
+
+  /* les mots les plus fragiles ouvrent la marche, le reste est mélangé :
+     tout ce qui a été appris peut ressortir, quelle que soit son ancienneté */
+  const fragiles = Store.Words.weakest(mots.length).filter(id => mots.includes(id));
+  const ordre = [...fragiles, ...shuffle(mots.filter(id => !fragiles.includes(id)))];
+
+  /* une paire par tranche de dix exercices, quelques traductions au fil de l'eau */
+  const nbPaires = mots.length >= 4 ? Math.max(1, Math.floor(cible / 10)) : 0;
+  const nbPhrases = phrases.length ? Math.min(phrases.length * 2, Math.floor(cible / 5)) : 0;
+
+  for(let i = 0; i < nbPaires; i++)
+    ex.push({ type:'pairs', prompt:T('c_paires'), items: sample(mots, 5).map(id => LEX[id]) });
+
+  const listeP = [];
+  while(listeP.length < nbPhrases) listeP.push(...shuffle(phrases));
+  listeP.slice(0, nbPhrases).forEach((p, i) => ex.push(i % 2 ? exTransF2T(p) : exTransT2F(p)));
+
+  /* on parcourt les mots en boucle jusqu'à la taille voulue, en changeant
+     de type à chaque passage pour ne jamais reposer deux fois la même question */
+  const fabriques = [
+    w => exPick(w, null),
+    w => exMeaning(w, null),
+    w => Audio_.hasThaiVoice() ? exListen(w, null) : exPick(w, null)
+  ];
+  let i = 0;
+  while(ex.length < cible && ordre.length){
+    const id = ordre[i % ordre.length];
+    const tour = Math.floor(i / ordre.length);
+    /* le type change à chaque exercice, et le décalage par tour évite qu'un
+       mot revu plus loin retombe sur la même question */
+    ex.push(fabriques[(i + tour) % fabriques.length](LEX[id]));
+    i++;
+    if(i > cible * 4) break;          // garde-fou : jamais de boucle sans fin
+  }
+
+  return shuffle(ex).slice(0, cible);
 }
