@@ -6,10 +6,10 @@
 const COURS = {
   'fr-th': { id:'fr-th', interface:'fr', cible:'th', drapeau:'🇹🇭',
              nom:{fr:'Thaï — depuis le français', en:'Thai — from French'},
-             fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js'] },
+             fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js','cours/revision-thai.js'] },
   'en-th': { id:'en-th', interface:'en', cible:'th', drapeau:'🇹🇭',
              nom:{fr:'Thaï — depuis l’anglais', en:'Thai — from English'},
-             fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js'] }
+             fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js','cours/revision-thai.js'] }
 };
 const COURS_DEFAUT = 'fr-th';
 

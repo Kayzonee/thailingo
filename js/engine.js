@@ -12,9 +12,11 @@ function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.flo
 function sample(a,n){ return shuffle(a).slice(0,Math.max(0,n)); }
 
 function tousLesMots(){ return Object.keys(LEX); }
-function tousLesChunks(){ return [...new Set(Object.values(SENT).flatMap(s=>s.chunks))]; }
+function tousLesChunks(){ return [...new Set([...Object.values(SENT), ...Object.values(REVISION)]
+                                     .flatMap(s=>s.chunks))]; }
 /* mots de la langue d'interface, pour les banques de mots */
-function motsCible(){ return [...new Set(Object.values(SENT).flatMap(s=>frWords(glose(s))))]; }
+function motsCible(){ return [...new Set([...Object.values(SENT), ...Object.values(REVISION)]
+                                     .flatMap(s=>frWords(glose(s))))]; }
 /* mots français utilisables dans une banque : on retire les gloses entre
    parenthèses (« (dit par un homme) ») et la ponctuation */
 function frWords(fr){
@@ -67,19 +69,19 @@ function exTransT2F(s){
   const sol = frWords(glose(s));
   const dis = sample(motsCible().filter(w=>!sol.includes(w)), Math.min(4, Math.max(2, 8-sol.length)));
   return { type:'trans', dir:'t2f', speak:s.chunks.join(''), chunks:s.chunks,
-    prompt:T('c_traduis'), shown:s.chunks.join(''), rom:s.rom,
+    prompt:T('c_traduis'), shown:s.chunks.join(''), rom:s.rom, fr:glose(s),
     solution:sol, bank:shuffle([...sol,...dis]) };
 }
 function exTransF2T(s){
   const sol = s.chunks;
   const dis = sample(tousLesChunks().filter(c=>!sol.includes(c)), Math.min(4, Math.max(2, 8-sol.length)));
-  return { type:'trans', dir:'f2t', prompt:T('c_ecris_thai'),
+  return { type:'trans', dir:'f2t', prompt:T('c_ecris_thai'), chunks:s.chunks, fr:glose(s),
     shown:glose(s), solution:sol, bank:shuffle([...sol,...dis]), speakAfter:s.chunks.join('') };
 }
 function exListenBuild(s){
   const sol = s.chunks;
   const dis = sample(tousLesChunks().filter(c=>!sol.includes(c)), 3);
-  return { type:'listen_build', prompt:T('c_ecris_entends'), speak:s.chunks.join(''),
+  return { type:'listen_build', prompt:T('c_ecris_entends'), speak:s.chunks.join(''), chunks:s.chunks,
     solution:sol, bank:shuffle([...sol,...dis]), rom:s.rom, fr:glose(s) };
 }
 function exBlank(s){
@@ -87,7 +89,7 @@ function exBlank(s){
   const i = 1 + Math.floor(Math.random()*(s.chunks.length-1));
   const missing = s.chunks[i];
   const dis = sample(tousLesChunks().filter(c=>c!==missing && !s.chunks.includes(c)), 3);
-  return { type:'blank', prompt:T('c_complete'), fr:glose(s), rom:s.rom, romPhrase:s.rom,
+  return { type:'blank', prompt:T('c_complete'), fr:glose(s), rom:s.rom, romPhrase:s.rom, chunks:s.chunks,
     before:s.chunks.slice(0,i).join(''), after:s.chunks.slice(i+1).join(''),
     speak:s.chunks.join(''),
     options: shuffle([missing,...dis]).map(c=>({label:c, correct:c===missing})) };
@@ -212,24 +214,100 @@ function tailleSeanceRevision(){
   return n ? EX_PAR_SEANCE_BASE + EX_PAR_LECON_TERMINEE * (n - 1) : 0;
 }
 
-function buildPractice(){
-  const lecons = leconsTerminees();
-  if(!lecons.length) return [];
+/* ============================================================
+   Séance de révision
+   Jusqu'à SEUIL_COMPOSITION leçons terminées, la séance reste un
+   entraînement au vocabulaire. Au-delà, elle bascule : 70 % de
+   composition de phrases, 30 % de rappels de vocabulaire, servis
+   par blocs — les rappels arrivent AVANT les phrases qui les
+   emploient. Les phrases viennent de REVISION : des tournures
+   qu'aucune leçon n'a enseignées, bâties sur les mots appris.
+   ============================================================ */
+const SEUIL_COMPOSITION = 10;      // leçons terminées
+const PART_VOCABULAIRE  = 3;       // 3 rappels…
+const PART_COMPOSITION  = 7;       // …pour 7 compositions
 
-  const mots = [...new Set(lecons.flatMap(l => l.words || []))].filter(id => LEX[id]);
-  const phrases = [...new Set(lecons.flatMap(l => l.sentences || []))]
-                    .map(id => SENT[id]).filter(Boolean);
-  if(!mots.length) return [];
+/* les mots que l'apprenant a effectivement rencontrés */
+function motsAppris(){
+  return new Set(leconsTerminees().flatMap(l => l.words || []).filter(id => LEX[id]));
+}
+/* une phrase de révision n'est jouable que si TOUS ses mots sont acquis */
+function phrasesRevisionJouables(){
+  const appris = motsAppris();
+  return Object.values(REVISION).filter(p => p.mots.length && p.mots.every(id => appris.has(id)));
+}
 
-  const cible = tailleSeanceRevision();
+/* les quatre façons de faire composer une phrase ; l'ordre tourne pour
+   qu'une même phrase ne repose jamais deux fois la même question */
+const FABRIQUES_PHRASE = [
+  s => exTransT2F(s),
+  s => exTransF2T(s),
+  s => exTransT2F(s),
+  s => Audio_.hasThaiVoice() ? exListenBuild(s) : exTransF2T(s),
+  s => exBlank(s) || exTransT2F(s),
+  s => exTransT2F(s),
+  s => exTransF2T(s)
+];
+
+/* un rappel de vocabulaire, type variable */
+function exRappel(id, tour){
+  const w = LEX[id];
+  if(!w) return null;
+  const fab = [
+    () => exPick(w, null),
+    () => exMeaning(w, null),
+    () => Audio_.hasThaiVoice() ? exListen(w, null) : exPick(w, null)
+  ];
+  return fab[tour % fab.length]();
+}
+
+/* mode « composition » : blocs de 3 rappels puis 7 phrases */
+function seanceComposition(phrases, mots, cible){
   const ex = [];
+  const ordreP = shuffle(phrases);
+  let ip = 0, tour = 0;
 
-  /* les mots les plus fragiles ouvrent la marche, le reste est mélangé :
-     tout ce qui a été appris peut ressortir, quelle que soit son ancienneté */
+  while(ex.length < cible){
+    const bloc = [];
+    for(let k = 0; k < PART_COMPOSITION; k++) bloc.push(ordreP[(ip + k) % ordreP.length]);
+
+    /* les rappels portent sur les mots des phrases du bloc : on révise
+       juste avant de s'en servir. Les mots les plus fragiles passent devant. */
+    const motsDuBloc = [...new Set(bloc.flatMap(p => p.mots))].filter(id => mots.includes(id));
+    const fragiles = Store.Words.weakest(mots.length).filter(id => motsDuBloc.includes(id));
+    const choix = [...fragiles, ...shuffle(motsDuBloc.filter(id => !fragiles.includes(id)))];
+    /* une paire prend la place d'un rappel de temps en temps, pour aérer :
+       elle ne s'ajoute pas, sinon la part de vocabulaire dépasserait 30 % */
+    const paire = tour % 3 === 2 && mots.length >= 4;
+    for(let k = 0; k < PART_VOCABULAIRE && ex.length < cible; k++){
+      if(paire && k === 0){
+        ex.push({ type:'pairs', prompt:T('c_paires'), items: sample(mots, 5).map(id => LEX[id]) });
+        continue;
+      }
+      const id = choix[k % Math.max(1, choix.length)] || mots[k % mots.length];
+      const e = exRappel(id, tour + k);
+      if(e) ex.push(e);
+    }
+
+    bloc.forEach((p, k) => {
+      if(ex.length >= cible) return;
+      const e = FABRIQUES_PHRASE[(tour + k) % FABRIQUES_PHRASE.length](p);
+      if(e) ex.push(e);
+    });
+
+    ip = (ip + PART_COMPOSITION) % ordreP.length;
+    tour++;
+    if(tour > cible) break;                 // garde-fou : jamais de boucle sans fin
+  }
+  return ex.slice(0, cible);
+}
+
+/* mode « vocabulaire » : la séance des premières leçons, inchangée */
+function seanceVocabulaire(mots, phrases, cible){
+  const ex = [];
   const fragiles = Store.Words.weakest(mots.length).filter(id => mots.includes(id));
   const ordre = [...fragiles, ...shuffle(mots.filter(id => !fragiles.includes(id)))];
 
-  /* une paire par tranche de dix exercices, quelques traductions au fil de l'eau */
   const nbPaires = mots.length >= 4 ? Math.max(1, Math.floor(cible / 10)) : 0;
   const nbPhrases = phrases.length ? Math.min(phrases.length * 2, Math.floor(cible / 5)) : 0;
 
@@ -240,8 +318,6 @@ function buildPractice(){
   while(listeP.length < nbPhrases) listeP.push(...shuffle(phrases));
   listeP.slice(0, nbPhrases).forEach((p, i) => ex.push(i % 2 ? exTransF2T(p) : exTransT2F(p)));
 
-  /* on parcourt les mots en boucle jusqu'à la taille voulue, en changeant
-     de type à chaque passage pour ne jamais reposer deux fois la même question */
   const fabriques = [
     w => exPick(w, null),
     w => exMeaning(w, null),
@@ -251,12 +327,36 @@ function buildPractice(){
   while(ex.length < cible && ordre.length){
     const id = ordre[i % ordre.length];
     const tour = Math.floor(i / ordre.length);
-    /* le type change à chaque exercice, et le décalage par tour évite qu'un
-       mot revu plus loin retombe sur la même question */
     ex.push(fabriques[(i + tour) % fabriques.length](LEX[id]));
     i++;
-    if(i > cible * 4) break;          // garde-fou : jamais de boucle sans fin
+    if(i > cible * 4) break;
   }
-
   return shuffle(ex).slice(0, cible);
+}
+
+function buildPractice(){
+  const lecons = leconsTerminees();
+  if(!lecons.length) return [];
+
+  const mots = [...new Set(lecons.flatMap(l => l.words || []))].filter(id => LEX[id]);
+  const phrases = [...new Set(lecons.flatMap(l => l.sentences || []))]
+                    .map(id => SENT[id]).filter(Boolean);
+  if(!mots.length) return [];
+
+  const cible = tailleSeanceRevision();
+  const composables = phrasesRevisionJouables();
+
+  /* la bascule demande DEUX conditions : assez de leçons derrière soi,
+     et assez de phrases jouables pour ne pas tourner en rond */
+  if(lecons.length > SEUIL_COMPOSITION && composables.length >= PART_COMPOSITION)
+    return seanceComposition(composables, mots, cible);
+
+  return seanceVocabulaire(mots, phrases, cible);
+}
+
+/* proportion réelle de composition dans une séance : sert à l'affichage et aux tests */
+function partComposition(ex){
+  if(!ex.length) return 0;
+  const n = ex.filter(e => e.type === 'trans' || e.type === 'listen_build' || e.type === 'blank').length;
+  return n / ex.length;
 }

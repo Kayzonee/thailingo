@@ -204,6 +204,9 @@ function thaiAvecRom(th, taille){
          (r ? `<span class="rom">${esc(r)}</span>` : '');
 }
 
+/* sens d'un mot à partir de son écriture thaïe (pour les retours de correction) */
+function sensDuMot(th){ const id = idParThai(th); return id ? glose(LEX[id]) : ''; }
+
 function toast(msg){
   const t = h(`<div class="toast">${esc(msg)}</div>`);
   document.body.appendChild(t); setTimeout(()=>t.remove(), 2200);
@@ -362,17 +365,17 @@ function weakList(){
 
 /* ---------------- révision ---------------- */
 function renderRevision(){
-  const dus = Store.Words.dueCount();
   const lecons = leconsTerminees();
   const mots = [...new Set(lecons.flatMap(l=>l.words||[]))].filter(id=>LEX[id]).length;
   const taille = tailleSeanceRevision();
+  const compo = lecons.length > SEUIL_COMPOSITION && phrasesRevisionJouables().length >= PART_COMPOSITION;
   app.innerHTML = topbar() + `<div class="screen">
     <h2 class="h-page">🔁 ${T('titre_revision')}</h2>
     <p class="sub">${lecons.length === 1 ? T('revision_portee_1',{mots})
                                             : T('revision_portee',{mots, lecons:lecons.length})}</p>
     ${lecons.length ? `
       <div class="banner green"><div><b>${T('seance_revision')}</b>
-        <small>${T('revision_taille',{n:taille})}${dus ? ' · '+T('mots_echeance',{n:dus}) : ''}</small></div>
+        <small>${T('revision_taille',{n:taille})}${compo ? ' · '+T('revision_compo') : ''}</small></div>
         <button class="btn" id="practice">${T('reviser')}</button></div>
       <div class="banner blue"><div><b>${T('defi_60')}</b>
         <small>${T('defi_60_detail')}</small></div>
@@ -411,8 +414,13 @@ function startLesson(unit, lesson){
   go('lesson');
 }
 function resumeLesson(){ const r = Store.get().resume; if(r) startLeconId(r); }
+
+/* La révision donne davantage de vies qu'une leçon : elle est plus longue,
+   et la composition de phrases y coûte plus cher qu'un QCM. Les leçons, elles,
+   restent à trois vies — choix verrouillé. */
+const VIES_REVISION = 7;
 function startTimed(){
-  Store.resetHearts();
+  Store.resetHearts(VIES_REVISION);
   let ex = buildPractice().concat(buildPractice());
   if(!Audio_.hasThaiVoice()) ex = ex.filter(e=>e.type!=='listen' && e.type!=='listen_build');
   ex = ex.filter(e=>e.type!=='speak' && e.type!=='pairs');
@@ -430,7 +438,7 @@ function startTimed(){
 }
 
 function startPractice(){
-  Store.resetHearts();
+  Store.resetHearts(VIES_REVISION);
   let ex = buildPractice();
   if(!Audio_.hasThaiVoice()) ex = ex.filter(e=>e.type!=='listen' && e.type!=='listen_build');
   L = { unit:null, lesson:null, title:'Révision', ex, idx:0, correct:0, answered:0,
@@ -745,20 +753,46 @@ function check(){
       if(e.options[i].correct) c.classList.add('ok'); else if(i===L.sel) c.classList.add('ko');
     });
   }
+  /* Une phrase ratée se corrige mot à mot : on réaffiche la bonne tournure
+     en thaï, chaque mot cliquable pour sa romanisation et son sens. */
+  const phrase = !!(e.chunks && e.chunks.length);
+  let corps = '';
+  if(ok){
+    /* réussite : si la réponse était en thaï, on redit ce qu'elle veut dire,
+       sinon on ne sait pas ce qu'on vient de choisir */
+    const sens = isThaiText(expected) ? sensDuMot(expected) : '';
+    if(isThaiText(expected))
+      corps = `<div class="fb-sub"><span class="thai">${esc(expected)}</span>
+        ${expectedRom?`<span class="rom">${esc(expectedRom)}</span>`:''}
+        ${sens?`<span class="rom sens">${esc(sens)}</span>`:''}</div>`;
+  } else if(phrase){
+    corps = `<div class="fb-sub">${hintable(e.chunks)}
+      <span class="rom">${esc(e.rom || expectedRom || '')}</span>
+      ${e.fr?`<span class="rom sens">${esc(e.fr)}</span>`:''}
+      <span class="rom aide">${T('appuie_mot')}</span>
+      ${donnee?`<span class="rom donnee">${T('ta_reponse')} : <span class="${isThaiText(donnee)?'thai':''}">${esc(donnee)}</span></span>`:''}
+      </div>`;
+  } else {
+    const sens = isThaiText(expected) ? sensDuMot(expected) : '';
+    corps = `<div class="fb-sub">
+      <span class="${isThaiText(expected)?'thai':''}">${esc(expected)}</span>
+      ${expectedRom?`<span class="rom">${esc(expectedRom)}</span>`:''}
+      ${sens?`<span class="rom sens">${esc(sens)}</span>`:''}
+      ${donnee?`<span class="rom donnee">${T('ta_reponse')} : <span class="${isThaiText(donnee)?'thai':''}">${esc(donnee)}</span></span>`:''}
+      </div>`;
+  }
+
   const f=document.getElementById('footer');
   f.className='footer '+(ok?'ok':'ko');
   f.innerHTML=`<div class="inner">
     <div class="fb-mascot">${mascotSVG(ok?'content':'triste')}</div>
     <div style="flex:1">
       <div class="fb-title">${ok?(L.combo>=3?T('combo',{n:L.combo}):T('excellent')):T('bonne_reponse')}</div>
-      ${ok?'':`<div class="fb-sub">
-        <span class="${isThaiText(expected)?'thai':''}">${esc(expected)}</span>
-        ${expectedRom?`<span class="rom">${esc(expectedRom)}</span>`:''}
-        ${donnee?`<span class="rom donnee">${T('ta_reponse')} : <span class="${isThaiText(donnee)?'thai':''}">${esc(donnee)}</span></span>`:''}
-      </div>`}
+      ${corps}
       ${e.explain?`<div class="fb-rule">📘 ${esc(e.explain)}</div>`:''}
     </div>
     <button class="btn ${ok?'':'red'}" id="cont">${T('continuer')}</button></div>`;
+  if(!ok && phrase) wireHints();
   document.getElementById('cont').onclick=next;
   if(!L.timed && Store.get().hearts<=0 && !ok) setTimeout(echecLecon, 700);
 }

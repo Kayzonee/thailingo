@@ -16,7 +16,8 @@ ctx.window = ctx; ctx.globalThis = ctx;
 vm.createContext(ctx);
 
 const charger = f => vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'), ctx, {filename:f});
-['i18n/strings.js','js/contenu.js','cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js']
+['i18n/strings.js','js/contenu.js','cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js',
+ 'cours/revision-thai.js']
   .forEach(charger);
 vm.runInContext('finaliserContenu()', ctx);
 ['js/state.js','js/engine.js'].forEach(charger);
@@ -41,7 +42,9 @@ const g = expr => vm.runInContext(expr, ctx);
 const LEX=g('LEX'), SENT=g('SENT'), SCRIPT=g('SCRIPT'), CURRICULUM=g('CURRICULUM'), SECTIONS=g('SECTIONS'),
       TONE_RULES=g('TONE_RULES'), UNITES_LANGUE=g('UNITES_LANGUE'), UNITES_ECRITURE=g('UNITES_ECRITURE'),
       Store=g('Store'), buildExercises=g('buildExercises'), buildPractice=g('buildPractice'),
-      frWords=g('frWords'), romDe=g('romDe'), I18N=g('I18N'), glose=g('glose'), txt=g('txt');
+      frWords=g('frWords'), romDe=g('romDe'), I18N=g('I18N'), glose=g('glose'), txt=g('txt'),
+      REVISION=g('REVISION'), idParThai=g('idParThai'), partComposition=g('partComposition'),
+      SEUIL_COMPOSITION=g('SEUIL_COMPOSITION');
 const setLangue = l => vm.runInContext(`definirLangue('${l}')`, ctx);
 
 console.log('\n── Intégrité du source ──');
@@ -282,6 +285,143 @@ t('une leçon de tons ne produit que des exercices de ton, avec la règle', ()=>
     eq(e.type,'tone'); ok(e.explain, 'règle pédagogique manquante');
     eq(e.options.filter(o=>o.correct).length, 1);
   });
+});
+
+t('aucune clé du lexique n’est déclarée deux fois dans le source', ()=>{
+  /* JavaScript écrase silencieusement la première : un mot disparaît de
+     l'app sans qu'aucun autre test ne s'en aperçoive. C'est arrivé à ยาย. */
+  const vues = {}, dbl = [];
+  ['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js'].forEach(f=>{
+    const src = fs.readFileSync(path.join(root,f),'utf8');
+    const re = /^  ([A-Za-z0-9_]+):\{ th:'([^']+)'/gm; let m;
+    while((m = re.exec(src))){
+      if(vues[m[1]]) dbl.push(`${m[1]} (${vues[m[1]]} puis ${m[2]})`);
+      vues[m[1]] = m[2];
+    }
+  });
+  eq(dbl.length, 0, 'clés dupliquées : '+dbl.join(', ')+' — ');
+});
+
+console.log('\n── Phrases de révision ──');
+
+t('chaque phrase de révision est bien formée', ()=>{
+  ok(Object.keys(REVISION).length >= 300, 'banque trop maigre : '+Object.keys(REVISION).length);
+  Object.entries(REVISION).forEach(([id,p])=>{
+    ok(Array.isArray(p.chunks) && p.chunks.length >= 2, id+' : chunks manquants');
+    ok(p.fr && p.en, id+' : glose manquante');
+  });
+});
+
+t('tout mot d’une phrase de révision existe au lexique', ()=>{
+  /* c'est ce qui garantit la correction mot à mot cliquable */
+  const fautifs = [];
+  Object.entries(REVISION).forEach(([id,p])=>{
+    p.chunks.forEach(c=>{ if(!idParThai(c)) fautifs.push(id+' : '+c); });
+  });
+  eq(fautifs.length, 0, 'mots hors lexique : '+fautifs.slice(0,5).join(', ')+' — ');
+});
+
+t('la romanisation se déduit mot à mot, jamais à la main', ()=>{
+  Object.entries(REVISION).forEach(([id,p])=>{
+    eq(p.rom, p.chunks.map(c=>romDe(c)).join(' '), id+' : ');
+    eq(p.mots.length, p.chunks.length, id+' : mots requis incomplets — ');
+  });
+});
+
+t('une phrase de révision n’est jamais une phrase de leçon', ()=>{
+  const desLecons = new Set(Object.values(SENT).map(s=>s.chunks.join('')));
+  const repetees = Object.entries(REVISION)
+    .filter(([,p])=>desLecons.has(p.chunks.join('')))
+    .map(([id])=>id);
+  eq(repetees.length, 0, 'déjà enseignées : '+repetees.join(', ')+' — ');
+});
+
+t('aucune phrase de révision n’est écrite deux fois', ()=>{
+  const vues = {}, dbl = [];
+  Object.entries(REVISION).forEach(([id,p])=>{
+    const k = p.chunks.join(''); if(vues[k]) dbl.push(id+'≡'+vues[k]); vues[k]=id;
+  });
+  eq(dbl.length, 0, 'doublons : '+dbl.join(', ')+' — ');
+});
+
+t('une phrase n’entre en révision que si tous ses mots sont acquis', ()=>{
+  const jouables = g('phrasesRevisionJouables()');
+  const acquis = new Set(g('[...motsAppris()]'));
+  jouables.forEach(p=> p.mots.forEach(id=>
+    ok(acquis.has(id), 'mot non acquis proposé : '+id)));
+});
+
+console.log('\n── Séance de révision ──');
+
+/* aide : terminer n leçons de langue, dans l'ordre du parcours */
+function terminer(n){
+  Store.reset && Store.reset();
+  const lecons = UNITES_LANGUE.flatMap(u=>u.lessons).filter(l=>!l.script && !l.tones).slice(0, n);
+  lecons.forEach(l=> Store.completeLesson(l.id, 10, false));
+  return lecons;
+}
+
+t('en deçà du seuil, la séance reste un entraînement au vocabulaire', ()=>{
+  g('localStorage.clear()'); g('Store.recharger ? Store.recharger() : 0');
+  terminer(4);
+  const ex = buildPractice();
+  ok(ex.length > 0, 'séance vide');
+  ok(partComposition(ex) < 0.5, 'trop de composition trop tôt : '+partComposition(ex).toFixed(2));
+});
+
+t('au-delà du seuil, la composition de phrases domine', ()=>{
+  terminer(SEUIL_COMPOSITION + 8);
+  const ex = buildPractice();
+  const part = partComposition(ex);
+  ok(part >= 0.66 && part <= 0.74, 'part de composition hors cible : '+part.toFixed(2));
+});
+
+t('à la bascule, la banque évite de tourner en rond', ()=>{
+  /* juste après le seuil, il doit y avoir assez de phrases jouables pour que
+     la séance n'en repasse pas trois ou quatre fois les mêmes */
+  terminer(SEUIL_COMPOSITION + 1);
+  const jouables = g('phrasesRevisionJouables()').length;
+  const ex = buildPractice();
+  const compo = ex.filter(e=>e.type==='trans'||e.type==='listen_build'||e.type==='blank').length;
+  ok(jouables >= 35, 'trop peu de phrases jouables à la bascule : '+jouables);
+  ok(compo / jouables <= 1.2, 'chaque phrase repasse '+(compo/jouables).toFixed(1)+' fois');
+});
+
+t('la séance n’a pas de plafond : elle grandit avec les leçons', ()=>{
+  terminer(12); const a = buildPractice().length;
+  terminer(24); const b = buildPractice().length;
+  ok(b > a, `la séance n'a pas grandi (${a} puis ${b})`);
+  eq(b, 15 + 5*(24-1), 'taille attendue — ');
+});
+
+t('les rappels de vocabulaire précèdent les phrases qu’ils préparent', ()=>{
+  terminer(SEUIL_COMPOSITION + 8);
+  const ex = buildPractice();
+  const compo = e => e.type==='trans' || e.type==='listen_build' || e.type==='blank';
+  ok(!compo(ex[0]), 'la séance s’ouvre sur une composition');
+  /* premier bloc : trois rappels avant la première phrase */
+  const premiere = ex.findIndex(compo);
+  ok(premiere >= 3, 'pas de rappel avant la première phrase (index '+premiere+')');
+});
+
+t('une phrase ratée peut être corrigée mot à mot', ()=>{
+  terminer(SEUIL_COMPOSITION + 8);
+  const ex = buildPractice().filter(e=>e.type==='trans' || e.type==='listen_build' || e.type==='blank');
+  ok(ex.length, 'aucune composition produite');
+  ex.forEach(e=>{
+    ok(Array.isArray(e.chunks) && e.chunks.length, e.type+' : pas de découpage pour la correction');
+    e.chunks.forEach(c=> ok(!!romDe(c), e.type+' : « '+c+' » sans romanisation'));
+  });
+});
+
+t('la révision donne sept vies, la leçon trois', ()=>{
+  const source = fs.readFileSync(path.join(root,'js/app.js'),'utf8');
+  ok(/const VIES_REVISION = 7;/.test(source), 'VIES_REVISION absent');
+  ok(/startPractice\(\)\{\s*\n?\s*Store\.resetHearts\(VIES_REVISION\)/.test(source),
+     'la révision ne demande pas ses vies');
+  Store.resetHearts(); eq(Store.get().hearts, 3, 'leçon : ');
+  Store.resetHearts(7); eq(Store.get().hearts, 7, 'révision : ');
+  Store.resetHearts(); eq(Store.get().hearts, 3, 'retour en leçon : ');
 });
 
 console.log('\n── Progression, cours et sauvegarde ──');

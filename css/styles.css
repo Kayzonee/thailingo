@@ -365,3 +365,9 @@ button, .choice, .tile, .pair, .key, .node{touch-action:manipulation}
   text-transform:uppercase;color:var(--ink-soft)}
 .zone-reponse .answer-area{border:none;margin:0;min-height:64px;padding:0}
 :root[data-app-theme="sombre"] .zone-reponse{background:#20272E}
+
+/* correction d'une phrase : la bonne tournure, mot à mot et cliquable */
+.footer .fb-sub .big-thai{ font-size:22px; margin:2px 0 4px; }
+.footer .fb-sub .hintable{ border-bottom:2px dotted currentColor; padding:0 2px; cursor:pointer; }
+.footer .fb-sub .sens{ display:block; font-weight:600; opacity:.95; }
+.footer .fb-sub .aide{ display:block; opacity:.6; font-size:12px; margin-top:2px; }

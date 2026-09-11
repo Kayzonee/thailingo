@@ -119,7 +119,9 @@ const Store = {
   crowns(id){ return (C().progress[id]||{}).crowns || 0; },
   totalCrowns(){ return Object.values(C().progress).reduce((a,p)=>a+(p.crowns||0),0); },
   loseHeart(){ S.hearts = Math.max(0, S.hearts-1); save(); return S.hearts; },
-  resetHearts(){ S.hearts = S.maxHearts; save(); },
+  /* n : nombre de vies voulu pour cette séance (la révision en donne davantage).
+     maxHearts n'est jamais touché : une leçon ordinaire reste à trois vies. */
+  resetHearts(n){ S.hearts = n || S.maxHearts; save(); },
   addXp(n){ C().xp += n; S.dailyXp += n; save(); },
   completeLesson(lessonId, xp, perfect){
     if(lessonId){

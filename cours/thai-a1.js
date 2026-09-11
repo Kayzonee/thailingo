@@ -148,7 +148,30 @@ ajouterPalier({
   si_khao:{ th:'สีขาว', rom:'sǐi-khǎao', fr:'blanc', en:'white', emoji:'⚪' },
   si_lueang:{ th:'สีเหลือง', rom:'sǐi-lʉ̌ang', fr:'jaune', en:'yellow', emoji:'🟡' },
   si_som:{ th:'สีส้ม', rom:'sǐi-sôm', fr:'orange', en:'orange', emoji:'🟠' },
-  yai:{ th:'ใหญ่', rom:'yài', fr:'grand', en:'big', emoji:'🐘' },
+  /* — outils de la demande et de la question — */
+  mai_q:{ th:'ไหม', rom:'mǎi', fr:'(question oui/non)', en:'(yes/no question)', emoji:'❓' },
+  khoo:{ th:'ขอ', rom:'khɔ̌ɔ', fr:'puis-je avoir', en:'may I have', emoji:'🙏' },
+  noi:{ th:'หน่อย', rom:'nɔ̀i', fr:'un peu (demande polie)', en:'a bit (softens a request)', emoji:'🙂' },
+
+  /* — mots de liaison (déplacés depuis A2 et B1 : ils servent dès les
+       premières phrases complètes) — */
+  lae:{ th:'และ', rom:'lɛ́', fr:'et', en:'and', emoji:'➕' },
+  tae:{ th:'แต่', rom:'tɛ̀ɛ', fr:'mais', en:'but', emoji:'↔️' },
+  rue:{ th:'หรือ', rom:'rʉ̌ʉ', fr:'ou', en:'or', emoji:'❔' },
+  kap:{ th:'กับ', rom:'kàp', fr:'avec', en:'with', emoji:'➕' },
+  phro:{ th:'เพราะ', rom:'phrɔ́', fr:'parce que', en:'because', emoji:'➡️' },
+  danglan:{ th:'ดังนั้น', rom:'dang-nán', fr:'donc', en:'therefore', emoji:'➡️' },
+  ko:{ th:'ก็', rom:'kɔ̂ɔ', fr:'alors, eh bien', en:'then, well', emoji:'➡️' },
+  phuea:{ th:'เพื่อ', rom:'phʉ̂a', fr:'pour, afin de', en:'in order to', emoji:'🎯' },
+  tha_if:{ th:'ถ้า', rom:'thâa', fr:'si', en:'if', emoji:'🔀' },
+  muea:{ th:'เมื่อ', rom:'mʉ̂a', fr:'quand, lorsque', en:'when', emoji:'⏱️' },
+  thueng_maewa:{ th:'ถึงแม้ว่า', rom:'thʉ̌ng-mɛ́ɛ-wâa', fr:'bien que', en:'although', emoji:'🔄' },
+  raweang:{ th:'ระหว่าง', rom:'rá-wàang', fr:'pendant, entre', en:'during, between', emoji:'↔️' },
+  wa:{ th:'ว่า', rom:'wâa', fr:'que (dire que…)', en:'that (say that…)', emoji:'💬' },
+  thi_rel:{ th:'ที่', rom:'thîi', fr:'qui / que ; à (un lieu)', en:'that, which; at (a place)', emoji:'🔗' },
+  doi:{ th:'โดย', rom:'dooi', fr:'par, au moyen de', en:'by, through', emoji:'🛤️' },
+  nokjak:{ th:'นอกจาก', rom:'nɔ̂ɔk-jàak', fr:'en dehors de', en:'apart from', emoji:'➖' },
+  yai_big:{ th:'ใหญ่', rom:'yài', fr:'grand', en:'big', emoji:'🐘' },
   lek:{ th:'เล็ก', rom:'lék', fr:'petit', en:'small', emoji:'🐜' },
   ron:{ th:'ร้อน', rom:'rɔ́ɔn', fr:'chaud', en:'hot', emoji:'🔥' },
   yen:{ th:'เย็น', rom:'yen', fr:'frais', en:'cool', emoji:'❄️' },
@@ -389,7 +412,7 @@ ajouterPalier({ palier:'a1',
   sections:[
     { id:'sec-a1', titre:{fr:'Débutant', en:'Beginner'},
       sousTitre:{fr:'Se faire comprendre au quotidien', en:'Getting by day to day'},
-      unites:['a1u1','a1u2','a1u3','a1u4','a1u5','a1u6','a1u7','a1u8','a1u9','a1u10','a1u11','a1u12'],
+      unites:['a1u1','a1u2','a1u3','a1u4','a1u5','a1u5b','a1u6','a1u7','a1u8','a1u9','a1u10','a1u11','a1u12'],
       couleur:'#58CC02' }
   ],
   unites:[
@@ -404,7 +427,7 @@ ajouterPalier({ palier:'a1',
     { id:'a1u2l1', title:{fr:'Pronoms', en:'Pronouns'}, words:['phom','chan','khun','khao','rao','phuak_khao'], sentences:['s_myname','s_whatname'] },
     { id:'a1u2l2', title:{fr:'Les gens', en:'People'}, words:['khon','phuean','khru','nakrian','phuchai','phuying','dek'], sentences:['s_ihave','s_go_school'] },
     { id:'a1u2l3', title:{fr:'D’où viens-tu ?', en:'Where from?'}, words:['cheu','arai','thai','farangset','angkrit','phasa'], sentences:['s_wherefrom','s_fromfr','s_iam_french','s_nicetomeet'] },
-    { id:'a1u2l4', title:{fr:'Poser une question', en:'Asking a question'}, words:['khrai','thammai','muearai','yangngai','thinai','arai'], sentences:['s_whatname','s_where_go','s_wherefrom'] }
+    { id:'a1u2l4', title:{fr:'Poser une question', en:'Asking a question'}, words:['khrai','thammai','muearai','yangngai','thinai','arai','mai_q'], sentences:['s_whatname','s_where_go','s_wherefrom'] }
   ]},
   { id:'a1u3', title:{fr:'Les nombres', en:'Numbers'}, subtitle:{fr:'Compter et payer', en:'Counting and paying'},
     color:'#FF4B4B', icon:'🔢', lessons:[
@@ -422,7 +445,19 @@ ajouterPalier({ palier:'a1',
     color:'#FFB020', icon:'🍜', lessons:[
     { id:'a1u5l1', title:{fr:'Plats', en:'Dishes'}, words:['kuaitiao','phatthai','somtam','ahan','ranahan'], sentences:['s_noodle','s_verygood'] },
     { id:'a1u5l2', title:{fr:'Boissons', en:'Drinks'}, words:['bia','namkhaeng','nom','namtan','kluea','khanom'], sentences:['s_water','s_beer'] },
-    { id:'a1u5l3', title:{fr:'Faim et soif', en:'Hungry and thirsty'}, words:['hiu','im','ao','yak','phonlamai'], sentences:['s_hungry','s_full','s_buy_fruit'] }
+    { id:'a1u5l3', title:{fr:'Faim et soif', en:'Hungry and thirsty'}, words:['hiu','im','ao','yak','phonlamai','khoo','noi'], sentences:['s_hungry','s_full','s_buy_fruit'] }
+  ]},
+  { id:'a1u5b', title:{fr:'Mots de liaison', en:'Linking words'},
+    subtitle:{fr:'Relier ses idées', en:'Joining ideas'},
+    color:'#7B61FF', icon:'🔗', lessons:[
+    { id:'a1u5bl1', title:{fr:'Et, mais, ou', en:'And, but, or'},
+      words:['lae','tae','rue','kap'], sentences:['a2_but','s_ihave'] },
+    { id:'a1u5bl2', title:{fr:'Parce que, donc, alors', en:'Because, so, then'},
+      words:['phro','danglan','ko','phuea'], sentences:['a2_because','b1_therefore','b1_inorder'] },
+    { id:'a1u5bl3', title:{fr:'Si, quand, bien que', en:'If, when, although'},
+      words:['tha_if','muea','thueng_maewa','raweang'], sentences:['a2_if','b1_although','b1_during'] },
+    { id:'a1u5bl4', title:{fr:'Que, qui', en:'That, who'},
+      words:['wa','thi_rel','doi','nokjak'], sentences:['b1_which','b1_because_that','b1_apartfrom'] }
   ]},
   { id:'a1u6', title:{fr:'La famille', en:'Family'}, subtitle:{fr:'Les proches', en:'Close relatives'},
     color:'#FF86D0', icon:'👨‍👩‍👧', lessons:[
@@ -433,7 +468,7 @@ ajouterPalier({ palier:'a1',
   { id:'a1u7', title:{fr:'Décrire', en:'Describing'}, subtitle:{fr:'Couleurs et qualités', en:'Colours and qualities'},
     color:'#CE82FF', icon:'🎨', lessons:[
     { id:'a1u7l1', title:{fr:'Couleurs', en:'Colours'}, words:['si_daeng','si_namngen','si_khiao','si_dam','si_khao','si_lueang','si_som'], sentences:['s_book_red'] },
-    { id:'a1u7l2', title:{fr:'Tailles', en:'Sizes'}, words:['yai','lek','mai_new','kao_old','reo','cha_slow'], sentences:['s_big_house'] },
+    { id:'a1u7l2', title:{fr:'Tailles', en:'Sizes'}, words:['yai_big','lek','mai_new','kao_old','reo','cha_slow'], sentences:['s_big_house'] },
     { id:'a1u7l3', title:{fr:'Jugements', en:'Judgements'}, words:['di','mai_di','suai','phaeng','thuk','mak','nitnoi'], sentences:['s_pretty','s_expensive'] }
   ]},
   { id:'a1u8', title:{fr:'Le temps', en:'Time'}, subtitle:{fr:'Quand ?', en:'When?'},

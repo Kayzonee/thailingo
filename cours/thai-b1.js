@@ -108,14 +108,6 @@ ajouterPalier({ palier:'b1', lexique:{
   ubattihet:{ th:'อุบัติเหตุ', rom:'ù-bàt-tì-hèet', fr:'accident', en:'accident', emoji:'🚑' },
 
   /* — liens logiques et subordination — */
-  wa:{ th:'ว่า', rom:'wâa', fr:'que (dire que…)', en:'that (say that…)', emoji:'💬' },
-  thi_rel:{ th:'ที่', rom:'thîi', fr:'qui / que (relatif)', en:'that, which', emoji:'🔗' },
-  phuea:{ th:'เพื่อ', rom:'phʉ̂a', fr:'pour, afin de', en:'in order to', emoji:'🎯' },
-  doi:{ th:'โดย', rom:'dooi', fr:'par, au moyen de', en:'by, through', emoji:'🛤️' },
-  thueng_maewa:{ th:'ถึงแม้ว่า', rom:'thʉ̌ng-mɛ́ɛ-wâa', fr:'bien que', en:'although', emoji:'🔄' },
-  danglan:{ th:'ดังนั้น', rom:'dang-nán', fr:'donc', en:'therefore', emoji:'➡️' },
-  nokjak:{ th:'นอกจาก', rom:'nɔ̂ɔk-jàak', fr:'en dehors de', en:'apart from', emoji:'➖' },
-  raweang:{ th:'ระหว่าง', rom:'rá-wàang', fr:'pendant, entre', en:'during, between', emoji:'↔️' },
   jonkrathang:{ th:'จนกระทั่ง', rom:'jon-krà-thâng', fr:'jusqu’à ce que', en:'until', emoji:'⏱️' },
   thammai_mai:{ th:'ทำไมถึง', rom:'tham-mai-thʉ̌ng', fr:'pourquoi donc', en:'why exactly', emoji:'❔' },
   yangrai_kotam:{ th:'อย่างไรก็ตาม', rom:'yàang-rai-kɔ̂ɔ-taam', fr:'quoi qu’il en soit', en:'in any case', emoji:'🌀' },
@@ -136,7 +128,6 @@ ajouterPalier({ palier:'b1', lexique:{
   /* — verbes et mots-outils très courants — */
   bok:{ th:'บอก', rom:'bɔ̀ɔk', fr:'dire, annoncer', en:'to tell', emoji:'📢' },
   keng:{ th:'เก่ง', rom:'kèng', fr:'doué', en:'skilled', emoji:'🏅' },
-  ko:{ th:'ก็', rom:'kɔ̂ɔ', fr:'alors, eh bien', en:'then, well', emoji:'➡️' },
   poet:{ th:'เปิด', rom:'pə̀ət', fr:'ouvrir', en:'to open', emoji:'🔓' },
   pit:{ th:'ปิด', rom:'pìt', fr:'fermer', en:'to close', emoji:'🔒' },
   thi_ni:{ th:'ที่นี่', rom:'thîi-nîi', fr:'ici', en:'here', emoji:'📍' },
@@ -242,12 +233,10 @@ ajouterPalier({ palier:'b1',
     { id:'b1u7l2', title:{fr:'Cuissons', en:'Cooking methods'}, words:['tom','phat','thot','ping'], sentences:['b1_cook'] },
     { id:'b1u7l3', title:{fr:'À table', en:'At the table'}, words:['jaan','chon','som','takiap'], sentences:['b1_taste'] }
   ]},
-  { id:'b1u8', title:{fr:'Relier les idées', en:'Linking ideas'}, subtitle:{fr:'Phrases plus longues', en:'Longer sentences'},
+  { id:'b1u8', title:{fr:'Le monde autour de soi', en:'The world around you'}, subtitle:{fr:'Nature, environnement, prudence', en:'Nature, environment, care'},
     color:'#7B61FF', icon:'🔗', lessons:[
-    { id:'b1u8l1', title:{fr:'Qui, que', en:'Who, which'}, words:['thi_rel','wa','doi'], sentences:['b1_which','b1_because_that'] },
-    { id:'b1u8l2', title:{fr:'But et opposition', en:'Purpose and contrast'}, words:['phuea','thueng_maewa','danglan','nokjak'], sentences:['b1_inorder','b1_although','b1_therefore','b1_apartfrom'] },
-    { id:'b1u8l3', title:{fr:'Situer dans le temps', en:'Placing in time'}, words:['raweang','jonkrathang','yangrai_kotam','thammai_mai','yut','thaang'], sentences:['b1_during','b1_until'] },
-    { id:'b1u8l7', title:{fr:'Petits mots utiles', en:'Handy little words'}, words:['ko','thi_ni','sonjai','bang_some'], sentences:['b1_internet','b1_culture','b1_apartfrom'] },
+    { id:'b1u8l3', title:{fr:'Situer dans le temps', en:'Placing in time'}, words:['jonkrathang','yangrai_kotam','thammai_mai','yut','thaang'], sentences:['b1_during','b1_until'] },
+    { id:'b1u8l7', title:{fr:'Petits mots utiles', en:'Handy little words'}, words:['thi_ni','sonjai','bang_some'], sentences:['b1_internet','b1_culture','b1_apartfrom'] },
     { id:'b1u8l4', title:{fr:'Nature', en:'Nature'}, words:['thammachat','ton_mai','dokmai','maenam','pa','satliang'], sentences:['b1_nature'] },
     { id:'b1u8l5', title:{fr:'Environnement', en:'Environment'}, words:['singwaetlom','malaphit','raksa','narak','nasonjai'], sentences:['b1_pollution','b1_interesting'] },
     { id:'b1u8l6', title:{fr:'Danger', en:'Danger'}, words:['rokphai','attrai','plotphai','chak','truat','hai_kamlang','ubattihet'], sentences:['b1_dangerous','b1_safe','b1_accident'] }

@@ -16,11 +16,11 @@ statiques et l'API du navigateur.
 | | |
 |---|---|
 | Cours | `fr-th` (thaï depuis le français), `en-th` (thaï depuis l'anglais) |
-| Contenu | 463 mots, 143 phrases, 32 unités, 106 leçons |
+| Contenu | 468 mots, 143 phrases de leçon, **330 phrases de révision**, 33 unités, 107 leçons |
 | Paliers | A1 Débutant, A2 Élémentaire, B1 Intermédiaire |
 | Écriture | alphabet complet (44 consonnes avec classe de ton, 10 voyelles, 4 signes) + 11 règles de ton |
 | Sauvegarde | locale + en ligne (Firebase), avec un code de récupération |
-| Tests | 51 tests Node + 23 tests d'interface, tous verts |
+| Tests | 65 tests Node + 23 tests d'interface, tous verts |
 
 **Il reste deux chantiers**, décrits en §7 : les cours `th-fr` / `th-en`, et les paliers B2 / C1.
 
@@ -36,7 +36,7 @@ python3 -m http.server 8777        # depuis la racine du dépôt
 - tests d'interface : <http://localhost:8777/tests/ui.html> (ils jouent des scénarios dans l'app réelle, dans une iframe)
 
 ```bash
-node tests/run.js                  # 47 tests : contenu, traductions, exercices, progression, sauvegarde
+node tests/run.js                  # 65 tests : contenu, traductions, exercices, révision, progression, sauvegarde
 ```
 
 **Les deux suites doivent passer avant tout déploiement.** Celle de Node contient des
@@ -53,6 +53,7 @@ tests d'intégrité du source qui ont déjà rattrapé de vraies casses (voir §
 | `js/contenu.js` | agrège les paliers ; expose `LEX`, `SENT`, `SCRIPT`, `TONE_RULES`, `CURRICULUM`, `SECTIONS`, `UNITES_LANGUE`, `UNITES_ECRITURE`, `romDe()`, `glose()`, `txt()` |
 | `cours/registre.js` | définition des cours et chargement à la demande de leurs fichiers |
 | `cours/thai-a1.js`, `-a2.js`, `-b1.js` | le contenu, un fichier par palier |
+| `cours/revision-thai.js` | les phrases réservées à la révision (voir §4) |
 | `js/state.js` | sauvegarde versionnée (schéma 6) : réglages globaux, progression **par cours** |
 | `js/nuage.js` | sauvegarde en ligne Firebase, **par API REST, sans SDK** |
 | `js/audio.js` | synthèse vocale th-TH, effets sonores générés, reconnaissance vocale |
@@ -103,6 +104,26 @@ ajouterPalier({
   }]
 });
 ```
+
+### Les phrases de révision (`cours/revision-thai.js`)
+
+Elles ne sont enseignées dans aucune leçon : elles servent à faire composer des
+tournures **nouvelles** avec le vocabulaire déjà appris. Le bloc s'appelle `revision:`
+et n'écrit que trois champs :
+
+```js
+ajouterPalier({ palier:'a1', revision:{
+  rv_a1_042:{ chunks:['คุณ','หิว','ไหม','ครับ'], fr:'As-tu faim ?', en:'Are you hungry?' }
+}});
+```
+
+`rom` et `mots` (les mots requis) sont **déduits automatiquement** par
+`finaliserContenu()` — ne jamais les écrire à la main, la romanisation ne peut alors
+pas diverger de celle du lexique. En contrepartie, une règle stricte, tenue par un
+test : **chaque chunk doit être une entrée du lexique**. C'est ce qui permet à la
+correction d'être cliquable mot à mot. Une phrase n'entre en révision que lorsque
+tous ses mots ont été rencontrés dans une leçon terminée ; deux autres tests
+interdisent qu'elle reprenne une phrase de leçon ou qu'elle soit écrite deux fois.
 
 Une unité d'**écriture** porte `ecriture:true`, et ses leçons utilisent `script:[index…]`
 (indices dans `SCRIPT`) ou `tones:[index…]` (indices dans `TONE_RULES`) au lieu de
@@ -243,7 +264,20 @@ lui demander serait une régression :
 - **la séance de révision ne pioche que dans les leçons terminées** (au moins une
   couronne), toutes confondues, et sa longueur suit l'avancement : une leçon ordinaire
   (15 exercices) plus 5 par leçon terminée supplémentaire, sans plafond. Voir
-  `buildPractice()` et `tailleSeanceRevision()` dans `js/engine.js`.
+  `buildPractice()` et `tailleSeanceRevision()` dans `js/engine.js` ;
+- **la révision donne sept vies**, la leçon en garde trois. Elle est plus longue, et
+  composer une phrase coûte plus cher qu'un QCM ;
+- **au-delà de dix leçons terminées, la révision bascule à 70 % de composition de
+  phrases et 30 % de rappels de vocabulaire**, servis par blocs : trois rappels
+  portant sur les mots des sept phrases qui suivent. En deçà, elle reste un
+  entraînement au vocabulaire. Voir `SEUIL_COMPOSITION` dans `js/engine.js` ;
+- **rien ne sort jamais de la révision** : tous les mots des leçons terminées restent
+  dans le tirage. Le compteur « mots arrivés à échéance » a été retiré, il laissait
+  croire le contraire ;
+- **une phrase ratée se corrige mot à mot** : la bonne tournure s'affiche en thaï,
+  chaque mot cliquable donnant sa romanisation et son sens (`hintable()` dans
+  `js/app.js`). Sur un QCM réussi dont la réponse est en thaï, l'encadré vert redit
+  ce que le mot choisi veut dire.
 
 ## 9. Pièges déjà rencontrés — ne pas les redécouvrir
 
