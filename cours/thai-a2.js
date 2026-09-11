@@ -6,7 +6,6 @@
 ajouterPalier({ palier:'a2', lexique:{
   /* — corps et santé — */
   hua:{ th:'หัว', rom:'hǔa', fr:'tête', en:'head', emoji:'🧠' },
-  ta_eye:{ th:'ตาดู', rom:'taa', fr:'œil', en:'eye', emoji:'👁️' },
   hu:{ th:'หู', rom:'hǔu', fr:'oreille', en:'ear', emoji:'👂' },
   pak:{ th:'ปาก', rom:'pàak', fr:'bouche', en:'mouth', emoji:'👄' },
   mue:{ th:'มือ', rom:'mʉʉ', fr:'main', en:'hand', emoji:'✋' },
@@ -207,7 +206,7 @@ ajouterPalier({ palier:'a2',
   a2_passport:{ chunks:['หนังสือเดินทาง','ของ','ผม','หาย'], rom:'nǎng-sʉ̌ʉ-dəən-thaang khɔ̌ɔng phǒm hǎai', fr:'J’ai perdu mon passeport', en:'I have lost my passport' },
   a2_must:{ chunks:['คุณ','ต้อง','ไป','ตอนนี้'], rom:'khun tɔ̂ng pai tɔɔn-níi', fr:'Tu dois partir maintenant', en:'You must go now' },
   a2_should:{ chunks:['คุณ','ควร','พักผ่อน'], rom:'khun khuan phák-phɔ̀n', fr:'Tu devrais te reposer', en:'You should rest' },
-  a2_more:{ chunks:['ขอ','อีก','หนึ่ง','ที่'], rom:'khɔ̌ɔ ìik nùeng thîi', fr:'Encore une portion, s’il vous plaît', en:'One more serving, please' },
+  a2_more:{ chunks:['ขอ','อีก','หนึ่ง','ที่'], rom:'khɔ̌ɔ ìik nʉ̀ng thîi', fr:'Encore une portion, s’il vous plaît', en:'One more serving, please' },
   a2_allgone:{ chunks:['หมด','แล้ว'], rom:'mòt lɛ́ɛo', fr:'Il n’y en a plus', en:'It’s all gone' },
   a2_because:{ chunks:['ผม','ไม่','ไป','เพราะ','ฝน','ตก'], rom:'phǒm mâi pai phrɔ́ fǒn tòk', fr:'Je n’y vais pas parce qu’il pleut', en:'I’m not going because it’s raining' },
   a2_if:{ chunks:['ถ้า','ว่าง','ผม','จะ','ไป'], rom:'thâa wâang phǒm jà pai', fr:'Si je suis libre, j’irai', en:'If I’m free, I’ll go' },
@@ -225,7 +224,7 @@ ajouterPalier({ palier:'a2',
   unites:[
   { id:'a2u1', title:{fr:'Le corps', en:'The body'}, subtitle:{fr:'Se sentir bien ou mal', en:'Feeling well or unwell'},
     color:'#FF4B4B', icon:'🩺', lessons:[
-    { id:'a2u1l1', title:{fr:'Le corps', en:'Body parts'}, words:['hua','ta_eye','hu','pak','mue','thao'], sentences:['a2_headache'] },
+    { id:'a2u1l1', title:{fr:'Le corps', en:'Body parts'}, words:['hua','ta','hu','pak','mue','thao'], sentences:['a2_headache'] },
     { id:'a2u1l2', title:{fr:'Être malade', en:'Being ill'}, words:['puai','jep','puat','khaijai','nueai'], sentences:['a2_sick','a2_tired'] },
     { id:'a2u1l3', title:{fr:'Chez le médecin', en:'At the doctor’s'}, words:['mo','ya_med','phayaban','khaengraeng','thong','lang','jai'], sentences:['a2_doctor'] }
   ]},

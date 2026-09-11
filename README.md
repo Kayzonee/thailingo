@@ -16,11 +16,11 @@ statiques et l'API du navigateur.
 | | |
 |---|---|
 | Cours | `fr-th` (thaï depuis le français), `en-th` (thaï depuis l'anglais) |
-| Contenu | 468 mots, 143 phrases de leçon, **330 phrases de révision**, 33 unités, 107 leçons |
+| Contenu | 467 mots, 143 phrases de leçon, **330 phrases de révision**, 33 unités, 107 leçons |
 | Paliers | A1 Débutant, A2 Élémentaire, B1 Intermédiaire |
 | Écriture | alphabet complet (44 consonnes avec classe de ton, 10 voyelles, 4 signes) + 11 règles de ton |
 | Sauvegarde | locale + en ligne (Firebase), avec un code de récupération |
-| Tests | 65 tests Node + 23 tests d'interface, tous verts |
+| Tests | 67 tests Node + 23 tests d'interface, tous verts |
 
 **Il reste deux chantiers**, décrits en §7 : les cours `th-fr` / `th-en`, et les paliers B2 / C1.
 
@@ -36,7 +36,7 @@ python3 -m http.server 8777        # depuis la racine du dépôt
 - tests d'interface : <http://localhost:8777/tests/ui.html> (ils jouent des scénarios dans l'app réelle, dans une iframe)
 
 ```bash
-node tests/run.js                  # 65 tests : contenu, traductions, exercices, révision, progression, sauvegarde
+node tests/run.js                  # 67 tests : contenu, traductions, exercices, révision, progression, sauvegarde
 ```
 
 **Les deux suites doivent passer avant tout déploiement.** Celle de Node contient des
@@ -132,7 +132,11 @@ Une unité d'**écriture** porte `ecriture:true`, et ses leçons utilisent `scri
 ### Règles que les tests font respecter
 
 - chaque mot a `th`, `rom`, `fr`, `en`, `emoji`, et `th` est bien en caractères thaïs ;
-- **aucun doublon d'écriture thaïe** dans tout le lexique ;
+- **aucun doublon d'écriture thaïe** dans tout le lexique — un vrai homographe
+  (ตา : œil / grand-père maternel) reçoit **une seule entrée portant les deux sens**,
+  jamais deux entrées : `romDe()` et la correction mot à mot ne sauraient pas laquelle choisir ;
+- **une seule convention de romanisation** : la voyelle de มือ, ลืม, หรือ s'écrit `ʉ`,
+  jamais `ue`. Un test refuse qu'une phrase de leçon romanise un mot autrement que le lexique ;
 - chaque phrase a `chunks`, `rom`, `fr`, `en` ;
 - tout mot thaï affiché a une romanisation (`romDe()` ne doit jamais rendre vide) ;
 - toute leçon référence du contenu existant ;

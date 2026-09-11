@@ -287,6 +287,32 @@ t('une leçon de tons ne produit que des exercices de ton, avec la règle', ()=>
   });
 });
 
+t('la romanisation d’une phrase de leçon suit celle du lexique', ()=>{
+  /* les phrases de leçon écrivent leur romanisation à la main : si l'on corrige
+     un mot au lexique sans corriger les phrases, les deux divergent en silence */
+  const ecarts = [];
+  Object.entries(SENT).forEach(([id,s])=>{
+    const t = s.rom.split(' ');
+    if(t.length !== s.chunks.length) return;      // découpage libre : on ne juge pas
+    s.chunks.forEach((c,i)=>{
+      const attendu = (LEX[idParThai(c)] || {}).rom;
+      if(attendu && attendu !== t[i]) ecarts.push(`${id} ${c} : « ${t[i]} » ≠ « ${attendu} »`);
+    });
+  });
+  eq(ecarts.length, 0, ecarts.slice(0,4).join(' ; ')+' — ');
+});
+
+t('une même graphie thaïe ne porte qu’une entrée, homographes compris', ()=>{
+  /* ตา (œil / grand-père maternel) est un vrai homographe : une seule entrée
+     portant les deux sens, sinon romDe() et la correction mot à mot devraient
+     choisir l'un des deux au hasard */
+  const parTh = {};
+  Object.entries(LEX).forEach(([id,w])=>{ (parTh[w.th] = parTh[w.th] || []).push(id); });
+  const dbl = Object.entries(parTh).filter(([,ids])=>ids.length>1).map(([th,ids])=>th+' ('+ids.join(',')+')');
+  eq(dbl.length, 0, 'graphies partagées : '+dbl.join(', ')+' — ');
+  ok(/œil/.test(glose(LEX.ta)) && /grand-père/.test(glose(LEX.ta)), 'ตา a perdu un de ses deux sens');
+});
+
 t('aucune clé du lexique n’est déclarée deux fois dans le source', ()=>{
   /* JavaScript écrase silencieusement la première : un mot disparaît de
      l'app sans qu'aucun autre test ne s'en aperçoive. C'est arrivé à ยาย. */
