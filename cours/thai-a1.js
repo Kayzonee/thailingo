@@ -5,7 +5,10 @@
    ============================================================ */
 ajouterPalier({
   palier:'a1',
-  tonsNoms:{ fr:['moyen','bas','descendant','haut','montant'],
+  /* `cles` : identifiants internes des tons, dans l'ordre des noms affichés.
+     Le moteur s'en sert pour relier r.ton à son libellé, quelle que soit la langue. */
+  tonsNoms:{ cles:['moyen','bas','descendant','haut','montant'],
+             fr:['moyen','bas','descendant','haut','montant'],
              en:['mid','low','falling','high','rising'] },
 
   lexique:{

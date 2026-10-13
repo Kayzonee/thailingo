@@ -34,7 +34,25 @@ function repondre(F, D, juste){
   return true;
 }
 
+/* onload se déclenche quand les scripts sont là, pas quand le contenu du cours
+   est chargé : demarrer() est asynchrone. Sans cette attente, les tests partaient
+   parfois sur un parcours encore vide — passant ou échouant selon le cache. */
+function contenuPret(f, msMax = 8000){
+  const t0 = Date.now();
+  return new Promise((ok, ko)=>{
+    (function voir(){
+      const T = f.contentWindow && f.contentWindow.ThaiLingo;
+      /* on attend la promesse `pret` de l'app : le contenu chargé ET le premier
+         rendu fait, sinon notre premier go() se fait effacer par le sien */
+      if(T && T.pret) return T.pret.then(ok, ok);
+      if(Date.now() - t0 > msMax) return ko(new Error('application jamais prête'));
+      setTimeout(voir, 40);
+    })();
+  });
+}
+
 document.getElementById('app').onload = async ()=>{
+  await contenuPret(document.getElementById('app'));
   const W = document.getElementById('app').contentWindow;
   const F = W.ThaiLingo;
   const D = W.document;

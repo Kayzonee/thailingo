@@ -14,6 +14,9 @@ const PALIERS = [];
 const ORDRE_PALIERS = ['a1','a2','b1','b2','c1'];
 
 function ajouterPalier(bloc){ PALIERS.push(bloc); }
+/* Changer de cours REMPLACE le contenu, il ne s'y ajoute pas : sans cela les
+   paliers de deux langues se cumulent et le parcours double de taille. */
+function viderContenu(){ PALIERS.length = 0; }
 
 /* glose d'une entrée dans la langue de l'interface ; le français sert de repli */
 function glose(o){
@@ -61,6 +64,15 @@ function finaliserContenu(){
   return { mots:Object.keys(LEX).length, phrases:Object.keys(SENT).length,
            revision:Object.keys(REVISION).length,
            unites:CURRICULUM.length, lecons:CURRICULUM.reduce((a,u)=>a+u.lessons.length,0) };
+}
+
+/* Assemble des mots en une phrase écrite. Thaï et chinois ne mettent pas
+   d'espace entre les mots ; le vietnamien, si — « raukhôngcay » n'est pas
+   du vietnamien, « rau không cay » en est. */
+function joindreMots(mots){
+  let sep = '';
+  try{ const c = coursActif(); sep = (c && typeof c.separateur === 'string') ? c.separateur : ''; }catch(e){}
+  return (mots||[]).join(sep);
 }
 
 function romDe(th){ return (th && ROM_PAR_THAI[th]) || ''; }

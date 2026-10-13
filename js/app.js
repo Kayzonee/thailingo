@@ -7,7 +7,12 @@ let L = null;                 // état de la leçon en cours
 
 const h = (html)=>{ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; };
 const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const isThaiText = s => /[\u0E00-\u0E7F]/.test(s);   // plage thaïe, en échappements pour ne dépendre d'aucun encodage
+/* Un texte est-il dans la langue enseignée ? Les exercices le DISENT (o.cible),
+   parce qu'en vietnamien l'écriture est latine : aucune plage Unicode ne
+   distinguerait « xin chào » de « bonjour ». Le reniflage ne sert que de repli
+   pour les écritures propres (thaï, chinois). */
+function scriptCible(){ try{ return coursActif().script; }catch(e){ return /[\u0E00-\u0E7F]/; } }
+const isThaiText = s => { const r = scriptCible(); return !!r && r.test(s); };
 
 
 /* au démarrage : récupérer la progression en ligne si celle de l'appareil est vide
@@ -496,7 +501,7 @@ function exChoiceUI(body, e){
     <div class="kbd-hint">${T('astuce_clavier',{n:e.options.length})}</div>`;
   const wrap = document.getElementById('ch');
   e.options.forEach((o,i)=>{
-    const thaiCls = (e.thai || isThaiText(o.label)) ? 'thai' : '';
+    const thaiCls = (e.thai || o.cible || isThaiText(o.label)) ? 'thai' : '';
     const el = h(`<button class="choice">
       <span class="num">${i+1}</span>
       ${o.emoji?`<span class="emoji">${o.emoji}</span>`:''}
@@ -506,7 +511,7 @@ function exChoiceUI(body, e){
       if(L.state!=='ask') return;
       wrap.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
       el.classList.add('sel'); L.sel=i; setCheck(true); Audio_.tap();
-      if(e.type!=='listen' && isThaiText(o.label)) Audio_.speak(o.label);
+      if(e.type!=='listen' && (o.cible || isThaiText(o.label))) Audio_.speak(o.label);
     };
     wrap.appendChild(el);
   });
@@ -582,12 +587,15 @@ function wireBank(e, thaiBank){
     bank.appendChild(t);
   });
 }
+/* espace entre les mots à l'affichage, selon la langue enseignée */
+function sepMots(){ try{ return coursActif().separateur || ''; }catch(e){ return ''; } }
+
 function hintable(chunks){
   return `<div class="thai big-thai">` + chunks.map(c=>{
     const id = Object.keys(LEX).find(k=>LEX[k].th===c);
     const info = id ? `${LEX[id].rom} — ${glose(LEX[id])}` : '';
     return `<span class="hintable" data-info="${esc(info)}" data-th="${esc(c)}">${esc(c)}</span>`;
-  }).join('') + `</div>`;
+  }).join(sepMots()) + `</div>`;
 }
 function wireHints(){
   document.querySelectorAll('.hintable').forEach(el=>{
@@ -722,10 +730,10 @@ function check(){
   else if(e.type==='trans' || e.type==='listen_build'){
     const mots = L.built.map(x=>x.w);
     ok = mots.join(' ') === e.solution.join(' ');
-    if(!ok) donnee = e.dir === 't2f' ? mots.join(' ') : mots.join('');
+    if(!ok) donnee = e.dir === 't2f' ? mots.join(' ') : joindreMots(mots);
     if(e.dir === 't2f'){ expected = e.solution.join(' '); }
     else {
-      expected = e.solution.join('');
+      expected = joindreMots(e.solution);
       expectedRom = e.solution.map(c=>romDe(c)).filter(Boolean).join(' ');
       if(e.type==='listen_build') expectedRom += ' — ' + e.fr;
     }
@@ -745,7 +753,7 @@ function check(){
     if(!L.timed) Store.loseHeart();
     L.requeue.push(JSON.parse(JSON.stringify(e)));   // Duolingo : l'exercice raté revient
   }
-  if((e.type==='trans' && e.dir==='f2t') || e.type==='listen_build') Audio_.speak(e.solution.join(''));
+  if((e.type==='trans' && e.dir==='f2t') || e.type==='listen_build') Audio_.speak(joindreMots(e.solution));
 
   if(['pick','meaning','listen','script','blank','tone'].includes(e.type)){
     const wrap=document.getElementById('ch');
@@ -982,4 +990,7 @@ async function demarrer(){
   render();
   synchroniserEnLigne();
 }
-demarrer();
+/* `pret` se résout quand le premier rendu est fait. Sans ce signal, un appelant
+   extérieur (les tests d'interface) peut afficher un écran que le render() final
+   de demarrer() efface aussitôt — la panne ne se voyait qu'à cache froid. */
+window.ThaiLingo.pret = demarrer();

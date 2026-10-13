@@ -1,10 +1,16 @@
-/* Audio : voix thaïe (Web Speech) + effets sonores générés (Web Audio, zéro fichier) */
+/* Audio : voix de la langue enseignée (Web Speech) + effets sonores générés
+   (Web Audio, zéro fichier). L'étiquette de langue vient du cours actif. */
 const Audio_ = (()=>{
   let voice = null, ctx = null;
+  /* étiquette BCP-47 du cours actif ; le thaï reste le repli */
+  function etiquette(){
+    try{ return (coursActif().voix) || 'th-TH'; }catch(e){ return 'th-TH'; }
+  }
   function pickVoice(){
     if(!('speechSynthesis' in window)) return;
     const vs = speechSynthesis.getVoices();
-    const found = vs.find(v=>/^th(-|_)?/i.test(v.lang)) || null;
+    const racine = etiquette().split('-')[0];
+    const found = vs.find(v=>new RegExp('^'+racine+'(-|_)?','i').test(v.lang)) || null;
     const changed = !!found !== !!voice;
     voice = found;
     if(changed && typeof window.onThaiVoiceChange === 'function') window.onThaiVoiceChange();
@@ -19,7 +25,7 @@ const Audio_ = (()=>{
     try{
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang='th-TH'; u.rate=rate; if(voice) u.voice=voice;
+      u.lang=etiquette(); u.rate=rate; if(voice) u.voice=voice;
       speechSynthesis.speak(u);
       return true;
     }catch(e){ return false; }
@@ -47,7 +53,7 @@ const Audio_ = (()=>{
     if(!SR) return null;
     let rec;
     try{ rec = new SR(); }catch(e){ return null; }
-    rec.lang='th-TH'; rec.interimResults=false; rec.maxAlternatives=3;
+    rec.lang=etiquette(); rec.interimResults=false; rec.maxAlternatives=3;
     rec.onresult = ev=>{
       const alts = [...ev.results[0]].map(r=>r.transcript);
       onResult(alts);

@@ -7,6 +7,9 @@
    ============================================================ */
 /* noms des tons dans la langue de l'interface */
 function nomsDesTons(){ return (TONES && TONES[LANGUE]) || (TONES && TONES.fr) || ['moyen','bas','descendant','haut','montant']; }
+/* clés internes des tons, dans l'ordre des noms : le thaï en a cinq, le chinois
+   quatre plus le neutre, le vietnamien six — la liste vient donc du contenu */
+function clesDesTons(){ return (TONES && TONES.cles) || ['moyen','bas','descendant','haut','montant']; }
 
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function sample(a,n){ return shuffle(a).slice(0,Math.max(0,n)); }
@@ -40,7 +43,7 @@ function exPick(w, unit){
   const d = neighbours(unit, idOf(w), 3, o=>o.emoji);
   return { type:'pick', word:w, wordId:idOf(w),
     prompt:T('c_lequel',{mot:glose(w)}),
-    options: shuffle([w,...d]).map(o=>({label:o.th, sub:o.rom, emoji:o.emoji, correct:o.th===w.th})) };
+    options: shuffle([w,...d]).map(o=>({label:o.th, sub:o.rom, emoji:o.emoji, cible:true, correct:o.th===w.th})) };
 }
 function exMeaning(w, unit){
   const d = neighbours(unit, idOf(w), 3, o=>glose(o));
@@ -52,7 +55,7 @@ function exListen(w, unit){
   const d = neighbours(unit, idOf(w), 3, o=>o.th);
   return { type:'listen', wordId:idOf(w), speak:w.th,
     prompt:T('c_entends'),
-    options: shuffle([w,...d]).map(o=>({label:o.th, sub:o.rom, correct:o.th===w.th})) };
+    options: shuffle([w,...d]).map(o=>({label:o.th, sub:o.rom, cible:true, correct:o.th===w.th})) };
 }
 /* l'index thaï → identifiant se reconstruit quand le contenu change de cours */
 let ID_BY_TH = null, ID_BY_TH_TAILLE = -1;
@@ -68,20 +71,20 @@ function idOf(w){
 function exTransT2F(s){
   const sol = frWords(glose(s));
   const dis = sample(motsCible().filter(w=>!sol.includes(w)), Math.min(4, Math.max(2, 8-sol.length)));
-  return { type:'trans', dir:'t2f', speak:s.chunks.join(''), chunks:s.chunks,
-    prompt:T('c_traduis'), shown:s.chunks.join(''), rom:s.rom, fr:glose(s),
+  return { type:'trans', dir:'t2f', speak:joindreMots(s.chunks), chunks:s.chunks,
+    prompt:T('c_traduis'), shown:joindreMots(s.chunks), rom:s.rom, fr:glose(s),
     solution:sol, bank:shuffle([...sol,...dis]) };
 }
 function exTransF2T(s){
   const sol = s.chunks;
   const dis = sample(tousLesChunks().filter(c=>!sol.includes(c)), Math.min(4, Math.max(2, 8-sol.length)));
   return { type:'trans', dir:'f2t', prompt:T('c_ecris_thai'), chunks:s.chunks, fr:glose(s),
-    shown:glose(s), solution:sol, bank:shuffle([...sol,...dis]), speakAfter:s.chunks.join('') };
+    shown:glose(s), solution:sol, bank:shuffle([...sol,...dis]), speakAfter:joindreMots(s.chunks) };
 }
 function exListenBuild(s){
   const sol = s.chunks;
   const dis = sample(tousLesChunks().filter(c=>!sol.includes(c)), 3);
-  return { type:'listen_build', prompt:T('c_ecris_entends'), speak:s.chunks.join(''), chunks:s.chunks,
+  return { type:'listen_build', prompt:T('c_ecris_entends'), speak:joindreMots(s.chunks), chunks:s.chunks,
     solution:sol, bank:shuffle([...sol,...dis]), rom:s.rom, fr:glose(s) };
 }
 function exBlank(s){
@@ -90,15 +93,16 @@ function exBlank(s){
   const missing = s.chunks[i];
   const dis = sample(tousLesChunks().filter(c=>c!==missing && !s.chunks.includes(c)), 3);
   return { type:'blank', prompt:T('c_complete'), fr:glose(s), rom:s.rom, romPhrase:s.rom, chunks:s.chunks,
-    before:s.chunks.slice(0,i).join(''), after:s.chunks.slice(i+1).join(''),
-    speak:s.chunks.join(''),
-    options: shuffle([missing,...dis]).map(c=>({label:c, correct:c===missing})) };
+    before:joindreMots(s.chunks.slice(0,i)), after:joindreMots(s.chunks.slice(i+1)),
+    speak:joindreMots(s.chunks),
+    options: shuffle([missing,...dis]).map(c=>({label:c, cible:true, correct:c===missing})) };
 }
 /* épeler : reconstruire le mot lettre par lettre (clavier thaï) */
 function exSpell(w){
+  const clavier = (typeof coursActif === 'function' && coursActif().clavier) || null;
+  if(!clavier) return null;                 /* épeler n'a pas de sens en chinois */
   const letters = Array.from(w.th);
-  const pool = ['ก','ข','ค','ง','จ','ช','ด','ต','ท','น','บ','ป','ผ','พ','ม','ย','ร','ล','ว','ส','ห','อ','า','ิ','ี','ุ','ู','เ','แ','โ','ไ','่','้','ั','ำ'];
-  const dis = sample(pool.filter(c=>!letters.includes(c)), 5);
+  const dis = sample(clavier.filter(c=>!letters.includes(c)), 5);
   return { type:'spell', wordId:idOf(w), word:w, speak:w.th,
     prompt:T('c_ecris_mot'), hint:`${glose(w)} · ${w.rom}`,
     solution:letters, keys: shuffle([...letters, ...dis]) };
@@ -112,24 +116,30 @@ function exSpeak(w){
 /* règles de ton : reconnaître le ton d'une syllabe, et l'inverse */
 function exTone(r){
   const noms = nomsDesTons();
-  const nomTon = r => noms[['moyen','bas','descendant','haut','montant'].indexOf(r.ton)] || r.ton;
+  const cles = clesDesTons();
+  const nomTon = r => noms[cles.indexOf(r.ton)] || r.ton;
   const a = { type:'tone', syll:r, speak:r.th, prompt:T('c_ton_syllabe'),
     explain:glose(r.regle),
     options: shuffle(noms).map(t=>({label:T('ton_prefixe',{nom:t}), correct:t===nomTon(r)})) };
   const others = sample(TONE_RULES.filter(x=>x.ton!==r.ton), 3);
   const b = { type:'tone', thai:true, prompt:T('c_syllabe_ton',{ton:nomTon(r)}),
     explain:glose(r.regle),
-    options: shuffle([r,...others]).map(o=>({label:o.th, sub:o.rom, correct:o.th===r.th})) };
+    options: shuffle([r,...others]).map(o=>({label:o.th, sub:o.rom, cible:true, correct:o.th===r.th})) };
   return [a,b];
 }
 
 function exScript(L){
+  /* on tire les distracteurs dans la même famille que la lettre (consonne,
+     voyelle, clé, digramme…) : comparer une initiale de pinyin à une clé de
+     caractère ne demande aucune connaissance, seulement de la reconnaissance */
+  const memeFamille = SCRIPT.filter(x => x.cls === L.cls);
+  const vivier = memeFamille.length >= 4 ? memeFamille : SCRIPT;
   const a = { type:'script', prompt:T('c_son_lettre',{lettre:L.th}),
-    options: shuffle([L, ...sample(SCRIPT.filter(x=>x.rom!==L.rom),3)])
+    options: shuffle([L, ...sample(vivier.filter(x=>x.rom!==L.rom),3)])
       .map(o=>({label:o.rom, sub:glose(o), correct:o.rom===L.rom})) };
   const b = { type:'script', thai:true, prompt:T('c_lettre_son',{son:L.rom}),
-    options: shuffle([L, ...sample(SCRIPT.filter(x=>x.th!==L.th),3)])
-      .map(o=>({label:o.th, correct:o.th===L.th})) };
+    options: shuffle([L, ...sample(vivier.filter(x=>x.th!==L.th),3)])
+      .map(o=>({label:o.th, cible:true, correct:o.th===L.th})) };
   return [a,b];
 }
 
@@ -177,7 +187,7 @@ function buildExercises(lesson, unit, level=0){
   // on épelle / prononce des mots au sens concret (pas les gloses grammaticales)
   const concrets = order.filter(id=>!/^\(/.test(glose(LEX[id])));
   if(level >= 2) sample(concrets, 2).forEach(id=>{
-    if(Array.from(LEX[id].th).length <= 6) ex.push(exSpell(LEX[id]));
+    if(Array.from(LEX[id].th).length <= 6){ const e = exSpell(LEX[id]); if(e) ex.push(e); }
   });
   if(level >= 3 && Audio_.canListen()) sample(concrets, 1).forEach(id=> ex.push(exSpeak(LEX[id])) );
 

@@ -59,7 +59,7 @@ t('aucune déclaration de haut niveau n’est dupliquée', ()=>{
   eq(doublons.length, 0, 'déclarations en double : '+doublons.join(', ')+' — ');
 });
 t('le code d’amorçage ne s’exécute qu’une fois', ()=>{
-  ['window.ThaiLingo = {', '\ndemarrer();'].forEach(marqueur=>{
+  ['window.ThaiLingo = {', '\nwindow.ThaiLingo.pret = demarrer();'].forEach(marqueur=>{
     eq(sourceApp.split(marqueur).length - 1, 1, `« ${marqueur.trim()} » : `);
   });
 });
@@ -230,6 +230,192 @@ t('l’écran de sauvegarde tient en deux boutons', ()=>{
 t('l’application sauvegarde en ligne après chaque leçon', ()=>{
   ok(/Nuage\.ecrire\(Store\.get\(\)\)/.test(sourceApp), 'pas d’écriture en fin de leçon');
   ok(/Nuage\.lire\(\)/.test(sourceApp), 'pas de lecture au démarrage');
+});
+
+console.log('\n── Les trois cours : chinois et vietnamien au même niveau d’exigence ──');
+
+/* Charge un cours dans son propre contexte et rend ses tables. */
+function monterCours(fichiers, idCours){
+  const st = {};
+  const c = {
+    console,
+    localStorage:{ getItem:k=>k in st?st[k]:null, setItem:(k,v)=>st[k]=String(v),
+                   removeItem:k=>delete st[k], clear:()=>Object.keys(st).forEach(k=>delete st[k]) },
+    Audio_:{ hasThaiVoice:()=>true, canListen:()=>true, speak(){}, good(){}, bad(){}, tap(){}, win(){}, unlock(){} },
+    Date, Math, JSON, Object, Array, String, Number, RegExp, Error, isNaN, parseInt, parseFloat,
+    btoa, atob, escape, unescape, Promise, Set, Map
+  };
+  c.window = c; c.globalThis = c;
+  vm.createContext(c);
+  ['i18n/strings.js','js/contenu.js','cours/registre.js'].concat(fichiers)
+    .forEach(f=>vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'), c, {filename:f}));
+  /* le cours actif porte la voix, l'écriture et le séparateur : sans lui,
+     on testerait le chinois avec les réglages du thaï */
+  if(idCours) vm.runInContext(`COURS_ACTIF = COURS[${JSON.stringify(idCours)}]`, c);
+  vm.runInContext('finaliserContenu()', c);
+  ['js/state.js','js/engine.js'].forEach(f=>vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'), c, {filename:f}));
+  return e => vm.runInContext(e, c);
+}
+
+t('les cours engendrés sont bien ceux que produit le générateur', ()=>{
+  /* chinois-*.js et vietnamien-*.js sont engendrés : une correction faite à la
+     main sur eux serait perdue à la régénération suivante. On vérifie qu'ils
+     n'ont pas dérivé de leurs tables. */
+  const chantier = path.join(root, '..', 'chantier-zh-vi');
+  if(!fs.existsSync(path.join(chantier,'generer.js'))){ ok(true, 'chantier absent'); return; }
+  const avant = {};
+  const engendres = fs.readdirSync(path.join(root,'cours'))
+    .filter(f=>/^(chinois|vietnamien|revision-chinois|revision-vietnamien)/.test(f));
+  engendres.forEach(f=> avant[f] = fs.readFileSync(path.join(root,'cours',f),'utf8'));
+  require('child_process').execSync('node generer.js && node generer-revision.js',
+    { cwd: chantier, stdio:'pipe' });
+  const derive = engendres.filter(f=> fs.readFileSync(path.join(root,'cours',f),'utf8') !== avant[f]);
+  eq(derive.length, 0, 'fichiers modifiés à la main : '+derive.join(', ')+' — ');
+});
+
+t('changer de cours remplace le contenu, il ne s’y ajoute pas', ()=>{
+  /* Deux cours qui lisent des fichiers différents se cumulaient : le parcours
+     passait de 107 à 213 leçons. Le thaï seul ne pouvait pas le révéler,
+     ses deux cours partageant les mêmes fichiers. */
+  const st = {};
+  const c = {
+    console,
+    localStorage:{ getItem:k=>k in st?st[k]:null, setItem:(k,v)=>st[k]=String(v),
+                   removeItem:k=>delete st[k], clear:()=>Object.keys(st).forEach(k=>delete st[k]) },
+    Audio_:{ hasThaiVoice:()=>true, canListen:()=>true, speak(){}, good(){}, bad(){}, tap(){}, win(){}, unlock(){} },
+    Date, Math, JSON, Object, Array, String, Number, RegExp, Error, isNaN, parseInt, parseFloat,
+    btoa, atob, escape, unescape, Promise, Set, Map
+  };
+  c.window = c; c.globalThis = c;
+  vm.createContext(c);
+  ['i18n/strings.js','js/contenu.js','cours/registre.js']
+    .forEach(f=>vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'), c, {filename:f}));
+
+  const mesurer = fichiers => {
+    vm.runInContext('viderContenu()', c);
+    fichiers.forEach(f=>vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'), c, {filename:f}));
+    return vm.runInContext('finaliserContenu()', c);
+  };
+  const TH = ['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js','cours/revision-thai.js'];
+  const ZH = ['cours/chinois-a1.js','cours/chinois-a2.js','cours/chinois-b1.js','cours/revision-chinois.js'];
+
+  const a = mesurer(TH);
+  const b = mesurer(ZH);
+  const c2 = mesurer(TH);
+  eq(JSON.stringify(c2), JSON.stringify(a), 'le thaï revient différent après un détour par le chinois — ');
+  ok(b.lecons < a.lecons + 10, 'le chinois a hérité des leçons thaïes : '+b.lecons);
+  ok(b.mots > 400 && b.lecons > 90, 'le chinois n’a pas chargé : '+JSON.stringify(b));
+});
+
+const COURS_A_TESTER = [
+  ['chinois',    'fr-zh', ['cours/chinois-a1.js','cours/chinois-a2.js','cours/chinois-b1.js','cours/revision-chinois.js']],
+  ['vietnamien', 'fr-vi', ['cours/vietnamien-a1.js','cours/vietnamien-a2.js','cours/vietnamien-b1.js','cours/revision-vietnamien.js']]
+];
+
+COURS_A_TESTER.forEach(([nom, idCours, fichiers])=>{
+  const g2 = monterCours(fichiers, idCours);
+  const L = g2('LEX'), S = g2('SENT'), R = g2('REVISION'), SC = g2('SCRIPT'), TR = g2('TONE_RULES'),
+        UL = g2('UNITES_LANGUE'), UE = g2('UNITES_ECRITURE'), SEC = g2('SECTIONS'), CUR = g2('CURRICULUM');
+
+  t(`${nom} : chaque mot est complet`, ()=>{
+    ok(Object.keys(L).length > 400, 'lexique trop maigre : '+Object.keys(L).length);
+    Object.entries(L).forEach(([id,w])=>{
+      ['th','rom','fr','en','emoji'].forEach(k=> ok(w[k], `${id} : ${k} manquant`));
+    });
+  });
+
+  t(`${nom} : aucune graphie n’est employée deux fois`, ()=>{
+    const par = {};
+    Object.entries(L).forEach(([id,w])=>{ (par[w.th]=par[w.th]||[]).push(id); });
+    const dbl = Object.entries(par).filter(([,v])=>v.length>1).map(([k,v])=>k+' ('+v.join(',')+')');
+    eq(dbl.length, 0, 'graphies partagées : '+dbl.join(', ')+' — ');
+  });
+
+  t(`${nom} : chaque phrase de leçon est complète et romanisée`, ()=>{
+    eq(Object.keys(S).length, 143, 'parité du nombre de phrases — ');
+    Object.entries(S).forEach(([id,s])=>{
+      ok(Array.isArray(s.chunks) && s.chunks.length, id+' : chunks manquants');
+      ok(s.rom && s.fr && s.en, id+' : rom ou glose manquante');
+      s.chunks.forEach(c=> ok(!!g2(`romDe(${JSON.stringify(c)})`), `${id} : « ${c} » sans romanisation`));
+    });
+  });
+
+  t(`${nom} : toute leçon référence du contenu existant`, ()=>{
+    CUR.forEach(u=>u.lessons.forEach(l=>{
+      (l.words||[]).forEach(id=> ok(L[id], `${l.id} : mot inconnu ${id}`));
+      (l.sentences||[]).forEach(id=> ok(S[id], `${l.id} : phrase inconnue ${id}`));
+      (l.script||[]).forEach(i=> ok(SC[i], `${l.id} : lettre ${i} hors alphabet`));
+      (l.tones||[]).forEach(i=> ok(TR[i], `${l.id} : règle de ton ${i} absente`));
+    }));
+  });
+
+  t(`${nom} : aucun mot n’est enseigné nulle part`, ()=>{
+    const vus = new Set(CUR.flatMap(u=>u.lessons.flatMap(l=>l.words||[])));
+    const orphelins = Object.keys(L).filter(id=>!vus.has(id));
+    eq(orphelins.length, 0, 'jamais enseignés : '+orphelins.slice(0,8).join(', ')+' — ');
+  });
+
+  t(`${nom} : aucune leçon de langue n’est vide`, ()=>{
+    UL.forEach(u=>u.lessons.forEach(l=>{
+      ok(!l.script && !l.tones, `${l.id} : leçon d’écriture dans le parcours de langue`);
+      ok((l.words||[]).length >= 3, `${l.id} : ${(l.words||[]).length} mot(s) seulement`);
+    }));
+  });
+
+  t(`${nom} : les sections couvrent le parcours, sans doublon`, ()=>{
+    const couv = SEC.flatMap(s=>s.unites);
+    eq(couv.length, new Set(couv).size, 'unité citée deux fois — ');
+    UL.forEach(u=> ok(couv.includes(u.id), `${u.id} hors section`));
+    eq(UL.length + UE.length, CUR.length, 'langue et écriture doivent être disjointes — ');
+  });
+
+  t(`${nom} : l’écriture est propre à la langue`, ()=>{
+    ok(SC.length >= 25, 'alphabet trop court : '+SC.length);
+    ok(TR.length >= 10, 'trop peu de règles de ton : '+TR.length);
+    const th = SC.map(x=>x.th), rom = SC.map(x=>x.rom);
+    eq(th.length, new Set(th).size, 'lettre répétée — ');
+    eq(rom.length, new Set(rom).size, 'deux lettres pour le même son : l’exercice n’aurait pas de réponse unique — ');
+    const cles = g2('clesDesTons()');
+    TR.forEach(r=> ok(cles.includes(r.ton), `ton inconnu : ${r.ton}`));
+  });
+
+  t(`${nom} : les phrases de révision tiennent la règle du lexique`, ()=>{
+    ok(Object.keys(R).length >= 150, 'banque trop maigre : '+Object.keys(R).length);
+    const desLecons = new Set(Object.values(S).map(s=>s.chunks.join('')));
+    const vues = {};
+    Object.entries(R).forEach(([id,p])=>{
+      p.chunks.forEach(c=> ok(!!g2(`idParThai(${JSON.stringify(c)})`), `${id} : « ${c} » hors lexique`));
+      eq(p.rom, p.chunks.map(c=>g2(`romDe(${JSON.stringify(c)})`)).join(' '), id+' : romanisation déduite — ');
+      ok(!desLecons.has(p.chunks.join('')), `${id} : reprend une phrase de leçon`);
+      const k = p.chunks.join(''); ok(!vues[k], `${id} : doublon de ${vues[k]}`); vues[k] = id;
+    });
+  });
+
+  t(`${nom} : les mots sont séparés comme l’exige la langue`, ()=>{
+    /* « raukhôngcay » n'est pas du vietnamien ; « rau không cay » en est.
+       Le thaï et le chinois, eux, s'écrivent sans espace. */
+    const sep = g2(`coursActif().separateur`);
+    const attendu = nom === 'vietnamien' ? ' ' : '';
+    eq(sep, attendu, `séparateur du cours ${nom} — `);
+    const s3 = Object.values(S).find(x=>x.chunks.length >= 3);
+    eq(g2(`joindreMots(${JSON.stringify(s3.chunks)})`), s3.chunks.join(attendu),
+       'assemblage d’une phrase — ');
+  });
+
+  t(`${nom} : une leçon produit des exercices jouables`, ()=>{
+    const u = UL[0], l = u.lessons[0];
+    const ex = g2(`buildExercises(${JSON.stringify(l)}, ${JSON.stringify(u)}, 0)`);
+    ok(ex.length > 0 && ex.length <= 15, 'nombre d’exercices : '+ex.length);
+    ex.forEach(e=>{
+      ok(e.prompt, e.type+' : pas de consigne');
+      if(e.options){
+        ok(e.options.some(o=>o.correct), e.type+' : aucune bonne réponse');
+        const bonnes = e.options.filter(o=>o.correct).map(o=>o.label);
+        eq(new Set(bonnes).size, bonnes.length, e.type+' : bonne réponse en double — ');
+      }
+      if(e.solution) ok(e.bank && e.solution.every(x=>e.bank.includes(x)), e.type+' : solution hors banque');
+    });
+  });
 });
 
 console.log('\n── Générateur d’exercices ──');

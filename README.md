@@ -15,12 +15,14 @@ statiques et l'API du navigateur.
 
 | | |
 |---|---|
-| Cours | `fr-th` (thaï depuis le français), `en-th` (thaï depuis l'anglais) |
-| Contenu | 467 mots, 143 phrases de leçon, **330 phrases de révision**, 33 unités, 107 leçons |
+| Cours | `fr-th`, `en-th` (thaï), `fr-zh` (chinois), `fr-vi` (vietnamien) — tous depuis le français sauf `en-th` |
+| Contenu thaï | 467 mots, 143 phrases de leçon, 330 phrases de révision, 33 unités, 107 leçons |
+| Contenu chinois | 467 mots, 143 phrases, 170 phrases de révision, 33 unités, 106 leçons |
+| Contenu vietnamien | 464 mots, 143 phrases, 170 phrases de révision, 33 unités, 104 leçons |
 | Paliers | A1 Débutant, A2 Élémentaire, B1 Intermédiaire |
 | Écriture | alphabet complet (44 consonnes avec classe de ton, 10 voyelles, 4 signes) + 11 règles de ton |
 | Sauvegarde | locale + en ligne (Firebase), avec un code de récupération |
-| Tests | 67 tests Node + 23 tests d'interface, tous verts |
+| Tests | 90 tests Node + 23 tests d'interface, tous verts |
 
 **Il reste deux chantiers**, décrits en §7 : les cours `th-fr` / `th-en`, et les paliers B2 / C1.
 
@@ -36,7 +38,7 @@ python3 -m http.server 8777        # depuis la racine du dépôt
 - tests d'interface : <http://localhost:8777/tests/ui.html> (ils jouent des scénarios dans l'app réelle, dans une iframe)
 
 ```bash
-node tests/run.js                  # 67 tests : contenu, traductions, exercices, révision, progression, sauvegarde
+node tests/run.js                  # 90 tests : contenu, traductions, exercices, révision, progression, sauvegarde
 ```
 
 **Les deux suites doivent passer avant tout déploiement.** Celle de Node contient des
@@ -54,6 +56,7 @@ tests d'intégrité du source qui ont déjà rattrapé de vraies casses (voir §
 | `cours/registre.js` | définition des cours et chargement à la demande de leurs fichiers |
 | `cours/thai-a1.js`, `-a2.js`, `-b1.js` | le contenu, un fichier par palier |
 | `cours/revision-thai.js` | les phrases réservées à la révision (voir §4) |
+| `cours/chinois-*.js`, `vietnamien-*.js` | les deux autres langues, **engendrées** (voir §4bis) |
 | `js/state.js` | sauvegarde versionnée (schéma 6) : réglages globaux, progression **par cours** |
 | `js/nuage.js` | sauvegarde en ligne Firebase, **par API REST, sans SDK** |
 | `js/audio.js` | synthèse vocale th-TH, effets sonores générés, reconnaissance vocale |
@@ -145,6 +148,39 @@ Une unité d'**écriture** porte `ecriture:true`, et ses leçons utilisent `scri
 - langue et écriture restent deux parcours disjoints.
 
 ---
+
+## 4bis. Les cours chinois et vietnamien
+
+Ils sont **engendrés**, pas écrits à la main, depuis le squelette du cours thaï :
+mêmes identifiants de mots, de phrases, d'unités et de leçons. Seul le contenu change.
+Le chantier vit dans `../chantier-zh-vi/` :
+
+| Fichier | Rôle |
+|---|---|
+| `squelette.json` | le parcours thaï extrait (unités, leçons, identifiants) |
+| `tables.json` | pour chaque identifiant, le mot chinois et le mot vietnamien |
+| `phrases-a/b/c.json` | les 143 phrases de leçon dans les deux langues |
+| `revision-zh/vi.json` | les banques de révision |
+| `ecriture.json` | alphabet, tons et unités d'écriture propres à chaque langue |
+| `roms.json` | romanisations des mots hors lexique |
+| `generer.js`, `generer-revision.js` | produisent `cours/*.js` |
+
+```bash
+cd ../chantier-zh-vi && node generer.js && node generer-revision.js
+```
+
+La régénération est idempotente : **ne jamais corriger `cours/chinois-*.js` à la main**,
+la correction serait perdue au prochain passage. Corriger les tables, puis régénérer.
+
+**Ce qu'un cours déclare** (`cours/registre.js`) : `voix` (étiquette BCP-47 pour la
+synthèse et la reconnaissance vocales), `script` (expression régulière de l'écriture
+enseignée, `null` si elle est latine), `clavier` (lettres de l'exercice « épeler »,
+`null` pour le désactiver), `separateur` (`''` sans espace pour le thaï et le chinois,
+`' '` pour le vietnamien).
+
+**Deux absences assumées côté vietnamien** : `mai_q`, `cl_tua` et `pi` n'existent pas,
+parce que không, con et năm y portent déjà deux sens — un vrai homographe reçoit une
+seule entrée, comme ตา en thaï. Le générateur élague ces identifiants des leçons.
 
 ## 5. Sauvegarde
 
