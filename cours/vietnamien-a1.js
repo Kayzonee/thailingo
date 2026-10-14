@@ -9,1543 +9,1788 @@ ajouterPalier({
  "lexique": {
   "sawatdee": {
    "th": "xin chào",
-   "rom": "sine tchao",
+   "rom": "ngang · huyền",
    "fr": "bonjour",
    "en": "hello",
    "emoji": "👋"
   },
   "khrap": {
    "th": "ạ",
-   "rom": "a",
+   "rom": "nặng",
    "fr": "(marque de politesse)",
    "en": "(marque de politesse)",
    "emoji": "🙋‍♂️"
   },
   "kha": {
    "th": "dạ",
-   "rom": "za",
+   "rom": "nặng",
    "fr": "(oui, poliment)",
    "en": "(oui, poliment)",
    "emoji": "🙋‍♀️"
   },
   "khopkhun": {
    "th": "cảm ơn",
-   "rom": "cam eune",
+   "rom": "hỏi · ngang",
    "fr": "merci",
    "en": "thank you",
    "emoji": "🙏"
   },
   "khothot": {
    "th": "xin lỗi",
-   "rom": "sine loy",
+   "rom": "ngang · ngã",
    "fr": "pardon",
    "en": "sorry",
    "emoji": "😅"
   },
   "chai": {
    "th": "vâng",
-   "rom": "vang",
+   "rom": "ngang",
    "fr": "oui",
    "en": "yes",
    "emoji": "✅"
   },
   "mai_no": {
    "th": "không",
-   "rom": "khong",
+   "rom": "ngang",
    "fr": "non / ne pas ; (question oui/non)",
    "en": "non / ne pas ; (question oui/non)",
    "emoji": "❌"
   },
   "sabaidee": {
    "th": "khỏe",
-   "rom": "khwé",
+   "rom": "hỏi",
    "fr": "ça va bien",
    "en": "I’m fine",
    "emoji": "😊"
   },
   "lakon": {
    "th": "tạm biệt",
-   "rom": "tam biète",
+   "rom": "nặng · nặng",
    "fr": "au revoir",
    "en": "goodbye",
    "emoji": "👋"
   },
   "yindee": {
    "th": "hân hạnh",
-   "rom": "heune hagne",
+   "rom": "ngang · nặng",
    "fr": "enchanté",
    "en": "delighted",
    "emoji": "🤝"
   },
   "maipenrai": {
    "th": "không sao",
-   "rom": "khong sao",
+   "rom": "ngang · ngang",
    "fr": "de rien / pas grave",
    "en": "no worries",
    "emoji": "🤷"
   },
   "chok_dee": {
    "th": "chúc may mắn",
-   "rom": "tchouc maï mane",
+   "rom": "sắc · ngang · sắc",
    "fr": "bonne chance",
    "en": "good luck",
    "emoji": "🍀"
   },
   "raatri": {
    "th": "chúc ngủ ngon",
-   "rom": "tchouc ngou ngone",
+   "rom": "sắc · hỏi · ngang",
    "fr": "bonne nuit",
    "en": "good night",
    "emoji": "🌙"
   },
   "phop_kan": {
    "th": "hẹn gặp lại",
-   "rom": "hène gap laï",
+   "rom": "nặng · nặng · nặng",
    "fr": "à bientôt",
    "en": "see you soon",
    "emoji": "👋"
   },
   "phom": {
    "th": "tôi",
-   "rom": "toy",
+   "rom": "ngang",
    "fr": "je",
    "en": "je",
    "emoji": "👨"
   },
   "chan": {
    "th": "mình",
-   "rom": "mine",
+   "rom": "huyền",
    "fr": "je (entre proches)",
    "en": "je (entre proches)",
    "emoji": "👩"
   },
   "khun": {
    "th": "bạn",
-   "rom": "bane",
+   "rom": "nặng",
    "fr": "tu / vous",
    "en": "you",
    "emoji": "🫵"
   },
   "khao": {
    "th": "anh ấy",
-   "rom": "agne ây",
+   "rom": "ngang · sắc",
    "fr": "il / elle",
    "en": "he / she",
    "emoji": "🧑"
   },
   "rao": {
    "th": "chúng tôi",
-   "rom": "tchoung toy",
+   "rom": "sắc · ngang",
    "fr": "nous",
    "en": "we",
    "emoji": "👨‍👩‍👧"
   },
   "phuak_khao": {
    "th": "họ",
-   "rom": "ho",
+   "rom": "nặng",
    "fr": "ils / elles",
    "en": "they",
    "emoji": "👥"
   },
   "khon": {
    "th": "người",
-   "rom": "ngoueï",
+   "rom": "huyền",
    "fr": "personne",
    "en": "person",
    "emoji": "🧍"
   },
   "phuean": {
    "th": "bạn bè",
-   "rom": "bane bè",
+   "rom": "nặng · huyền",
    "fr": "ami",
    "en": "friend",
    "emoji": "👯"
   },
   "khru": {
    "th": "giáo viên",
-   "rom": "zao vienne",
+   "rom": "sắc · ngang",
    "fr": "professeur",
    "en": "teacher",
    "emoji": "👩‍🏫"
   },
   "nakrian": {
    "th": "học sinh",
-   "rom": "hoc sine",
+   "rom": "nặng · ngang",
    "fr": "élève",
    "en": "student",
    "emoji": "🎒"
   },
   "cheu": {
    "th": "tên",
-   "rom": "tenne",
+   "rom": "ngang",
    "fr": "nom / s’appeler",
    "en": "name / to be called",
    "emoji": "🏷️"
   },
   "arai": {
    "th": "gì",
-   "rom": "zi",
+   "rom": "huyền",
    "fr": "quoi",
    "en": "what",
    "emoji": "❓"
   },
   "phuchai": {
    "th": "đàn ông",
-   "rom": "dane ong",
+   "rom": "huyền · ngang",
    "fr": "homme",
    "en": "man",
    "emoji": "👨"
   },
   "phuying": {
    "th": "phụ nữ",
-   "rom": "fou nu",
+   "rom": "nặng · ngã",
    "fr": "femme",
    "en": "woman",
    "emoji": "👩"
   },
   "dek": {
    "th": "trẻ em",
-   "rom": "trè ème",
+   "rom": "hỏi · ngang",
    "fr": "enfant",
    "en": "child",
    "emoji": "🧒"
   },
   "mae": {
    "th": "mẹ",
-   "rom": "mè",
+   "rom": "nặng",
    "fr": "mère",
    "en": "mother",
    "emoji": "👩"
   },
   "pho": {
    "th": "bố",
-   "rom": "bo",
+   "rom": "sắc",
    "fr": "père",
    "en": "father",
    "emoji": "👨"
   },
   "luk": {
    "th": "con",
-   "rom": "cone",
+   "rom": "ngang",
    "fr": "enfant ; classif. animaux",
    "en": "enfant ; classif. animaux",
    "emoji": "👶"
   },
   "phi": {
    "th": "anh",
-   "rom": "agne",
+   "rom": "ngang",
    "fr": "aîné",
    "en": "aîné",
    "emoji": "🧑"
   },
   "nong": {
    "th": "em",
-   "rom": "ème",
+   "rom": "ngang",
    "fr": "cadet(te)",
    "en": "cadet(te)",
    "emoji": "🧒"
   },
   "khropkhrua": {
    "th": "gia đình",
-   "rom": "za dine",
+   "rom": "ngang · huyền",
    "fr": "famille",
    "en": "family",
    "emoji": "👨‍👩‍👧"
   },
   "pu": {
    "th": "ông nội",
-   "rom": "ong noy",
+   "rom": "ngang · nặng",
    "fr": "grand-père paternel",
    "en": "paternal grandfather",
    "emoji": "👴"
   },
   "ya": {
    "th": "bà nội",
-   "rom": "ba noy",
+   "rom": "huyền · nặng",
    "fr": "grand-mère paternelle",
    "en": "paternal grandmother",
    "emoji": "👵"
   },
   "ta": {
    "th": "mắt",
-   "rom": "mate",
+   "rom": "sắc",
    "fr": "œil",
    "en": "œil",
    "emoji": "👁️"
   },
   "yai": {
    "th": "bà ngoại",
-   "rom": "ba ngwaï",
+   "rom": "huyền · nặng",
    "fr": "grand-mère maternelle",
    "en": "maternal grandmother",
    "emoji": "👵"
   },
   "sami": {
    "th": "chồng",
-   "rom": "tchong",
+   "rom": "huyền",
    "fr": "mari",
    "en": "husband",
    "emoji": "🤵"
   },
   "phanraya": {
    "th": "vợ",
-   "rom": "veu",
+   "rom": "nặng",
    "fr": "épouse",
    "en": "wife",
    "emoji": "👰"
   },
   "sun": {
    "th": "số không",
-   "rom": "so khong",
+   "rom": "sắc · ngang",
    "fr": "zéro",
    "en": "zero",
    "emoji": "0️⃣"
   },
   "nueng": {
    "th": "một",
-   "rom": "mote",
+   "rom": "nặng",
    "fr": "un",
    "en": "one",
    "emoji": "1️⃣"
   },
   "song": {
    "th": "hai",
-   "rom": "haï",
+   "rom": "ngang",
    "fr": "deux",
    "en": "two",
    "emoji": "2️⃣"
   },
   "sam": {
    "th": "ba",
-   "rom": "ba",
+   "rom": "ngang",
    "fr": "trois",
    "en": "three",
    "emoji": "3️⃣"
   },
   "si": {
    "th": "bốn",
-   "rom": "bone",
+   "rom": "sắc",
    "fr": "quatre",
    "en": "four",
    "emoji": "4️⃣"
   },
   "ha": {
    "th": "năm",
-   "rom": "name",
+   "rom": "ngang",
    "fr": "cinq ; année",
    "en": "cinq ; année",
    "emoji": "5️⃣"
   },
   "hok": {
    "th": "sáu",
-   "rom": "sao",
+   "rom": "sắc",
    "fr": "six",
    "en": "six",
    "emoji": "6️⃣"
   },
   "jet": {
    "th": "bảy",
-   "rom": "baï",
+   "rom": "hỏi",
    "fr": "sept",
    "en": "seven",
    "emoji": "7️⃣"
   },
   "paet": {
    "th": "tám",
-   "rom": "tame",
+   "rom": "sắc",
    "fr": "huit",
    "en": "eight",
    "emoji": "8️⃣"
   },
   "kao": {
    "th": "chín",
-   "rom": "tchine",
+   "rom": "sắc",
    "fr": "neuf",
    "en": "nine",
    "emoji": "9️⃣"
   },
   "sip": {
    "th": "mười",
-   "rom": "mouei",
+   "rom": "huyền",
    "fr": "dix",
    "en": "ten",
    "emoji": "🔟"
   },
   "sip_et": {
    "th": "mười một",
-   "rom": "mouei mote",
+   "rom": "huyền · nặng",
    "fr": "onze",
    "en": "eleven",
    "emoji": "1️⃣"
   },
   "yisip": {
    "th": "hai mươi",
-   "rom": "haï mouei",
+   "rom": "ngang · ngang",
    "fr": "vingt",
    "en": "twenty",
    "emoji": "2️⃣"
   },
   "roi": {
    "th": "trăm",
-   "rom": "trame",
+   "rom": "ngang",
    "fr": "cent",
    "en": "hundred",
    "emoji": "💯"
   },
   "phan": {
    "th": "nghìn",
-   "rom": "nguine",
+   "rom": "huyền",
    "fr": "mille",
    "en": "thousand",
    "emoji": "🔢"
   },
   "baht": {
    "th": "đồng",
-   "rom": "dong",
+   "rom": "huyền",
    "fr": "dong",
    "en": "dong",
    "emoji": "💰"
   },
   "thaorai": {
    "th": "bao nhiêu",
-   "rom": "bao nieou",
+   "rom": "ngang · ngang",
    "fr": "combien",
    "en": "how much",
    "emoji": "🧮"
   },
   "ki": {
    "th": "mấy",
-   "rom": "mây",
+   "rom": "sắc",
    "fr": "combien de",
    "en": "how many",
    "emoji": "🔢"
   },
   "nam": {
    "th": "nước",
-   "rom": "nouac",
+   "rom": "sắc",
    "fr": "eau",
    "en": "water",
    "emoji": "💧"
   },
   "khao_rice": {
    "th": "cơm",
-   "rom": "keume",
+   "rom": "ngang",
    "fr": "riz",
    "en": "rice",
    "emoji": "🍚"
   },
   "kafae": {
    "th": "cà phê",
-   "rom": "ca fê",
+   "rom": "huyền · ngang",
    "fr": "café",
    "en": "coffee",
    "emoji": "☕"
   },
   "cha": {
    "th": "trà",
-   "rom": "tra",
+   "rom": "huyền",
    "fr": "thé",
    "en": "tea",
    "emoji": "🍵"
   },
   "ahan": {
    "th": "thức ăn",
-   "rom": "theuc ane",
+   "rom": "sắc · ngang",
    "fr": "nourriture",
    "en": "food",
    "emoji": "🍽️"
   },
   "phonlamai": {
    "th": "trái cây",
-   "rom": "traï kây",
+   "rom": "sắc · ngang",
    "fr": "fruit",
    "en": "fruit",
    "emoji": "🍍"
   },
   "kai": {
    "th": "thịt gà",
-   "rom": "tite ga",
+   "rom": "nặng · huyền",
    "fr": "poulet",
    "en": "chicken",
    "emoji": "🍗"
   },
   "mu": {
    "th": "thịt lợn",
-   "rom": "tite leune",
+   "rom": "nặng · nặng",
    "fr": "porc",
    "en": "pork",
    "emoji": "🐷"
   },
   "nuea": {
    "th": "thịt bò",
-   "rom": "tite bo",
+   "rom": "nặng · huyền",
    "fr": "bœuf / viande",
    "en": "beef / meat",
    "emoji": "🥩"
   },
   "pla": {
    "th": "cá",
-   "rom": "ca",
+   "rom": "sắc",
    "fr": "poisson",
    "en": "fish",
    "emoji": "🐟"
   },
   "kung": {
    "th": "tôm",
-   "rom": "tome",
+   "rom": "ngang",
    "fr": "crevette",
    "en": "shrimp",
    "emoji": "🦐"
   },
   "phak": {
    "th": "rau",
-   "rom": "rao",
+   "rom": "ngang",
    "fr": "légume",
    "en": "vegetable",
    "emoji": "🥬"
   },
   "khai": {
    "th": "trứng",
-   "rom": "treung",
+   "rom": "sắc",
    "fr": "œuf",
    "en": "egg",
    "emoji": "🥚"
   },
   "namtan": {
    "th": "đường",
-   "rom": "dououeng",
+   "rom": "huyền",
    "fr": "sucre",
    "en": "sugar",
    "emoji": "🍬"
   },
   "kluea": {
    "th": "muối",
-   "rom": "mouoy",
+   "rom": "sắc",
    "fr": "sel",
    "en": "salt",
    "emoji": "🧂"
   },
   "phet": {
    "th": "cay",
-   "rom": "kaï",
+   "rom": "ngang",
    "fr": "épicé",
    "en": "spicy",
    "emoji": "🌶️"
   },
   "aroi": {
    "th": "ngon",
-   "rom": "ngone",
+   "rom": "ngang",
    "fr": "délicieux",
    "en": "delicious",
    "emoji": "😋"
   },
   "wan": {
    "th": "ngọt",
-   "rom": "ngote",
+   "rom": "nặng",
    "fr": "sucré",
    "en": "sweet",
    "emoji": "🍯"
   },
   "priao": {
    "th": "chua",
-   "rom": "tchoua",
+   "rom": "ngang",
    "fr": "acide",
    "en": "sour",
    "emoji": "🍋"
   },
   "khem": {
    "th": "mặn",
-   "rom": "mane",
+   "rom": "nặng",
    "fr": "salé",
    "en": "salty",
    "emoji": "🧂"
   },
   "kuaitiao": {
    "th": "phở",
-   "rom": "feu",
+   "rom": "hỏi",
    "fr": "phở (soupe de nouilles)",
    "en": "phở (soupe de nouilles)",
    "emoji": "🍜"
   },
   "phatthai": {
    "th": "bún chả",
-   "rom": "boune tcha",
+   "rom": "sắc · hỏi",
    "fr": "bún chả",
    "en": "bún chả",
    "emoji": "🍤"
   },
   "somtam": {
    "th": "bánh mì",
-   "rom": "bagne mi",
+   "rom": "sắc · huyền",
    "fr": "bánh mì",
    "en": "bánh mì",
    "emoji": "🥗"
   },
   "bia": {
    "th": "bia",
-   "rom": "bia",
+   "rom": "ngang",
    "fr": "bière",
    "en": "beer",
    "emoji": "🍺"
   },
   "namkhaeng": {
    "th": "đá",
-   "rom": "da",
+   "rom": "sắc",
    "fr": "glaçons",
    "en": "ice",
    "emoji": "🧊"
   },
   "nom": {
    "th": "sữa",
-   "rom": "soua",
+   "rom": "ngã",
    "fr": "lait",
    "en": "milk",
    "emoji": "🥛"
   },
   "khanom": {
    "th": "bánh ngọt",
-   "rom": "bagne ngote",
+   "rom": "sắc · nặng",
    "fr": "friandise",
    "en": "snack",
    "emoji": "🍪"
   },
   "hiu": {
    "th": "đói",
-   "rom": "doy",
+   "rom": "sắc",
    "fr": "avoir faim",
    "en": "to be hungry",
    "emoji": "😋"
   },
   "im": {
    "th": "no",
-   "rom": "no",
+   "rom": "ngang",
    "fr": "être rassasié",
    "en": "to be full",
    "emoji": "😌"
   },
   "kin": {
    "th": "ăn",
-   "rom": "ane",
+   "rom": "ngang",
    "fr": "manger",
    "en": "to eat",
    "emoji": "🍴"
   },
   "duem": {
    "th": "uống",
-   "rom": "ouong",
+   "rom": "sắc",
    "fr": "boire",
    "en": "to drink",
    "emoji": "🥤"
   },
   "pai": {
    "th": "đi",
-   "rom": "di",
+   "rom": "ngang",
    "fr": "aller",
    "en": "to go",
    "emoji": "🚶"
   },
   "ma": {
    "th": "đến",
-   "rom": "dène",
+   "rom": "sắc",
    "fr": "venir",
    "en": "to come",
    "emoji": "🔙"
   },
   "chop": {
    "th": "thích",
-   "rom": "tike",
+   "rom": "sắc",
    "fr": "aimer bien",
    "en": "to like",
    "emoji": "👍"
   },
   "rak": {
    "th": "yêu",
-   "rom": "ieou",
+   "rom": "ngang",
    "fr": "aimer (d’amour)",
    "en": "to love",
    "emoji": "❤️"
   },
   "mi": {
    "th": "có",
-   "rom": "co",
+   "rom": "sắc",
    "fr": "avoir",
    "en": "to have",
    "emoji": "🎁"
   },
   "pen": {
    "th": "là",
-   "rom": "la",
+   "rom": "huyền",
    "fr": "être (identité)",
    "en": "to be (identity)",
    "emoji": "🪪"
   },
   "yu": {
    "th": "ở",
-   "rom": "eu",
+   "rom": "hỏi",
    "fr": "être (situé)",
    "en": "to be (located)",
    "emoji": "📍"
   },
   "phut": {
    "th": "nói",
-   "rom": "noy",
+   "rom": "sắc",
    "fr": "parler",
    "en": "to speak",
    "emoji": "💬"
   },
   "ao": {
    "th": "lấy",
-   "rom": "lây",
+   "rom": "sắc",
    "fr": "prendre / vouloir",
    "en": "to take / want",
    "emoji": "🤲"
   },
   "yak": {
    "th": "muốn",
-   "rom": "mouone",
+   "rom": "sắc",
    "fr": "vouloir",
    "en": "to want to",
    "emoji": "🌟"
   },
   "tham": {
    "th": "làm",
-   "rom": "lame",
+   "rom": "huyền",
    "fr": "faire",
    "en": "to do / make",
    "emoji": "🔨"
   },
   "du": {
    "th": "xem",
-   "rom": "sème",
+   "rom": "ngang",
    "fr": "regarder",
    "en": "to watch",
    "emoji": "👀"
   },
   "fang": {
    "th": "nghe",
-   "rom": "ngué",
+   "rom": "ngang",
    "fr": "écouter",
    "en": "to listen",
    "emoji": "👂"
   },
   "an": {
    "th": "đọc",
-   "rom": "doc",
+   "rom": "nặng",
    "fr": "lire",
    "en": "to read",
    "emoji": "📖"
   },
   "khian": {
    "th": "viết",
-   "rom": "viète",
+   "rom": "sắc",
    "fr": "écrire",
    "en": "to write",
    "emoji": "✍️"
   },
   "non": {
    "th": "ngủ",
-   "rom": "ngou",
+   "rom": "hỏi",
    "fr": "dormir",
    "en": "to sleep",
    "emoji": "😴"
   },
   "thamngan": {
    "th": "làm việc",
-   "rom": "lame viec",
+   "rom": "huyền · nặng",
    "fr": "travailler",
    "en": "to work",
    "emoji": "💼"
   },
   "rian": {
    "th": "học",
-   "rom": "hoc",
+   "rom": "nặng",
    "fr": "étudier",
    "en": "to study",
    "emoji": "🎓"
   },
   "sue": {
    "th": "mua",
-   "rom": "moua",
+   "rom": "ngang",
    "fr": "acheter",
    "en": "to buy",
    "emoji": "🛒"
   },
   "khai_sell": {
    "th": "bán",
-   "rom": "bane",
+   "rom": "sắc",
    "fr": "vendre",
    "en": "to sell",
    "emoji": "🏪"
   },
   "hai": {
    "th": "cho",
-   "rom": "tcho",
+   "rom": "ngang",
    "fr": "donner",
    "en": "to give",
    "emoji": "🎁"
   },
   "ru": {
    "th": "biết",
-   "rom": "biète",
+   "rom": "sắc",
    "fr": "savoir",
    "en": "to know",
    "emoji": "💡"
   },
   "khaochai": {
    "th": "hiểu",
-   "rom": "hieou",
+   "rom": "hỏi",
    "fr": "comprendre",
    "en": "to understand",
    "emoji": "💭"
   },
   "chuai": {
    "th": "giúp",
-   "rom": "zioupe",
+   "rom": "sắc",
    "fr": "aider",
    "en": "to help",
    "emoji": "🆘"
   },
   "ro": {
    "th": "đợi",
-   "rom": "deuy",
+   "rom": "nặng",
    "fr": "attendre",
    "en": "to wait",
    "emoji": "⏳"
   },
   "doen": {
    "th": "đi bộ",
-   "rom": "di bo",
+   "rom": "ngang · nặng",
    "fr": "marcher",
    "en": "to walk",
    "emoji": "🚶"
   },
   "wing": {
    "th": "chạy",
-   "rom": "tchaï",
+   "rom": "nặng",
    "fr": "courir",
    "en": "to run",
    "emoji": "🏃"
   },
   "nang": {
    "th": "ngồi",
-   "rom": "ngoy",
+   "rom": "huyền",
    "fr": "s’asseoir",
    "en": "to sit",
    "emoji": "🪑"
   },
   "yuen": {
    "th": "đứng",
-   "rom": "deung",
+   "rom": "sắc",
    "fr": "se tenir debout",
    "en": "to stand",
    "emoji": "🧍"
   },
   "si_daeng": {
    "th": "màu đỏ",
-   "rom": "maou do",
+   "rom": "huyền · hỏi",
    "fr": "rouge",
    "en": "red",
    "emoji": "🔴"
   },
   "si_namngen": {
    "th": "màu xanh dương",
-   "rom": "maou sagne zououeng",
+   "rom": "huyền · ngang · ngang",
    "fr": "bleu",
    "en": "blue",
    "emoji": "🔵"
   },
   "si_khiao": {
    "th": "màu xanh lá",
-   "rom": "maou sagne la",
+   "rom": "huyền · ngang · sắc",
    "fr": "vert",
    "en": "green",
    "emoji": "🟢"
   },
   "si_dam": {
    "th": "màu đen",
-   "rom": "maou dène",
+   "rom": "huyền · ngang",
    "fr": "noir",
    "en": "black",
    "emoji": "⚫"
   },
   "si_khao": {
    "th": "màu trắng",
-   "rom": "maou trang",
+   "rom": "huyền · sắc",
    "fr": "blanc",
    "en": "white",
    "emoji": "⚪"
   },
   "si_lueang": {
    "th": "màu vàng",
-   "rom": "maou vang",
+   "rom": "huyền · huyền",
    "fr": "jaune",
    "en": "yellow",
    "emoji": "🟡"
   },
   "si_som": {
    "th": "màu cam",
-   "rom": "maou came",
+   "rom": "huyền · ngang",
    "fr": "orange",
    "en": "orange",
    "emoji": "🟠"
   },
   "khoo": {
    "th": "cho tôi",
-   "rom": "tcho toy",
+   "rom": "ngang · ngang",
    "fr": "puis-je avoir",
    "en": "may I have",
    "emoji": "🙏"
   },
   "noi": {
    "th": "một chút",
-   "rom": "mote tchoute",
+   "rom": "nặng · sắc",
    "fr": "un peu (demande polie)",
    "en": "a bit (softens a request)",
    "emoji": "🙂"
   },
   "lae": {
    "th": "và",
-   "rom": "va",
+   "rom": "huyền",
    "fr": "et",
    "en": "and",
    "emoji": "➕"
   },
   "tae": {
    "th": "nhưng",
-   "rom": "gneung",
+   "rom": "ngang",
    "fr": "mais",
    "en": "but",
    "emoji": "↔️"
   },
   "rue": {
    "th": "hoặc",
-   "rom": "hwac",
+   "rom": "nặng",
    "fr": "ou",
    "en": "or",
    "emoji": "❔"
   },
   "kap": {
    "th": "với",
-   "rom": "voy",
+   "rom": "sắc",
    "fr": "avec",
    "en": "with",
    "emoji": "➕"
   },
   "phro": {
    "th": "vì",
-   "rom": "vi",
+   "rom": "huyền",
    "fr": "parce que",
    "en": "because",
    "emoji": "➡️"
   },
   "danglan": {
    "th": "vì vậy",
-   "rom": "vi vây",
+   "rom": "huyền · nặng",
    "fr": "donc",
    "en": "therefore",
    "emoji": "➡️"
   },
   "ko": {
    "th": "thì",
-   "rom": "ti",
+   "rom": "huyền",
    "fr": "alors, donc",
    "en": "alors, donc",
    "emoji": "➡️"
   },
   "phuea": {
    "th": "để",
-   "rom": "dê",
+   "rom": "hỏi",
    "fr": "pour, afin de",
    "en": "in order to",
    "emoji": "🎯"
   },
   "tha_if": {
    "th": "nếu",
-   "rom": "néou",
+   "rom": "sắc",
    "fr": "si",
    "en": "if",
    "emoji": "🔀"
   },
   "muea": {
    "th": "khi",
-   "rom": "khi",
+   "rom": "ngang",
    "fr": "quand, lorsque",
    "en": "when",
    "emoji": "⏱️"
   },
   "thueng_maewa": {
    "th": "mặc dù",
-   "rom": "mac zou",
+   "rom": "nặng · huyền",
    "fr": "bien que",
    "en": "although",
    "emoji": "🔄"
   },
   "raweang": {
    "th": "trong khi",
-   "rom": "trong khi",
+   "rom": "ngang · ngang",
    "fr": "pendant, entre",
    "en": "during, between",
    "emoji": "↔️"
   },
   "wa": {
    "th": "rằng",
-   "rom": "rang",
+   "rom": "huyền",
    "fr": "que (dire que…)",
    "en": "that (say that…)",
    "emoji": "💬"
   },
   "thi_rel": {
    "th": "mà",
-   "rom": "ma",
+   "rom": "huyền",
    "fr": "qui / que (relatif)",
    "en": "qui / que (relatif)",
    "emoji": "🔗"
   },
   "doi": {
    "th": "bằng",
-   "rom": "bang",
+   "rom": "huyền",
    "fr": "par, au moyen de",
    "en": "by, through",
    "emoji": "🛤️"
   },
   "nokjak": {
    "th": "ngoài",
-   "rom": "ngwaï",
+   "rom": "huyền",
    "fr": "en dehors de",
    "en": "apart from",
    "emoji": "➖"
   },
   "yai_big": {
    "th": "to",
-   "rom": "to",
+   "rom": "ngang",
    "fr": "grand",
    "en": "big",
    "emoji": "🐘"
   },
   "lek": {
    "th": "nhỏ",
-   "rom": "gno",
+   "rom": "hỏi",
    "fr": "petit",
    "en": "small",
    "emoji": "🐜"
   },
   "ron": {
    "th": "nóng",
-   "rom": "nong",
+   "rom": "sắc",
    "fr": "chaud",
    "en": "hot",
    "emoji": "🔥"
   },
   "yen": {
    "th": "mát",
-   "rom": "mate",
+   "rom": "sắc",
    "fr": "frais",
    "en": "cool",
    "emoji": "❄️"
   },
   "nao": {
    "th": "lạnh",
-   "rom": "lagne",
+   "rom": "nặng",
    "fr": "froid (climat)",
    "en": "cold (weather)",
    "emoji": "🥶"
   },
   "suai": {
    "th": "đẹp",
-   "rom": "dèpe",
+   "rom": "nặng",
    "fr": "joli",
    "en": "beautiful",
    "emoji": "🌸"
   },
   "di": {
    "th": "tốt",
-   "rom": "tote",
+   "rom": "sắc",
    "fr": "bien / bon",
    "en": "good",
    "emoji": "👌"
   },
   "mai_di": {
    "th": "xấu",
-   "rom": "sâou",
+   "rom": "sắc",
    "fr": "mauvais",
    "en": "bad",
    "emoji": "👎"
   },
   "phaeng": {
    "th": "đắt",
-   "rom": "date",
+   "rom": "sắc",
    "fr": "cher",
    "en": "expensive",
    "emoji": "💸"
   },
   "thuk": {
    "th": "rẻ",
-   "rom": "rè",
+   "rom": "hỏi",
    "fr": "pas cher",
    "en": "cheap",
    "emoji": "🏷️"
   },
   "mai_new": {
    "th": "mới",
-   "rom": "meuy",
+   "rom": "sắc",
    "fr": "neuf / nouveau",
    "en": "new",
    "emoji": "✨"
   },
   "kao_old": {
    "th": "cũ",
-   "rom": "cou",
+   "rom": "ngã",
    "fr": "vieux (chose)",
    "en": "old (thing)",
    "emoji": "📻"
   },
   "reo": {
    "th": "nhanh",
-   "rom": "gnagne",
+   "rom": "ngang",
    "fr": "rapide",
    "en": "fast",
    "emoji": "⚡"
   },
   "cha_slow": {
    "th": "chậm",
-   "rom": "tcheume",
+   "rom": "nặng",
    "fr": "lent",
    "en": "slow",
    "emoji": "🐢"
   },
   "mak": {
    "th": "rất",
-   "rom": "rate",
+   "rom": "sắc",
    "fr": "beaucoup / très",
    "en": "very / a lot",
    "emoji": "📈"
   },
   "nitnoi": {
    "th": "hơi",
-   "rom": "heuy",
+   "rom": "ngang",
    "fr": "un peu",
    "en": "a little",
    "emoji": "🤏"
   },
   "wanni": {
    "th": "hôm nay",
-   "rom": "home naï",
+   "rom": "ngang · ngang",
    "fr": "aujourd’hui",
    "en": "today",
    "emoji": "📅"
   },
   "phrungni": {
    "th": "ngày mai",
-   "rom": "ngaï maï",
+   "rom": "huyền · ngang",
    "fr": "demain",
    "en": "tomorrow",
    "emoji": "⏭️"
   },
   "mueawan": {
    "th": "hôm qua",
-   "rom": "home koua",
+   "rom": "ngang · ngang",
    "fr": "hier",
    "en": "yesterday",
    "emoji": "⏮️"
   },
   "tonchao": {
    "th": "buổi sáng",
-   "rom": "bouoy sang",
+   "rom": "hỏi · sắc",
    "fr": "le matin",
    "en": "in the morning",
    "emoji": "🌅"
   },
   "tonbai": {
    "th": "buổi chiều",
-   "rom": "bouoy tchieou",
+   "rom": "hỏi · huyền",
    "fr": "l’après-midi",
    "en": "in the afternoon",
    "emoji": "🌤️"
   },
   "tonyen": {
    "th": "buổi tối",
-   "rom": "bouoy toy",
+   "rom": "hỏi · sắc",
    "fr": "le soir",
    "en": "in the evening",
    "emoji": "🌆"
   },
   "klangkhuen": {
    "th": "ban đêm",
-   "rom": "bane dème",
+   "rom": "ngang · ngang",
    "fr": "la nuit",
    "en": "at night",
    "emoji": "🌙"
   },
   "wela": {
    "th": "thời gian",
-   "rom": "teuy zane",
+   "rom": "huyền · ngang",
    "fr": "temps / heure",
    "en": "time",
    "emoji": "⏰"
   },
   "wan_day": {
    "th": "ngày",
-   "rom": "ngaï",
+   "rom": "huyền",
    "fr": "jour",
    "en": "day",
    "emoji": "📆"
   },
   "athit": {
    "th": "tuần",
-   "rom": "touane",
+   "rom": "huyền",
    "fr": "semaine",
    "en": "week",
    "emoji": "🗓️"
   },
   "duean": {
    "th": "tháng",
-   "rom": "tang",
+   "rom": "sắc",
    "fr": "mois",
    "en": "month",
    "emoji": "🌛"
   },
   "chaomong": {
    "th": "giờ",
-   "rom": "zeu",
+   "rom": "huyền",
    "fr": "heure (horloge)",
    "en": "o’clock",
    "emoji": "🕐"
   },
   "diao_ni": {
    "th": "bây giờ",
-   "rom": "bây zeu",
+   "rom": "ngang · huyền",
    "fr": "maintenant",
    "en": "now",
    "emoji": "⏱️"
   },
   "ban": {
    "th": "nhà",
-   "rom": "gna",
+   "rom": "huyền",
    "fr": "maison",
    "en": "house",
    "emoji": "🏠"
   },
   "rot": {
    "th": "ô tô",
-   "rom": "o to",
+   "rom": "ngang · ngang",
    "fr": "voiture",
    "en": "car",
    "emoji": "🚗"
   },
   "rotfai": {
    "th": "tàu hỏa",
-   "rom": "taou hwa",
+   "rom": "huyền · hỏi",
    "fr": "train",
    "en": "train",
    "emoji": "🚆"
   },
   "rotmee": {
    "th": "xe buýt",
-   "rom": "sè bouite",
+   "rom": "ngang · sắc",
    "fr": "bus",
    "en": "bus",
    "emoji": "🚌"
   },
   "taxi": {
    "th": "taxi",
-   "rom": "tac si",
+   "rom": "ngang",
    "fr": "taxi",
    "en": "taxi",
    "emoji": "🚕"
   },
   "khrueangbin": {
    "th": "máy bay",
-   "rom": "maï baï",
+   "rom": "sắc · ngang",
    "fr": "avion",
    "en": "plane",
    "emoji": "✈️"
   },
   "rongraem": {
    "th": "khách sạn",
-   "rom": "khak sane",
+   "rom": "sắc · nặng",
    "fr": "hôtel",
    "en": "hotel",
    "emoji": "🏨"
   },
   "talat": {
    "th": "chợ",
-   "rom": "tcheu",
+   "rom": "nặng",
    "fr": "marché",
    "en": "market",
    "emoji": "🏪"
   },
   "hongnam": {
    "th": "nhà vệ sinh",
-   "rom": "gna vè sine",
+   "rom": "huyền · nặng · ngang",
    "fr": "toilettes",
    "en": "toilet",
    "emoji": "🚻"
   },
   "ranahan": {
    "th": "nhà hàng",
-   "rom": "gna hang",
+   "rom": "huyền · huyền",
    "fr": "restaurant",
    "en": "restaurant",
    "emoji": "🍽️"
   },
   "rongrian": {
    "th": "trường học",
-   "rom": "trououeng hoc",
+   "rom": "huyền · nặng",
    "fr": "école",
    "en": "school",
    "emoji": "🏫"
   },
   "rongphaya": {
    "th": "bệnh viện",
-   "rom": "bègne vienne",
+   "rom": "nặng · nặng",
    "fr": "hôpital",
    "en": "hospital",
    "emoji": "🏥"
   },
   "sanambin": {
    "th": "sân bay",
-   "rom": "seune baï",
+   "rom": "ngang · ngang",
    "fr": "aéroport",
    "en": "airport",
    "emoji": "🛫"
   },
   "thanon": {
    "th": "con đường",
-   "rom": "cone dououeng",
+   "rom": "ngang · huyền",
    "fr": "rue",
    "en": "street",
    "emoji": "🛣️"
   },
   "thinai": {
    "th": "ở đâu",
-   "rom": "eu dâou",
+   "rom": "hỏi · ngang",
    "fr": "où",
    "en": "where",
    "emoji": "🗺️"
   },
   "sai": {
    "th": "trái",
-   "rom": "traï",
+   "rom": "sắc",
    "fr": "gauche",
    "en": "left",
    "emoji": "⬅️"
   },
   "khwa": {
    "th": "bên phải",
-   "rom": "bène faï",
+   "rom": "ngang · hỏi",
    "fr": "droite",
    "en": "right",
    "emoji": "➡️"
   },
   "trong_pai": {
    "th": "đi thẳng",
-   "rom": "di tang",
+   "rom": "ngang · hỏi",
    "fr": "tout droit",
    "en": "straight ahead",
    "emoji": "⬆️"
   },
   "klai": {
    "th": "xa",
-   "rom": "sa",
+   "rom": "ngang",
    "fr": "loin",
    "en": "far",
    "emoji": "🏔️"
   },
   "klai_near": {
    "th": "gần",
-   "rom": "gueune",
+   "rom": "huyền",
    "fr": "près",
    "en": "near",
    "emoji": "📍"
   },
   "ma_dog": {
    "th": "chó",
-   "rom": "tcho",
+   "rom": "sắc",
    "fr": "chien",
    "en": "dog",
    "emoji": "🐶"
   },
   "maeo": {
    "th": "mèo",
-   "rom": "mèo",
+   "rom": "huyền",
    "fr": "chat",
    "en": "cat",
    "emoji": "🐱"
   },
   "chang": {
    "th": "con voi",
-   "rom": "cone voy",
+   "rom": "ngang · ngang",
    "fr": "éléphant",
    "en": "elephant",
    "emoji": "🐘"
   },
   "nok": {
    "th": "chim",
-   "rom": "tchime",
+   "rom": "ngang",
    "fr": "oiseau",
    "en": "bird",
    "emoji": "🐦"
   },
   "ngoen": {
    "th": "tiền",
-   "rom": "tiène",
+   "rom": "huyền",
    "fr": "argent",
    "en": "money",
    "emoji": "💵"
   },
   "thorasap": {
    "th": "điện thoại",
-   "rom": "diène twaï",
+   "rom": "nặng · nặng",
    "fr": "téléphone",
    "en": "phone",
    "emoji": "📱"
   },
   "nangsue": {
    "th": "sách",
-   "rom": "sake",
+   "rom": "sắc",
    "fr": "livre",
    "en": "book",
    "emoji": "📕"
   },
   "krapao": {
    "th": "túi",
-   "rom": "touy",
+   "rom": "sắc",
    "fr": "sac",
    "en": "bag",
    "emoji": "👜"
   },
   "rom_umbrella": {
    "th": "ô",
-   "rom": "o",
+   "rom": "ngang",
    "fr": "parapluie",
    "en": "umbrella",
    "emoji": "☂️"
   },
   "kaoi": {
    "th": "ghế",
-   "rom": "gué",
+   "rom": "sắc",
    "fr": "chaise",
    "en": "chair",
    "emoji": "🪑"
   },
   "to_table": {
    "th": "bàn",
-   "rom": "bane",
+   "rom": "huyền",
    "fr": "table",
    "en": "table",
    "emoji": "🪑"
   },
   "pratu": {
    "th": "cửa",
-   "rom": "keua",
+   "rom": "hỏi",
    "fr": "porte",
    "en": "door",
    "emoji": "🚪"
   },
   "khrai": {
    "th": "ai",
-   "rom": "aï",
+   "rom": "ngang",
    "fr": "qui",
    "en": "who",
    "emoji": "🕵️"
   },
   "thammai": {
    "th": "tại sao",
-   "rom": "taï sao",
+   "rom": "nặng · ngang",
    "fr": "pourquoi",
    "en": "why",
    "emoji": "🤔"
   },
   "muearai": {
    "th": "khi nào",
-   "rom": "khi nao",
+   "rom": "ngang · huyền",
    "fr": "quand",
    "en": "when",
    "emoji": "📆"
   },
   "yangngai": {
    "th": "thế nào",
-   "rom": "tê nao",
+   "rom": "sắc · huyền",
    "fr": "comment",
    "en": "how",
    "emoji": "⚙️"
   },
   "phasa": {
    "th": "tiếng",
-   "rom": "tiègne",
+   "rom": "sắc",
    "fr": "langue",
    "en": "language",
    "emoji": "🗣️"
   },
   "thai": {
    "th": "Việt Nam",
-   "rom": "viète name",
+   "rom": "nặng · ngang",
    "fr": "vietnamien / Viêt Nam",
    "en": "vietnamien / Viêt Nam",
    "emoji": "🇹🇭"
   },
   "farangset": {
    "th": "Pháp",
-   "rom": "fap",
+   "rom": "sắc",
    "fr": "français (pays)",
    "en": "French (country)",
    "emoji": "🇫🇷"
   },
   "angkrit": {
    "th": "Anh",
-   "rom": "agne",
+   "rom": "ngang",
    "fr": "anglais",
    "en": "English",
    "emoji": "🇬🇧"
   },
   "tamruat": {
    "th": "cảnh sát",
-   "rom": "cagne sate",
+   "rom": "hỏi · sắc",
    "fr": "police",
    "en": "police",
    "emoji": "👮"
   },
   "cl_an": {
    "th": "cái",
-   "rom": "caï",
+   "rom": "sắc",
    "fr": "classif. objets",
    "en": "classif. objets",
    "emoji": "🔧"
   },
   "cl_bai": {
    "th": "tờ",
-   "rom": "teu",
+   "rom": "huyền",
    "fr": "classif. feuilles",
    "en": "classif. feuilles",
    "emoji": "🍃"
   },
   "cl_khuat": {
    "th": "chai",
-   "rom": "tchaï",
+   "rom": "ngang",
    "fr": "classif. bouteilles",
    "en": "classif. bouteilles",
    "emoji": "🍾"
   },
   "cl_cham": {
    "th": "bát",
-   "rom": "bate",
+   "rom": "sắc",
    "fr": "classif. bols",
    "en": "classif. bols",
    "emoji": "🥣"
   },
   "cl_khan": {
    "th": "chiếc",
-   "rom": "tchiéque",
+   "rom": "sắc",
    "fr": "classif. véhicules",
    "en": "classif. véhicules",
    "emoji": "🚗"
   },
   "cl_lem": {
    "th": "quyển",
-   "rom": "kouiène",
+   "rom": "hỏi",
    "fr": "classif. livres",
    "en": "classif. livres",
    "emoji": "📕"
+  },
+  "vi_trong": {
+   "th": "trong",
+   "rom": "ngang",
+   "fr": "dans, à l’intérieur",
+   "en": "in, inside",
+   "emoji": "📥"
+  },
+  "vi_tren": {
+   "th": "trên",
+   "rom": "ngang",
+   "fr": "sur, au-dessus",
+   "en": "on, above",
+   "emoji": "⬆️"
+  },
+  "vi_duoi": {
+   "th": "dưới",
+   "rom": "sắc",
+   "fr": "sous, en dessous",
+   "en": "under",
+   "emoji": "⬇️"
+  },
+  "vi_truoc": {
+   "th": "trước",
+   "rom": "sắc",
+   "fr": "devant ; avant",
+   "en": "in front; before",
+   "emoji": "⏩"
+  },
+  "vi_sau": {
+   "th": "sau",
+   "rom": "ngang",
+   "fr": "derrière ; après",
+   "en": "behind; after",
+   "emoji": "⏪"
+  },
+  "vi_vao": {
+   "th": "vào",
+   "rom": "huyền",
+   "fr": "entrer",
+   "en": "to enter",
+   "emoji": "🚪"
+  },
+  "vi_ra": {
+   "th": "ra",
+   "rom": "ngang",
+   "fr": "sortir",
+   "en": "to go out",
+   "emoji": "🚶"
+  },
+  "vi_ve": {
+   "th": "về",
+   "rom": "huyền",
+   "fr": "rentrer",
+   "en": "to return",
+   "emoji": "🔙"
+  },
+  "vi_len": {
+   "th": "lên",
+   "rom": "ngang",
+   "fr": "monter",
+   "en": "to go up",
+   "emoji": "🔼"
+  },
+  "vi_xuong": {
+   "th": "xuống",
+   "rom": "sắc",
+   "fr": "descendre",
+   "en": "to go down",
+   "emoji": "🔽"
+  },
+  "vi_qua": {
+   "th": "quá",
+   "rom": "sắc",
+   "fr": "trop",
+   "en": "too",
+   "emoji": "⚠️"
+  },
+  "vi_nhieu": {
+   "th": "nhiều",
+   "rom": "huyền",
+   "fr": "beaucoup de",
+   "en": "many",
+   "emoji": "➕"
+  },
+  "vi_it": {
+   "th": "ít",
+   "rom": "sắc",
+   "fr": "peu de",
+   "en": "few",
+   "emoji": "➖"
+  },
+  "vi_co": {
+   "th": "cô",
+   "rom": "ngang",
+   "fr": "mademoiselle ; tante",
+   "en": "Miss; aunt",
+   "emoji": "👗"
+  },
+  "vi_chu": {
+   "th": "chú",
+   "rom": "sắc",
+   "fr": "oncle (cadet)",
+   "en": "uncle",
+   "emoji": "👔"
+  },
+  "vi_bac": {
+   "th": "bác",
+   "rom": "sắc",
+   "fr": "oncle (aîné)",
+   "en": "elder uncle",
+   "emoji": "🧓"
+  },
+  "vi_contrai": {
+   "th": "con trai",
+   "rom": "ngang · ngang",
+   "fr": "fils, garçon",
+   "en": "son, boy",
+   "emoji": "👦"
+  },
+  "vi_congai": {
+   "th": "con gái",
+   "rom": "ngang · sắc",
+   "fr": "fille (enfant)",
+   "en": "daughter, girl",
+   "emoji": "👧"
+  },
+  "vi_quen": {
+   "th": "quen",
+   "rom": "ngang",
+   "fr": "connaître (quelqu’un)",
+   "en": "to know (someone)",
+   "emoji": "🤝"
+  },
+  "vi_tuoi": {
+   "th": "tuổi",
+   "rom": "hỏi",
+   "fr": "ans (âge)",
+   "en": "years old",
+   "emoji": "🎂"
+  },
+  "vi_so": {
+   "th": "số",
+   "rom": "sắc",
+   "fr": "numéro",
+   "en": "number",
+   "emoji": "#️⃣"
+  },
+  "vi_phut": {
+   "th": "phút",
+   "rom": "sắc",
+   "fr": "minute",
+   "en": "minute",
+   "emoji": "⏱️"
+  },
+  "vi_buoitrua": {
+   "th": "buổi trưa",
+   "rom": "hỏi · ngang",
+   "fr": "midi",
+   "en": "noon",
+   "emoji": "🌞"
+  },
+  "vi_luc": {
+   "th": "lúc",
+   "rom": "sắc",
+   "fr": "au moment de",
+   "en": "at (a time)",
+   "emoji": "🕰️"
+  },
+  "vi_mon_an": {
+   "th": "món ăn",
+   "rom": "sắc · ngang",
+   "fr": "plat (cuisine)",
+   "en": "dish",
+   "emoji": "🍲"
+  },
+  "vi_tao": {
+   "th": "táo",
+   "rom": "sắc",
+   "fr": "pomme",
+   "en": "apple",
+   "emoji": "🍎"
+  },
+  "vi_coc": {
+   "th": "cốc",
+   "rom": "sắc",
+   "fr": "verre, tasse",
+   "en": "cup, glass",
+   "emoji": "🥤"
+  },
+  "vi_cuahang": {
+   "th": "cửa hàng",
+   "rom": "hỏi · huyền",
+   "fr": "magasin",
+   "en": "shop",
+   "emoji": "🏪"
+  },
+  "vi_do_vat": {
+   "th": "đồ vật",
+   "rom": "huyền · nặng",
+   "fr": "chose, objet",
+   "en": "thing",
+   "emoji": "📦"
+  },
+  "vi_tieng_viet": {
+   "th": "tiếng Việt",
+   "rom": "sắc · nặng",
+   "fr": "le vietnamien (langue)",
+   "en": "Vietnamese (language)",
+   "emoji": "🇻🇳"
+  },
+  "vi_tieng_anh": {
+   "th": "tiếng Anh",
+   "rom": "sắc · ngang",
+   "fr": "l’anglais (langue)",
+   "en": "English (language)",
+   "emoji": "🇬🇧"
+  },
+  "vi_cac": {
+   "th": "các",
+   "rom": "sắc",
+   "fr": "(pluriel : les)",
+   "en": "(plural: the)",
+   "emoji": "🔢"
+  },
+  "vi_nhung": {
+   "th": "những",
+   "rom": "ngã",
+   "fr": "(pluriel : des)",
+   "en": "(plural: some)",
+   "emoji": "🔢"
+  },
+  "vi_hay": {
+   "th": "hay",
+   "rom": "ngang",
+   "fr": "ou bien ; souvent",
+   "en": "or; often",
+   "emoji": "❔"
+  },
+  "vi_giua": {
+   "th": "giữa",
+   "rom": "ngã",
+   "fr": "entre, au milieu",
+   "en": "between",
+   "emoji": "🎯"
   }
  },
  "tonsNoms": {
@@ -1586,7 +1831,7 @@ ajouterPalier({
    ],
    "fr": "Bonjour",
    "en": "Hello (said by a man)",
-   "rom": "sine tchao a"
+   "rom": "ngang · huyền nặng"
   },
   "s_hello_f": {
    "chunks": [
@@ -1595,7 +1840,7 @@ ajouterPalier({
    ],
    "fr": "Bonjour (à un ami)",
    "en": "Hello (said by a woman)",
-   "rom": "tchao bane"
+   "rom": "tchao nặng"
   },
   "s_hru": {
    "chunks": [
@@ -1605,7 +1850,7 @@ ajouterPalier({
    ],
    "fr": "Comment ça va ?",
    "en": "How are you?",
-   "rom": "bane khwé khong"
+   "rom": "nặng hỏi ngang"
   },
   "s_fine": {
    "chunks": [
@@ -1614,7 +1859,7 @@ ajouterPalier({
    ],
    "fr": "Ça va bien",
    "en": "I’m fine",
-   "rom": "toy khwé"
+   "rom": "ngang hỏi"
   },
   "s_thanks": {
    "chunks": [
@@ -1623,7 +1868,7 @@ ajouterPalier({
    ],
    "fr": "Merci beaucoup",
    "en": "Thank you very much",
-   "rom": "cam eune bane"
+   "rom": "hỏi · ngang nặng"
   },
   "s_sorry": {
    "chunks": [
@@ -1631,7 +1876,7 @@ ajouterPalier({
    ],
    "fr": "Excusez-moi",
    "en": "Excuse me",
-   "rom": "sine loy"
+   "rom": "ngang · ngã"
   },
   "s_nevermind": {
    "chunks": [
@@ -1640,7 +1885,7 @@ ajouterPalier({
    ],
    "fr": "Ce n’est rien",
    "en": "It’s nothing",
-   "rom": "khong sao"
+   "rom": "ngang sao"
   },
   "s_myname": {
    "chunks": [
@@ -1651,7 +1896,7 @@ ajouterPalier({
    ],
    "fr": "Je m’appelle Pierre",
    "en": "My name is Pierre",
-   "rom": "tenne toy la Pierre"
+   "rom": "ngang ngang huyền Pierre"
   },
   "s_whatname": {
    "chunks": [
@@ -1661,7 +1906,7 @@ ajouterPalier({
    ],
    "fr": "Comment tu t’appelles ?",
    "en": "What is your name?",
-   "rom": "bane tenne zi"
+   "rom": "nặng ngang huyền"
   },
   "s_nicetomeet": {
    "chunks": [
@@ -1669,7 +1914,7 @@ ajouterPalier({
    ],
    "fr": "Enchanté de te connaître",
    "en": "Nice to meet you",
-   "rom": "heune hagne"
+   "rom": "ngang · nặng"
   },
   "s_iam_french": {
    "chunks": [
@@ -1680,7 +1925,7 @@ ajouterPalier({
    ],
    "fr": "Je suis français",
    "en": "I am French",
-   "rom": "toy la ngoueï fap"
+   "rom": "ngang huyền huyền sắc"
   },
   "s_wherefrom": {
    "chunks": [
@@ -1691,7 +1936,7 @@ ajouterPalier({
    ],
    "fr": "D’où viens-tu ?",
    "en": "Where do you come from?",
-   "rom": "bane la ngoueï eu dâou"
+   "rom": "nặng huyền huyền hỏi · ngang"
   },
   "s_fromfr": {
    "chunks": [
@@ -1702,7 +1947,7 @@ ajouterPalier({
    ],
    "fr": "Je viens de France",
    "en": "I come from France",
-   "rom": "toy dène teu fap"
+   "rom": "ngang sắc huyền sắc"
   },
   "s_ieat": {
    "chunks": [
@@ -1712,7 +1957,7 @@ ajouterPalier({
    ],
    "fr": "Je mange du riz",
    "en": "I eat rice",
-   "rom": "toy ane keume"
+   "rom": "ngang ngang ngang"
   },
   "s_idrink": {
    "chunks": [
@@ -1722,7 +1967,7 @@ ajouterPalier({
    ],
    "fr": "Je bois du café",
    "en": "I drink coffee",
-   "rom": "toy ouong ca fê"
+   "rom": "ngang sắc huyền · ngang"
   },
   "s_youlike": {
    "chunks": [
@@ -1734,7 +1979,7 @@ ajouterPalier({
    ],
    "fr": "Tu aimes la cuisine vietnamienne ?",
    "en": "Do you like Vietnamese food?",
-   "rom": "bane tike theuc ane viète name khong"
+   "rom": "nặng sắc sắc · ngang nặng · ngang ngang"
   },
   "s_notspicy": {
    "chunks": [
@@ -1743,7 +1988,7 @@ ajouterPalier({
    ],
    "fr": "Pas épicé",
    "en": "Not spicy",
-   "rom": "khong kaï"
+   "rom": "ngang ngang"
   },
   "s_verygood": {
    "chunks": [
@@ -1752,7 +1997,7 @@ ajouterPalier({
    ],
    "fr": "C’est très bon",
    "en": "It’s very good",
-   "rom": "rate ngone"
+   "rom": "sắc ngang"
   },
   "s_water": {
    "chunks": [
@@ -1763,7 +2008,7 @@ ajouterPalier({
    ],
    "fr": "Une bouteille d’eau, s’il vous plaît",
    "en": "One bottle of water, please",
-   "rom": "tcho toy mote tchaï nouac"
+   "rom": "ngang · ngang nặng ngang sắc"
   },
   "s_noodle": {
    "chunks": [
@@ -1774,7 +2019,7 @@ ajouterPalier({
    ],
    "fr": "Un bol de nouilles, s’il vous plaît",
    "en": "One bowl of noodles, please",
-   "rom": "tcho toy mote bate feu"
+   "rom": "ngang · ngang nặng sắc hỏi"
   },
   "s_beer": {
    "chunks": [
@@ -1786,7 +2031,7 @@ ajouterPalier({
    ],
    "fr": "Une bière fraîche, s’il vous plaît",
    "en": "A cold beer, please",
-   "rom": "tcho toy mote tchaï bia lagne"
+   "rom": "ngang · ngang nặng ngang ngang nặng"
   },
   "s_hungry": {
    "chunks": [
@@ -1796,7 +2041,7 @@ ajouterPalier({
    ],
    "fr": "J’ai très faim",
    "en": "I am very hungry",
-   "rom": "toy rate doy"
+   "rom": "ngang sắc sắc"
   },
   "s_full": {
    "chunks": [
@@ -1806,7 +2051,7 @@ ajouterPalier({
    ],
    "fr": "Je n’ai plus faim",
    "en": "I’m full",
-   "rom": "toy no roy"
+   "rom": "ngang ngang huyền"
   },
   "s_howmuch": {
    "chunks": [
@@ -1815,7 +2060,7 @@ ajouterPalier({
    ],
    "fr": "Combien ?",
    "en": "How much?",
-   "rom": "bao nieou tiène"
+   "rom": "ngang · ngang huyền"
   },
   "s_price": {
    "chunks": [
@@ -1826,7 +2071,7 @@ ajouterPalier({
    ],
    "fr": "Cinquante mille dongs",
    "en": "Fifty baht",
-   "rom": "name mouei nguine dong"
+   "rom": "ngang mouei huyền huyền"
   },
   "s_expensive": {
    "chunks": [
@@ -1835,7 +2080,7 @@ ajouterPalier({
    ],
    "fr": "C’est trop cher",
    "en": "That’s too expensive",
-   "rom": "date koua"
+   "rom": "sắc koua"
   },
   "s_cheaper": {
    "chunks": [
@@ -1846,7 +2091,7 @@ ajouterPalier({
    ],
    "fr": "Vous pouvez baisser le prix ?",
    "en": "Can you lower the price?",
-   "rom": "rè heune dououc khong"
+   "rom": "hỏi ngang nặng ngang"
   },
   "s_toilet": {
    "chunks": [
@@ -1855,7 +2100,7 @@ ajouterPalier({
    ],
    "fr": "Où sont les toilettes ?",
    "en": "Where is the toilet?",
-   "rom": "gna vè sine eu dâou"
+   "rom": "huyền · nặng · ngang hỏi · ngang"
   },
   "s_hospital": {
    "chunks": [
@@ -1864,7 +2109,7 @@ ajouterPalier({
    ],
    "fr": "Où est l’hôpital ?",
    "en": "Where is the hospital?",
-   "rom": "bègne vienne eu dâou"
+   "rom": "nặng · nặng hỏi · ngang"
   },
   "s_gohotel": {
    "chunks": [
@@ -1873,7 +2118,7 @@ ajouterPalier({
    ],
    "fr": "Aller à l’hôtel",
    "en": "Go to the hotel",
-   "rom": "di khak sane"
+   "rom": "ngang sắc · nặng"
   },
   "s_turnleft": {
    "chunks": [
@@ -1882,7 +2127,7 @@ ajouterPalier({
    ],
    "fr": "Tourner à gauche",
    "en": "Turn left",
-   "rom": "rè traï"
+   "rom": "rè sắc"
   },
   "s_turnright": {
    "chunks": [
@@ -1891,7 +2136,7 @@ ajouterPalier({
    ],
    "fr": "Tourner à droite",
    "en": "Turn right",
-   "rom": "rè bène faï"
+   "rom": "rè ngang · hỏi"
   },
   "s_straight": {
    "chunks": [
@@ -1899,7 +2144,7 @@ ajouterPalier({
    ],
    "fr": "Tout droit",
    "en": "Straight ahead",
-   "rom": "di tang"
+   "rom": "ngang · hỏi"
   },
   "s_gomarket": {
    "chunks": [
@@ -1909,7 +2154,7 @@ ajouterPalier({
    ],
    "fr": "Nous allons au marché",
    "en": "We are going to the market",
-   "rom": "tchoung toy di tcheu"
+   "rom": "sắc · ngang ngang nặng"
   },
   "s_tomorrow": {
    "chunks": [
@@ -1920,7 +2165,7 @@ ajouterPalier({
    ],
    "fr": "Demain je vais au marché",
    "en": "Tomorrow I’m going to the market",
-   "rom": "ngaï maï toy di tcheu"
+   "rom": "huyền · ngang ngang ngang nặng"
   },
   "s_ihave": {
    "chunks": [
@@ -1933,7 +2178,7 @@ ajouterPalier({
    ],
    "fr": "J’ai un ami vietnamien",
    "en": "I have a Vietnamese friend",
-   "rom": "toy co mote ngoueï bane viète name"
+   "rom": "ngang sắc nặng huyền nặng nặng · ngang"
   },
   "s_ispeak": {
    "chunks": [
@@ -1945,7 +2190,7 @@ ajouterPalier({
    ],
    "fr": "Je parle un peu vietnamien",
    "en": "I speak a little Vietnamese",
-   "rom": "toy noy mote ite tiègne viète"
+   "rom": "ngang sắc nặng · sắc sắc viète"
   },
   "s_notunderstand": {
    "chunks": [
@@ -1955,7 +2200,7 @@ ajouterPalier({
    ],
    "fr": "Je ne comprends pas",
    "en": "I don’t understand",
-   "rom": "toy khong hieou"
+   "rom": "ngang ngang hỏi"
   },
   "s_speakslow": {
    "chunks": [
@@ -1965,7 +2210,7 @@ ajouterPalier({
    ],
    "fr": "Pouvez-vous parler lentement ?",
    "en": "Could you speak slowly?",
-   "rom": "noy tcheume mote tchoute"
+   "rom": "sắc nặng nặng · sắc"
   },
   "s_ilove": {
    "chunks": [
@@ -1976,7 +2221,7 @@ ajouterPalier({
    ],
    "fr": "J’aime le Viêt Nam",
    "en": "I love Vietnam",
-   "rom": "toy ieou viète name"
+   "rom": "ngang ngang viète name"
   },
   "s_study": {
    "chunks": [
@@ -1987,7 +2232,7 @@ ajouterPalier({
    ],
    "fr": "J’étudie le vietnamien",
    "en": "I study Vietnamese",
-   "rom": "toy hoc tiègne viète"
+   "rom": "ngang nặng sắc viète"
   },
   "s_pretty": {
    "chunks": [
@@ -1998,7 +2243,7 @@ ajouterPalier({
    ],
    "fr": "Le vietnamien est très beau",
    "en": "Vietnamese is a very beautiful language",
-   "rom": "tiègne viète rate dèpe"
+   "rom": "sắc viète sắc nặng"
   },
   "s_twodogs": {
    "chunks": [
@@ -2010,7 +2255,7 @@ ajouterPalier({
    ],
    "fr": "J’ai deux chiens",
    "en": "I have two dogs",
-   "rom": "toy co haï cone tcho"
+   "rom": "ngang sắc ngang ngang sắc"
   },
   "s_threefr": {
    "chunks": [
@@ -2020,7 +2265,7 @@ ajouterPalier({
    ],
    "fr": "Trois amis",
    "en": "Three friends",
-   "rom": "ba ngoueï bane"
+   "rom": "ngang huyền nặng"
   },
   "s_twocars": {
    "chunks": [
@@ -2030,7 +2275,7 @@ ajouterPalier({
    ],
    "fr": "Deux voitures",
    "en": "Two cars",
-   "rom": "haï tchiéque o to"
+   "rom": "ngang sắc ngang · ngang"
   },
   "s_family": {
    "chunks": [
@@ -2041,7 +2286,7 @@ ajouterPalier({
    ],
    "fr": "J’ai deux grands frères",
    "en": "I have two older brothers",
-   "rom": "toy co haï agne"
+   "rom": "ngang sắc ngang ngang"
   },
   "s_mother": {
    "chunks": [
@@ -2051,7 +2296,7 @@ ajouterPalier({
    ],
    "fr": "Maman travaille le matin",
    "en": "Mum works in the morning",
-   "rom": "mè lame viec bouoy sang"
+   "rom": "nặng huyền · nặng hỏi · sắc"
   },
   "s_hot": {
    "chunks": [
@@ -2061,7 +2306,7 @@ ajouterPalier({
    ],
    "fr": "Aujourd’hui il fait très chaud",
    "en": "It is very hot today",
-   "rom": "home naï rate nong"
+   "rom": "ngang · ngang sắc sắc"
   },
   "s_sleep": {
    "chunks": [
@@ -2071,7 +2316,7 @@ ajouterPalier({
    ],
    "fr": "Je veux dormir",
    "en": "I want to sleep",
-   "rom": "toy mouone ngou"
+   "rom": "ngang sắc hỏi"
   },
   "s_help": {
    "chunks": [
@@ -2081,7 +2326,7 @@ ajouterPalier({
    ],
    "fr": "Aidez-moi, s’il vous plaît",
    "en": "Please help me",
-   "rom": "zioupe toy mote tchoute"
+   "rom": "sắc ngang nặng · sắc"
   },
   "s_wait": {
    "chunks": [
@@ -2090,7 +2335,7 @@ ajouterPalier({
    ],
    "fr": "Attendez un instant",
    "en": "Wait a moment",
-   "rom": "deuy mote tchoute"
+   "rom": "nặng nặng · sắc"
   },
   "s_where_go": {
    "chunks": [
@@ -2100,7 +2345,7 @@ ajouterPalier({
    ],
    "fr": "Où vas-tu ?",
    "en": "Where are you going?",
-   "rom": "bane di eu dâou"
+   "rom": "nặng ngang hỏi · ngang"
   },
   "s_book_red": {
    "chunks": [
@@ -2110,7 +2355,7 @@ ajouterPalier({
    ],
    "fr": "Le livre rouge",
    "en": "The red book",
-   "rom": "kouiène sake maou do"
+   "rom": "hỏi sắc huyền · hỏi"
   },
   "s_big_house": {
    "chunks": [
@@ -2121,7 +2366,7 @@ ajouterPalier({
    ],
    "fr": "Ma maison est grande",
    "en": "A big house",
-   "rom": "gna coua toy to"
+   "rom": "huyền hỏi ngang ngang"
   },
   "s_buy_fruit": {
    "chunks": [
@@ -2131,7 +2376,7 @@ ajouterPalier({
    ],
    "fr": "J’achète des fruits",
    "en": "I buy fruit",
-   "rom": "toy moua traï kây"
+   "rom": "ngang ngang sắc · ngang"
   },
   "s_no_money": {
    "chunks": [
@@ -2142,7 +2387,7 @@ ajouterPalier({
    ],
    "fr": "Je n’ai pas d’argent",
    "en": "I have no money",
-   "rom": "toy khong co tiène"
+   "rom": "ngang ngang sắc huyền"
   },
   "s_read_book": {
    "chunks": [
@@ -2152,7 +2397,7 @@ ajouterPalier({
    ],
    "fr": "Il lit un livre",
    "en": "He reads a book",
-   "rom": "agne ây doc sake"
+   "rom": "ngang · sắc nặng sắc"
   },
   "s_go_school": {
    "chunks": [
@@ -2162,7 +2407,7 @@ ajouterPalier({
    ],
    "fr": "L’enfant va à l’école",
    "en": "The child goes to school",
-   "rom": "trè ème di hoc"
+   "rom": "hỏi · ngang ngang nặng"
   },
   "s_taxi_airport": {
    "chunks": [
@@ -2172,7 +2417,7 @@ ajouterPalier({
    ],
    "fr": "À l’aéroport, s’il vous plaît",
    "en": "To the airport, please",
-   "rom": "tcho toy di seune baï"
+   "rom": "ngang · ngang ngang ngang · ngang"
   }
  },
  "romanisations": {
@@ -2619,7 +2864,8 @@ ajouterPalier({
       "chok_dee",
       "phop_kan",
       "raatri",
-      "yindee"
+      "yindee",
+      "vi_co"
      ],
      "sentences": [
       "s_nevermind",
@@ -2674,7 +2920,8 @@ ajouterPalier({
       "nakrian",
       "phuchai",
       "phuying",
-      "dek"
+      "dek",
+      "vi_quen"
      ],
      "sentences": [
       "s_ihave",
@@ -2693,7 +2940,9 @@ ajouterPalier({
       "thai",
       "farangset",
       "angkrit",
-      "phasa"
+      "phasa",
+      "vi_tieng_viet",
+      "vi_tieng_anh"
      ],
      "sentences": [
       "s_wherefrom",
@@ -2769,7 +3018,8 @@ ajouterPalier({
       "kao",
       "sip",
       "sip_et",
-      "yisip"
+      "yisip",
+      "vi_tuoi"
      ],
      "sentences": [
       "s_price"
@@ -2787,7 +3037,8 @@ ajouterPalier({
       "baht",
       "thaorai",
       "ki",
-      "ngoen"
+      "ngoen",
+      "vi_so"
      ],
      "sentences": [
       "s_howmuch",
@@ -2893,7 +3144,8 @@ ajouterPalier({
       "phatthai",
       "somtam",
       "ahan",
-      "ranahan"
+      "ranahan",
+      "vi_mon_an"
      ],
      "sentences": [
       "s_noodle",
@@ -2932,7 +3184,8 @@ ajouterPalier({
       "yak",
       "phonlamai",
       "khoo",
-      "noi"
+      "noi",
+      "vi_tao"
      ],
      "sentences": [
       "s_hungry",
@@ -2965,7 +3218,8 @@ ajouterPalier({
       "lae",
       "tae",
       "rue",
-      "kap"
+      "kap",
+      "vi_hay"
      ],
      "sentences": [
       "a2_but",
@@ -3051,7 +3305,9 @@ ajouterPalier({
       "mae",
       "pho",
       "luk",
-      "khropkhrua"
+      "khropkhrua",
+      "vi_contrai",
+      "vi_congai"
      ],
      "sentences": [
       "s_mother",
@@ -3084,7 +3340,9 @@ ajouterPalier({
       "pu",
       "ya",
       "ta",
-      "yai"
+      "yai",
+      "vi_chu",
+      "vi_bac"
      ],
      "sentences": [
       "s_ihave"
@@ -3136,7 +3394,8 @@ ajouterPalier({
       "mai_new",
       "kao_old",
       "reo",
-      "cha_slow"
+      "cha_slow",
+      "vi_qua"
      ],
      "sentences": [
       "s_big_house"
@@ -3155,7 +3414,8 @@ ajouterPalier({
       "phaeng",
       "thuk",
       "mak",
-      "nitnoi"
+      "nitnoi",
+      "vi_it"
      ],
      "sentences": [
       "s_pretty",
@@ -3187,7 +3447,9 @@ ajouterPalier({
       "wanni",
       "phrungni",
       "mueawan",
-      "diao_ni"
+      "diao_ni",
+      "vi_truoc",
+      "vi_sau"
      ],
      "sentences": [
       "s_tomorrow",
@@ -3220,7 +3482,8 @@ ajouterPalier({
       "tonchao",
       "tonbai",
       "tonyen",
-      "klangkhuen"
+      "klangkhuen",
+      "vi_buoitrua"
      ],
      "sentences": [
       "s_mother"
@@ -3237,7 +3500,9 @@ ajouterPalier({
       "wan_day",
       "athit",
       "duean",
-      "chaomong"
+      "chaomong",
+      "vi_phut",
+      "vi_luc"
      ],
      "sentences": [
       "s_wait"
@@ -3286,7 +3551,10 @@ ajouterPalier({
       "pai",
       "ma",
       "doen",
-      "wing"
+      "wing",
+      "vi_vao",
+      "vi_ra",
+      "vi_ve"
      ],
      "sentences": [
       "s_gomarket",
@@ -3305,7 +3573,9 @@ ajouterPalier({
       "khwa",
       "trong_pai",
       "klai",
-      "klai_near"
+      "klai_near",
+      "vi_len",
+      "vi_xuong"
      ],
      "sentences": [
       "s_turnleft",
@@ -3339,7 +3609,8 @@ ajouterPalier({
       "rongraem",
       "talat",
       "ranahan",
-      "rongrian"
+      "rongrian",
+      "vi_cuahang"
      ],
      "sentences": [
       "s_gohotel",
@@ -3391,7 +3662,11 @@ ajouterPalier({
       "kaoi",
       "to_table",
       "pratu",
-      "ban"
+      "ban",
+      "vi_trong",
+      "vi_tren",
+      "vi_duoi",
+      "vi_giua"
      ],
      "sentences": [
       "s_big_house"
@@ -3496,7 +3771,9 @@ ajouterPalier({
       "ma_dog",
       "maeo",
       "chang",
-      "nok"
+      "nok",
+      "vi_cac",
+      "vi_nhung"
      ],
      "sentences": [
       "s_twodogs",
@@ -3515,7 +3792,9 @@ ajouterPalier({
       "cl_khuat",
       "cl_lem",
       "nangsue",
-      "krapao"
+      "krapao",
+      "vi_coc",
+      "vi_do_vat"
      ],
      "sentences": [
       "s_water"
@@ -3532,7 +3811,8 @@ ajouterPalier({
       "cl_cham",
       "sue",
       "khai_sell",
-      "hai"
+      "hai",
+      "vi_nhieu"
      ],
      "sentences": [
       "s_noodle",

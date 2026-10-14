@@ -1,5 +1,9 @@
 <!doctype html>
 <meta charset="utf-8">
+<!-- versionner.js n'estampille que les fichiers appelés par index.html : cette page-ci
+     pouvait donc être servie depuis le cache, et faire tourner un vieux harnais.
+     Un échec « l'onglet Écriture » après correction venait de là. -->
+<meta http-equiv="cache-control" content="no-store">
 <title>ThaiLingo — tests d'interface</title>
 <style>
  body{font-family:system-ui,sans-serif;padding:24px;max-width:820px;margin:auto}

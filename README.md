@@ -17,12 +17,12 @@ statiques et l'API du navigateur.
 |---|---|
 | Cours | `fr-th`, `en-th` (thaï), `fr-zh` (chinois), `fr-vi` (vietnamien) — tous depuis le français sauf `en-th` |
 | Contenu thaï | 467 mots, 143 phrases de leçon, 330 phrases de révision, 33 unités, 107 leçons |
-| Contenu chinois | 467 mots, 143 phrases, 170 phrases de révision, 33 unités, 106 leçons |
-| Contenu vietnamien | 464 mots, 143 phrases, 170 phrases de révision, 33 unités, 104 leçons |
+| Contenu chinois | 505 mots (95 % du HSK 1), 143 phrases, 170 phrases de révision, 33 unités, 106 leçons |
+| Contenu vietnamien | 510 mots, 143 phrases, 170 phrases de révision, 33 unités, 104 leçons |
 | Paliers | A1 Débutant, A2 Élémentaire, B1 Intermédiaire |
 | Écriture | alphabet complet (44 consonnes avec classe de ton, 10 voyelles, 4 signes) + 11 règles de ton |
 | Sauvegarde | locale + en ligne (Firebase), avec un code de récupération |
-| Tests | 90 tests Node + 23 tests d'interface, tous verts |
+| Tests | 96 tests Node + 23 tests d'interface, tous verts |
 
 **Il reste deux chantiers**, décrits en §7 : les cours `th-fr` / `th-en`, et les paliers B2 / C1.
 
@@ -38,7 +38,7 @@ python3 -m http.server 8777        # depuis la racine du dépôt
 - tests d'interface : <http://localhost:8777/tests/ui.html> (ils jouent des scénarios dans l'app réelle, dans une iframe)
 
 ```bash
-node tests/run.js                  # 90 tests : contenu, traductions, exercices, révision, progression, sauvegarde
+node tests/run.js                  # 96 tests : contenu, traductions, exercices, révision, progression, sauvegarde
 ```
 
 **Les deux suites doivent passer avant tout déploiement.** Celle de Node contient des
@@ -172,11 +172,29 @@ cd ../chantier-zh-vi && node generer.js && node generer-revision.js
 La régénération est idempotente : **ne jamais corriger `cours/chinois-*.js` à la main**,
 la correction serait perdue au prochain passage. Corriger les tables, puis régénérer.
 
-**Ce qu'un cours déclare** (`cours/registre.js`) : `voix` (étiquette BCP-47 pour la
-synthèse et la reconnaissance vocales), `script` (expression régulière de l'écriture
-enseignée, `null` si elle est latine), `clavier` (lettres de l'exercice « épeler »,
-`null` pour le désactiver), `separateur` (`''` sans espace pour le thaï et le chinois,
-`' '` pour le vietnamien).
+**Ce qu'un cours déclare** (`cours/registre.js`) : `voix` (étiquette BCP-47),
+`script` (expression régulière de l'écriture enseignée, `null` si elle est latine),
+`clavier` (lettres de l'exercice « épeler », `null` pour le désactiver),
+`separateur` (`''` sans espace pour le thaï et le chinois, `' '` pour le vietnamien),
+`prononciation` (`false` retire les exercices où l'on répète à voix haute).
+
+**La parité est celle du CHEMIN, pas du vocabulaire.** `supplements.json` ajoute à
+chaque langue les mots qu'elle réclame et que le thaï n'a pas, chacun rattaché à une
+leçon existante dont le thème le justifie : 38 en chinois (le HSK 1 passe de 71 % à
+95 %), 46 en vietnamien (couverture d'une liste de fréquence : 63 % → 73 %).
+
+**Le vietnamien n'a pas de romanisation.** Le quốc ngữ est déjà une écriture
+phonétique : il n'y a rien à transcrire, et une transcription inventée (« sine tchao »)
+paraîtrait fausse à un locuteur. La ligne sous le mot affiche donc la **décomposition
+en tons**, déduite mécaniquement des signes diacritiques (`chantier-zh-vi/tons-vi.js`) :
+`xin chào → ngang · huyền`. Un test refuse toute autre valeur.
+
+**La voix** (`js/audio.js`) : les voix fantaisie d'Apple (Eddy, Flo, Grandma…) sont
+écartées — sans ce filtre le chinois tombait sur « Eddy ». L'étiquette complète
+(`zh-CN`) l'emporte sur la racine (`zh`), la voix est rechoisie à chaque changement de
+cours, et le Profil permet d'en choisir une autre parmi celles de l'appareil. La
+qualité dépend de l'appareil : sur iPhone, télécharger la voix « Améliorée » dans
+Réglages → Accessibilité → Contenu énoncé → Voix.
 
 **Deux absences assumées côté vietnamien** : `mai_q`, `cl_tua` et `pi` n'existent pas,
 parce que không, con et năm y portent déjà deux sens — un vrai homographe reçoit une

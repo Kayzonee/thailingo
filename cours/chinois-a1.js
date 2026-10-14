@@ -1567,6 +1567,237 @@ ajouterPalier({
    "fr": "classif. livres",
    "en": "classif. livres",
    "emoji": "📕"
+  },
+  "zh_er": {
+   "th": "二",
+   "rom": "èr",
+   "fr": "deux (en comptant)",
+   "en": "two (counting)",
+   "emoji": "2️⃣"
+  },
+  "zh_sui": {
+   "th": "岁",
+   "rom": "suì",
+   "fr": "ans (âge)",
+   "en": "years old",
+   "emoji": "🎂"
+  },
+  "zh_hao": {
+   "th": "号",
+   "rom": "hào",
+   "fr": "numéro ; jour du mois",
+   "en": "number; day of month",
+   "emoji": "#️⃣"
+  },
+  "zh_ta_f": {
+   "th": "她",
+   "rom": "tā",
+   "fr": "elle",
+   "en": "she",
+   "emoji": "👩"
+  },
+  "zh_ne": {
+   "th": "呢",
+   "rom": "ne",
+   "fr": "(et toi ?)",
+   "en": "(and you?)",
+   "emoji": "❔"
+  },
+  "zh_na": {
+   "th": "哪",
+   "rom": "nǎ",
+   "fr": "quel, lequel",
+   "en": "which",
+   "emoji": "🔀"
+  },
+  "zh_zenmeyang": {
+   "th": "怎么样",
+   "rom": "zěnmeyàng",
+   "fr": "comment ça va ?",
+   "en": "how about it?",
+   "emoji": "🙂"
+  },
+  "zh_jiao": {
+   "th": "叫",
+   "rom": "jiào",
+   "fr": "s’appeler ; appeler",
+   "en": "to be called",
+   "emoji": "🗣️"
+  },
+  "zh_renshi": {
+   "th": "认识",
+   "rom": "rènshi",
+   "fr": "connaître (quelqu’un)",
+   "en": "to know (someone)",
+   "emoji": "🤝"
+  },
+  "zh_xiansheng": {
+   "th": "先生",
+   "rom": "xiānsheng",
+   "fr": "monsieur",
+   "en": "Mr, sir",
+   "emoji": "👔"
+  },
+  "zh_xiaojie": {
+   "th": "小姐",
+   "rom": "xiǎojiě",
+   "fr": "mademoiselle",
+   "en": "Miss",
+   "emoji": "👗"
+  },
+  "zh_erzi": {
+   "th": "儿子",
+   "rom": "érzi",
+   "fr": "fils",
+   "en": "son",
+   "emoji": "👦"
+  },
+  "zh_nver": {
+   "th": "女儿",
+   "rom": "nǚ’ér",
+   "fr": "fille (enfant)",
+   "en": "daughter",
+   "emoji": "👧"
+  },
+  "zh_duo": {
+   "th": "多",
+   "rom": "duō",
+   "fr": "nombreux, beaucoup de",
+   "en": "many",
+   "emoji": "➕"
+  },
+  "zh_shao": {
+   "th": "少",
+   "rom": "shǎo",
+   "fr": "peu de",
+   "en": "few",
+   "emoji": "➖"
+  },
+  "zh_tai": {
+   "th": "太",
+   "rom": "tài",
+   "fr": "trop",
+   "en": "too",
+   "emoji": "⚠️"
+  },
+  "zh_meiyou": {
+   "th": "没有",
+   "rom": "méiyǒu",
+   "fr": "ne pas avoir",
+   "en": "not to have",
+   "emoji": "🚫"
+  },
+  "zh_dongxi": {
+   "th": "东西",
+   "rom": "dōngxi",
+   "fr": "chose, objet",
+   "en": "thing",
+   "emoji": "📦"
+  },
+  "zh_beizi": {
+   "th": "杯子",
+   "rom": "bēizi",
+   "fr": "verre, tasse",
+   "en": "cup, glass",
+   "emoji": "🥤"
+  },
+  "zh_cai": {
+   "th": "菜",
+   "rom": "cài",
+   "fr": "plat (cuisine)",
+   "en": "dish",
+   "emoji": "🍲"
+  },
+  "zh_pingguo": {
+   "th": "苹果",
+   "rom": "píngguǒ",
+   "fr": "pomme",
+   "en": "apple",
+   "emoji": "🍎"
+  },
+  "zh_shangdian": {
+   "th": "商店",
+   "rom": "shāngdiàn",
+   "fr": "magasin",
+   "en": "shop",
+   "emoji": "🏪"
+  },
+  "zh_limian": {
+   "th": "里面",
+   "rom": "lǐmiàn",
+   "fr": "dedans, à l’intérieur",
+   "en": "inside",
+   "emoji": "📥"
+  },
+  "zh_shang": {
+   "th": "上",
+   "rom": "shàng",
+   "fr": "sur, dessus",
+   "en": "on, above",
+   "emoji": "⬆️"
+  },
+  "zh_xia": {
+   "th": "下",
+   "rom": "xià",
+   "fr": "sous, dessous",
+   "en": "under",
+   "emoji": "⬇️"
+  },
+  "zh_qianmian": {
+   "th": "前面",
+   "rom": "qiánmiàn",
+   "fr": "devant",
+   "en": "in front",
+   "emoji": "⏩"
+  },
+  "zh_houmian": {
+   "th": "后面",
+   "rom": "hòumiàn",
+   "fr": "derrière",
+   "en": "behind",
+   "emoji": "⏪"
+  },
+  "zh_fenzhong": {
+   "th": "分钟",
+   "rom": "fēnzhōng",
+   "fr": "minute",
+   "en": "minute",
+   "emoji": "⏱️"
+  },
+  "zh_zhongwu": {
+   "th": "中午",
+   "rom": "zhōngwǔ",
+   "fr": "midi",
+   "en": "noon",
+   "emoji": "🌞"
+  },
+  "zh_shihou": {
+   "th": "时候",
+   "rom": "shíhou",
+   "fr": "moment",
+   "en": "moment",
+   "emoji": "🕰️"
+  },
+  "zh_hanyu": {
+   "th": "中文",
+   "rom": "Zhōngwén",
+   "fr": "le chinois (langue)",
+   "en": "Chinese (language)",
+   "emoji": "🇨🇳"
+  },
+  "zh_yingwen": {
+   "th": "英文",
+   "rom": "Yīngwén",
+   "fr": "l’anglais (langue)",
+   "en": "English (language)",
+   "emoji": "🇬🇧"
+  },
+  "zh_hui": {
+   "th": "回",
+   "rom": "huí",
+   "fr": "rentrer, revenir",
+   "en": "to return",
+   "emoji": "🔙"
   }
  },
  "tonsNoms": {
@@ -2683,7 +2914,9 @@ ajouterPalier({
       "sabaidee",
       "chai",
       "mai_no",
-      "khothot"
+      "khothot",
+      "zh_ne",
+      "zh_zenmeyang"
      ],
      "sentences": [
       "s_hru",
@@ -2703,7 +2936,8 @@ ajouterPalier({
       "chok_dee",
       "phop_kan",
       "raatri",
-      "yindee"
+      "yindee",
+      "zh_xiaojie"
      ],
      "sentences": [
       "s_nevermind",
@@ -2738,7 +2972,9 @@ ajouterPalier({
       "khun",
       "khao",
       "rao",
-      "phuak_khao"
+      "phuak_khao",
+      "zh_ta_f",
+      "zh_jiao"
      ],
      "sentences": [
       "s_myname",
@@ -2758,7 +2994,8 @@ ajouterPalier({
       "nakrian",
       "phuchai",
       "phuying",
-      "dek"
+      "dek",
+      "zh_xiansheng"
      ],
      "sentences": [
       "s_ihave",
@@ -2777,7 +3014,9 @@ ajouterPalier({
       "thai",
       "farangset",
       "angkrit",
-      "phasa"
+      "phasa",
+      "zh_hanyu",
+      "zh_yingwen"
      ],
      "sentences": [
       "s_wherefrom",
@@ -2799,7 +3038,8 @@ ajouterPalier({
       "yangngai",
       "thinai",
       "arai",
-      "mai_q"
+      "mai_q",
+      "zh_na"
      ],
      "sentences": [
       "s_whatname",
@@ -2834,7 +3074,8 @@ ajouterPalier({
       "song",
       "sam",
       "si",
-      "ha"
+      "ha",
+      "zh_er"
      ],
      "sentences": [
       "s_twodogs",
@@ -2854,7 +3095,8 @@ ajouterPalier({
       "kao",
       "sip",
       "sip_et",
-      "yisip"
+      "yisip",
+      "zh_sui"
      ],
      "sentences": [
       "s_price"
@@ -2872,7 +3114,8 @@ ajouterPalier({
       "baht",
       "thaorai",
       "ki",
-      "ngoen"
+      "ngoen",
+      "zh_hao"
      ],
      "sentences": [
       "s_howmuch",
@@ -2978,7 +3221,8 @@ ajouterPalier({
       "phatthai",
       "somtam",
       "ahan",
-      "ranahan"
+      "ranahan",
+      "zh_cai"
      ],
      "sentences": [
       "s_noodle",
@@ -3017,7 +3261,8 @@ ajouterPalier({
       "yak",
       "phonlamai",
       "khoo",
-      "noi"
+      "noi",
+      "zh_pingguo"
      ],
      "sentences": [
       "s_hungry",
@@ -3136,7 +3381,9 @@ ajouterPalier({
       "mae",
       "pho",
       "luk",
-      "khropkhrua"
+      "khropkhrua",
+      "zh_erzi",
+      "zh_nver"
      ],
      "sentences": [
       "s_mother",
@@ -3221,7 +3468,8 @@ ajouterPalier({
       "mai_new",
       "kao_old",
       "reo",
-      "cha_slow"
+      "cha_slow",
+      "zh_tai"
      ],
      "sentences": [
       "s_big_house"
@@ -3240,7 +3488,8 @@ ajouterPalier({
       "phaeng",
       "thuk",
       "mak",
-      "nitnoi"
+      "nitnoi",
+      "zh_shao"
      ],
      "sentences": [
       "s_pretty",
@@ -3305,7 +3554,8 @@ ajouterPalier({
       "tonchao",
       "tonbai",
       "tonyen",
-      "klangkhuen"
+      "klangkhuen",
+      "zh_zhongwu"
      ],
      "sentences": [
       "s_mother"
@@ -3323,7 +3573,9 @@ ajouterPalier({
       "athit",
       "duean",
       "pi",
-      "chaomong"
+      "chaomong",
+      "zh_fenzhong",
+      "zh_shihou"
      ],
      "sentences": [
       "s_wait"
@@ -3372,7 +3624,8 @@ ajouterPalier({
       "pai",
       "ma",
       "doen",
-      "wing"
+      "wing",
+      "zh_hui"
      ],
      "sentences": [
       "s_gomarket",
@@ -3391,7 +3644,9 @@ ajouterPalier({
       "khwa",
       "trong_pai",
       "klai",
-      "klai_near"
+      "klai_near",
+      "zh_qianmian",
+      "zh_houmian"
      ],
      "sentences": [
       "s_turnleft",
@@ -3425,7 +3680,8 @@ ajouterPalier({
       "rongraem",
       "talat",
       "ranahan",
-      "rongrian"
+      "rongrian",
+      "zh_shangdian"
      ],
      "sentences": [
       "s_gohotel",
@@ -3477,7 +3733,10 @@ ajouterPalier({
       "kaoi",
       "to_table",
       "pratu",
-      "ban"
+      "ban",
+      "zh_limian",
+      "zh_shang",
+      "zh_xia"
      ],
      "sentences": [
       "s_big_house"
@@ -3509,7 +3768,9 @@ ajouterPalier({
       "rak",
       "mi",
       "pen",
-      "ru"
+      "ru",
+      "zh_renshi",
+      "zh_meiyou"
      ],
      "sentences": [
       "s_ilove",
@@ -3602,7 +3863,9 @@ ajouterPalier({
       "cl_khuat",
       "cl_lem",
       "nangsue",
-      "krapao"
+      "krapao",
+      "zh_dongxi",
+      "zh_beizi"
      ],
      "sentences": [
       "s_water"
@@ -3619,7 +3882,8 @@ ajouterPalier({
       "cl_cham",
       "sue",
       "khai_sell",
-      "hai"
+      "hai",
+      "zh_duo"
      ],
      "sentences": [
       "s_noodle",

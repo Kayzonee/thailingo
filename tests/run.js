@@ -257,6 +257,23 @@ function monterCours(fichiers, idCours){
   return e => vm.runInContext(e, c);
 }
 
+t('le harnais d’interface ne peut pas être servi depuis le cache', ()=>{
+  /* versionner.js n'estampille que ce qu'appelle index.html. Sans cette
+     en-tête, tests/ui.html pouvait tourner dans une vieille version et faire
+     échouer un test déjà corrigé — diagnostic faussé garanti. */
+  const ui = fs.readFileSync(path.join(root,'tests/ui.html'),'utf8');
+  ok(/cache-control[^>]*no-store/i.test(ui), 'tests/ui.html n’interdit pas la mise en cache');
+});
+
+t('la voix suit le cours, et les voix fantaisie sont écartées', ()=>{
+  const src = fs.readFileSync(path.join(root,'js/audio.js'),'utf8');
+  ok(/FANTAISIE/.test(src), 'le filtre des voix fantaisie a disparu');
+  ok(/n \+= 10/.test(src) || /lang\.toLowerCase\(\) === tag/.test(src),
+     'l’étiquette complète (zh-CN) n’est plus préférée à la racine');
+  const reg = fs.readFileSync(path.join(root,'cours/registre.js'),'utf8');
+  ok(/Audio_\.rafraichirVoix\(\)/.test(reg), 'la voix n’est pas rechoisie au changement de cours');
+});
+
 t('les cours engendrés sont bien ceux que produit le générateur', ()=>{
   /* chinois-*.js et vietnamien-*.js sont engendrés : une correction faite à la
      main sur eux serait perdue à la régénération suivante. On vérifie qu'ils
@@ -359,6 +376,9 @@ COURS_A_TESTER.forEach(([nom, idCours, fichiers])=>{
     UL.forEach(u=>u.lessons.forEach(l=>{
       ok(!l.script && !l.tones, `${l.id} : leçon d’écriture dans le parcours de langue`);
       ok((l.words||[]).length >= 3, `${l.id} : ${(l.words||[]).length} mot(s) seulement`);
+      /* au-delà de huit mots, la leçon dépasse ses 15 exercices et certains
+         mots n'apparaissent plus : les ajouts doivent rester répartis */
+      ok((l.words||[]).length <= 8, `${l.id} : ${(l.words||[]).length} mots, leçon surchargée`);
     }));
   });
 
@@ -388,6 +408,38 @@ COURS_A_TESTER.forEach(([nom, idCours, fichiers])=>{
       eq(p.rom, p.chunks.map(c=>g2(`romDe(${JSON.stringify(c)})`)).join(' '), id+' : romanisation déduite — ');
       ok(!desLecons.has(p.chunks.join('')), `${id} : reprend une phrase de leçon`);
       const k = p.chunks.join(''); ok(!vues[k], `${id} : doublon de ${vues[k]}`); vues[k] = id;
+    });
+  });
+
+  t(`${nom} : la prononciation affichée n’invente rien`, ()=>{
+    if(nom !== 'vietnamien'){
+      /* chinois : le pinyin porte un ton sur chaque syllabe */
+      const sansTon = Object.entries(L).filter(([,w])=> !/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜüa-z]/i.test(w.rom));
+      eq(sansTon.length, 0, 'pinyin absent : '+sansTon.slice(0,3).map(([i])=>i).join(', ')+' — ');
+      return;
+    }
+    /* vietnamien : le quốc ngữ EST phonétique, il n'y a rien à romaniser.
+       Ce qui s'affiche est la décomposition en tons, DÉDUITE de l'orthographe :
+       rien d'inventé, donc rien qu'un locuteur pourrait juger faux. */
+    const TONS = ['ngang','huyền','sắc','hỏi','ngã','nặng'];
+    const MARQUE = { '\u0300':'huyền', '\u0301':'sắc', '\u0309':'hỏi', '\u0303':'ngã', '\u0323':'nặng' };
+    const tonDe = syll => { for(const c of syll.normalize('NFD')) if(MARQUE[c]) return MARQUE[c]; return 'ngang'; };
+    const faux = [];
+    Object.entries(L).forEach(([id,w])=>{
+      const attendu = w.th.trim().split(/\s+/).map(tonDe).join(' · ');
+      if(w.rom !== attendu) faux.push(`${id} « ${w.rom} » ≠ « ${attendu} »`);
+      w.rom.split(' · ').forEach(t=> ok(TONS.includes(t), `${id} : « ${t} » n’est pas un ton vietnamien`));
+    });
+    eq(faux.length, 0, faux.slice(0,3).join(' ; ')+' — ');
+  });
+
+  t(`${nom} : aucun exercice ne demande de parler à voix haute`, ()=>{
+    eq(g2('coursActif().prononciation'), false, `${nom} : la prononciation devrait être coupée — `);
+    const lecons = UL.flatMap(u=>u.lessons).filter(l=>!l.script && !l.tones).slice(0, 10);
+    lecons.forEach(l=>{
+      const u = UL.find(x=>x.lessons.includes(l));
+      const ex = g2(`buildExercises(${JSON.stringify(l)}, ${JSON.stringify(u)}, 5)`);
+      ok(!ex.some(e=>e.type==='speak'), `${l.id} : exercice de prononciation produit`);
     });
   });
 

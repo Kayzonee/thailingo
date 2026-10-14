@@ -212,6 +212,12 @@ function thaiAvecRom(th, taille){
 /* sens d'un mot à partir de son écriture thaïe (pour les retours de correction) */
 function sensDuMot(th){ const id = idParThai(th); return id ? glose(LEX[id]) : ''; }
 
+/* un mot réel du cours, pour écouter une voix avant de la choisir */
+function exempleParle(){
+  const prem = Object.values(LEX)[0];
+  return prem ? prem.th : 'สวัสดี';
+}
+
 function toast(msg){
   const t = h(`<div class="toast">${esc(msg)}</div>`);
   document.body.appendChild(t); setTimeout(()=>t.remove(), 2200);
@@ -232,8 +238,9 @@ function renderProfile(){
     <div class="card"><div class="ic">🔥</div><div><h4>${T('serie_jours',{n:s.streak})}</h4><small>${T('serie_detail')}</small></div></div>
     <div class="card"><div class="ic">👑</div><div><h4>${T('couronnes_n',{n:Store.totalCrowns()})}</h4><small>${T('couronnes_detail',{max:totalLessons*5, lecons:totalLessons})}</small></div></div>
     <div class="card"><div class="ic">🧠</div><div><h4>${T('mots_rencontres',{n:known})}</h4><small>${T('mots_a_revoir',{n:due})}</small></div></div>
-    <div class="card"><div class="ic">🔊</div><div><h4>${T('voix_thaie',{etat:Audio_.hasThaiVoice()?T('voix_dispo'):T('voix_absente')})}</h4>
-      <small>${Audio_.hasThaiVoice()?T('voix_detail_ok'):T('voix_detail_ko')}</small></div></div>
+    <div class="card"><div class="ic">🔊</div><div style="flex:1"><h4>${T('voix_titre',{etat:Audio_.hasThaiVoice()?T('voix_dispo'):T('voix_absente')})}</h4>
+      <small>${Audio_.hasThaiVoice()? esc(Audio_.voixActuelle()||'') : T('voix_detail_ko')}</small></div>
+      ${Audio_.voixDisponibles().length>1?`<button class="btn ghost" id="choix-voix">${T('changer')}</button>`:''}</div>
     <div class="card"><div class="ic">🐢</div><div style="flex:1"><h4>${T('audio_lent')}</h4><small>${T('audio_lent_detail')}</small></div>
       <button class="btn ${s.slowAudio?'':'ghost'}" id="slow">${s.slowAudio?T('active'):T('desactive')}</button></div>
     <div class="card"><div class="ic">🔔</div><div style="flex:1"><h4>${T('effets_sonores')}</h4><small>${T('effets_detail')}</small></div>
@@ -280,6 +287,28 @@ function renderProfile(){
       Store.changerCours(id);
       await chargerCours(id);
       render();
+    });
+  };
+  const bv = document.getElementById('choix-voix');
+  if(bv) bv.onclick = ()=>{
+    /* la qualité dépend des voix installées sur l'appareil, pas de l'app :
+       on laisse donc choisir, et on fait entendre chaque voix avant de valider */
+    const voix = Audio_.voixDisponibles();
+    const ov = h(`<div class="overlay"><div class="dialog">
+      <h3>${T('voix_choisir')}</h3>
+      <p class="sub">${T('voix_aide')}</p>
+      ${voix.map((v,i)=>`<button class="btn ghost" data-v="${esc(v.name)}"
+         style="width:100%;margin-bottom:8px;text-align:left">${i===0?'⭐ ':''}${esc(v.name)}</button>`).join('')}
+      <button class="btn ghost" id="v-non" style="width:100%">${T('annuler')}</button></div></div>`);
+    document.body.appendChild(ov);
+    ov.querySelector('#v-non').onclick = ()=> ov.remove();
+    ov.querySelectorAll('[data-v]').forEach(b=> b.onclick = ()=>{
+      const s2 = Store.get();
+      s2.voix = s2.voix || {};
+      s2.voix[coursActif().voix] = b.dataset.v;
+      Store.save(); Audio_.rafraichirVoix();
+      Audio_.speak(exempleParle());
+      ov.remove(); renderProfile();
     });
   };
   document.getElementById('debloc').onclick = ()=>{

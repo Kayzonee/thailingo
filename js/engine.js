@@ -189,7 +189,10 @@ function buildExercises(lesson, unit, level=0){
   if(level >= 2) sample(concrets, 2).forEach(id=>{
     if(Array.from(LEX[id].th).length <= 6){ const e = exSpell(LEX[id]); if(e) ex.push(e); }
   });
-  if(level >= 3 && Audio_.canListen()) sample(concrets, 1).forEach(id=> ex.push(exSpeak(LEX[id])) );
+  /* répéter à voix haute : seulement si le cours le demande */
+  const avecPrononciation = (()=>{ try{ return coursActif().prononciation !== false; }catch(e){ return true; } })();
+  if(level >= 3 && avecPrononciation && Audio_.canListen())
+    sample(concrets, 1).forEach(id=> ex.push(exSpeak(LEX[id])) );
 
   // on démarre par une reconnaissance simple ; les exercices avancés (écriture,
   // prononciation) sont garantis dans la sélection finale, jamais tronqués

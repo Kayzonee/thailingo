@@ -8,7 +8,9 @@
               quand elle est latine et donc indiscernable du français.
    `clavier`: lettres proposées par l'exercice « épeler » ; null le désactive.
    `separateur` : ce qui sépare deux mots à l'écrit. Le thaï et le chinois
-              s'écrivent sans espace ; le vietnamien en met entre chaque mot. */
+              s'écrivent sans espace ; le vietnamien en met entre chaque mot.
+   `prononciation` : false retire les exercices où l'on répète le mot à voix
+              haute (reconnaissance vocale). */
 const COURS = {
   'fr-th': { id:'fr-th', interface:'fr', cible:'th', drapeau:'🇹🇭', voix:'th-TH', separateur:'',
              script:/[\u0E00-\u0E7F]/,
@@ -20,12 +22,12 @@ const COURS = {
              clavier:'ก ข ค ง จ ช ด ต ท น บ ป ผ พ ม ย ร ล ว ส ห อ า ิ ี ุ ู เ แ โ ไ ่ ้ ั ำ'.split(' '),
              nom:{fr:'Thaï — depuis l’anglais', en:'Thai — from English'},
              fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js','cours/revision-thai.js'] },
-  'fr-zh': { id:'fr-zh', interface:'fr', cible:'zh', drapeau:'🇨🇳', voix:'zh-CN', separateur:'',
+  'fr-zh': { id:'fr-zh', interface:'fr', cible:'zh', drapeau:'🇨🇳', voix:'zh-CN', separateur:'', prononciation:false,
              script:/[\u4E00-\u9FFF]/,
              clavier:null,          /* on n'épelle pas un caractère chinois au clavier */
              nom:{fr:'Chinois — depuis le français', en:'Chinese — from French'},
              fichiers:['cours/chinois-a1.js','cours/chinois-a2.js','cours/chinois-b1.js','cours/revision-chinois.js'] },
-  'fr-vi': { id:'fr-vi', interface:'fr', cible:'vi', drapeau:'🇻🇳', voix:'vi-VN', separateur:' ',
+  'fr-vi': { id:'fr-vi', interface:'fr', cible:'vi', drapeau:'🇻🇳', voix:'vi-VN', separateur:' ', prononciation:false,
              script:null,           /* écriture latine : indiscernable du français */
              clavier:'a ă â b c d đ e ê g h i k l m n o ô ơ p q r s t u ư v x y'.split(' '),
              nom:{fr:'Vietnamien — depuis le français', en:'Vietnamese — from French'},
@@ -42,6 +44,8 @@ function chargerCours(idCours){
   const c = COURS[idCours] || COURS[COURS_DEFAUT];
   COURS_ACTIF = c;
   definirLangue(c.interface);
+  /* la voix suit le cours : sans ce rappel, le chinois restait lu par la voix thaïe */
+  if(typeof Audio_ !== 'undefined' && Audio_.rafraichirVoix) Audio_.rafraichirVoix();
   /* deux cours qui ne lisent pas les mêmes fichiers ne doivent pas se superposer */
   const signature = c.fichiers.join('|');
   if(CONTENU_CHARGE !== signature){

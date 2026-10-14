@@ -9,784 +9,784 @@ ajouterPalier({
  "lexique": {
   "khwamkhithen": {
    "th": "ý kiến",
-   "rom": "i kiène",
+   "rom": "sắc · sắc",
    "fr": "opinion",
    "en": "opinion",
    "emoji": "💭"
   },
   "khit": {
    "th": "nghĩ",
-   "rom": "ngui",
+   "rom": "ngã",
    "fr": "penser",
    "en": "to think",
    "emoji": "🤔"
   },
   "chuea": {
    "th": "tin",
-   "rom": "tine",
+   "rom": "ngang",
    "fr": "croire",
    "en": "to believe",
    "emoji": "🙏"
   },
   "hen_duai": {
    "th": "đồng ý",
-   "rom": "dong i",
+   "rom": "huyền · sắc",
    "fr": "être d’accord",
    "en": "to agree",
    "emoji": "🤝"
   },
   "khatkhan": {
    "th": "phản đối",
-   "rom": "fane doy",
+   "rom": "hỏi · sắc",
    "fr": "s’opposer",
    "en": "to object",
    "emoji": "✋"
   },
   "athibai": {
    "th": "giải thích",
-   "rom": "zaï tike",
+   "rom": "hỏi · sắc",
    "fr": "expliquer",
    "en": "to explain",
    "emoji": "📖"
   },
   "yokwang": {
    "th": "ví dụ",
-   "rom": "vi zou",
+   "rom": "sắc · nặng",
    "fr": "donner un exemple",
    "en": "to give an example",
    "emoji": "📌"
   },
   "hetphon": {
    "th": "lý do",
-   "rom": "li zo",
+   "rom": "sắc · ngang",
    "fr": "raison",
    "en": "reason",
    "emoji": "🧩"
   },
   "panha": {
    "th": "vấn đề",
-   "rom": "veune dè",
+   "rom": "sắc · huyền",
    "fr": "problème",
    "en": "problem",
    "emoji": "⚠️"
   },
   "witthi": {
    "th": "cách",
-   "rom": "cake",
+   "rom": "sắc",
    "fr": "méthode / façon",
    "en": "way, method",
    "emoji": "🛠️"
   },
   "kaekhai": {
    "th": "sửa",
-   "rom": "soua",
+   "rom": "hỏi",
    "fr": "corriger, résoudre",
    "en": "to fix, solve",
    "emoji": "🔧"
   },
   "tatsinjai": {
    "th": "quyết định",
-   "rom": "kouiéte dine",
+   "rom": "sắc · nặng",
    "fr": "décider",
    "en": "to decide",
    "emoji": "⚖️"
   },
   "nae_nae": {
    "th": "chắc chắn",
-   "rom": "tchac tchane",
+   "rom": "sắc · sắc",
    "fr": "certainement",
    "en": "certainly",
    "emoji": "✔️"
   },
   "bang_thi": {
    "th": "có thể",
-   "rom": "co tê",
+   "rom": "sắc · hỏi",
    "fr": "peut-être",
    "en": "perhaps",
    "emoji": "🎲"
   },
   "khong_ja": {
    "th": "chắc là",
-   "rom": "tchac la",
+   "rom": "sắc · huyền",
    "fr": "sans doute",
    "en": "probably",
    "emoji": "📊"
   },
   "rueang": {
    "th": "chuyện",
-   "rom": "tchouiène",
+   "rom": "nặng",
    "fr": "histoire / sujet",
    "en": "story, matter",
    "emoji": "📚"
   },
   "lao": {
    "th": "kể",
-   "rom": "ké",
+   "rom": "hỏi",
    "fr": "raconter",
    "en": "to tell",
    "emoji": "🗣️"
   },
   "koetkhuen": {
    "th": "xảy ra",
-   "rom": "saï ra",
+   "rom": "hỏi · ngang",
    "fr": "se produire",
    "en": "to happen",
    "emoji": "💥"
   },
   "ton_raek": {
    "th": "lúc đầu",
-   "rom": "louc dâou",
+   "rom": "sắc · huyền",
    "fr": "au début",
    "en": "at first",
    "emoji": "1️⃣"
   },
   "lang_jak": {
    "th": "sau khi",
-   "rom": "saou khi",
+   "rom": "ngang · ngang",
    "fr": "après",
    "en": "after",
    "emoji": "⏭️"
   },
   "kon_na": {
    "th": "trước khi",
-   "rom": "trououc khi",
+   "rom": "sắc · ngang",
    "fr": "avant",
    "en": "before",
    "emoji": "⏮️"
   },
   "nai_thisut": {
    "th": "cuối cùng",
-   "rom": "couoy coung",
+   "rom": "sắc · huyền",
    "fr": "finalement",
    "en": "in the end",
    "emoji": "🏁"
   },
   "thanthi_dai": {
    "th": "bỗng nhiên",
-   "rom": "bong gniène",
+   "rom": "ngã · ngang",
    "fr": "soudain",
    "en": "suddenly",
    "emoji": "⚡"
   },
   "jam": {
    "th": "ghi nhớ",
-   "rom": "gui gneu",
+   "rom": "ngang · sắc",
    "fr": "retenir",
    "en": "to memorise",
    "emoji": "🧠"
   },
   "khaochai_phit": {
    "th": "hiểu lầm",
-   "rom": "hieou leume",
+   "rom": "hỏi · huyền",
    "fr": "mal comprendre",
    "en": "to misunderstand",
    "emoji": "🌀"
   },
   "thanakhan": {
    "th": "ngân hàng",
-   "rom": "ngueune hang",
+   "rom": "ngang · huyền",
    "fr": "banque",
    "en": "bank",
    "emoji": "🏦"
   },
   "banchi": {
    "th": "tài khoản",
-   "rom": "taï khwane",
+   "rom": "huyền · hỏi",
    "fr": "compte",
    "en": "account",
    "emoji": "📒"
   },
   "bat": {
    "th": "thẻ",
-   "rom": "tè",
+   "rom": "hỏi",
    "fr": "carte",
    "en": "card",
    "emoji": "💳"
   },
   "ratkha": {
    "th": "giá",
-   "rom": "za",
+   "rom": "sắc",
    "fr": "prix",
    "en": "price",
    "emoji": "🏷️"
   },
   "suanlot": {
    "th": "giảm giá",
-   "rom": "zame za",
+   "rom": "hỏi · sắc",
    "fr": "remise",
    "en": "discount",
    "emoji": "🔖"
   },
   "bai_set": {
    "th": "hóa đơn",
-   "rom": "hwa deune",
+   "rom": "sắc · ngang",
    "fr": "reçu",
    "en": "receipt",
    "emoji": "🧾"
   },
   "ekkasan": {
    "th": "giấy tờ",
-   "rom": "zây teu",
+   "rom": "sắc · huyền",
    "fr": "document",
    "en": "document",
    "emoji": "📄"
   },
   "langsue": {
    "th": "chữ ký",
-   "rom": "tcheu ki",
+   "rom": "ngã · sắc",
    "fr": "signature",
    "en": "signature",
    "emoji": "✒️"
   },
   "torakan": {
    "th": "liên hệ",
-   "rom": "liène hè",
+   "rom": "ngang · nặng",
    "fr": "contacter",
    "en": "to contact",
    "emoji": "📬"
   },
   "praisani": {
    "th": "bưu điện",
-   "rom": "bououe diène",
+   "rom": "ngang · nặng",
    "fr": "poste",
    "en": "post office",
    "emoji": "📮"
   },
   "song_send": {
    "th": "gửi",
-   "rom": "gueuy",
+   "rom": "hỏi",
    "fr": "envoyer",
    "en": "to send",
    "emoji": "📤"
   },
   "rap": {
    "th": "nhận",
-   "rom": "gneune",
+   "rom": "nặng",
    "fr": "recevoir",
    "en": "to receive",
    "emoji": "📥"
   },
   "jai_pay": {
    "th": "trả",
-   "rom": "tra",
+   "rom": "hỏi",
    "fr": "payer",
    "en": "to pay",
    "emoji": "💸"
   },
   "khue_ngoen": {
    "th": "hoàn tiền",
-   "rom": "hwane tiène",
+   "rom": "huyền · huyền",
    "fr": "rembourser",
    "en": "to refund",
    "emoji": "↩️"
   },
   "khomphiuter": {
    "th": "máy tính",
-   "rom": "maï tine",
+   "rom": "sắc · sắc",
    "fr": "ordinateur",
    "en": "computer",
    "emoji": "💻"
   },
   "internet": {
    "th": "mạng",
-   "rom": "mang",
+   "rom": "nặng",
    "fr": "internet",
    "en": "internet",
    "emoji": "🌐"
   },
   "aeplikhechan": {
    "th": "ứng dụng",
-   "rom": "eung zoung",
+   "rom": "sắc · nặng",
    "fr": "application",
    "en": "app",
    "emoji": "📲"
   },
   "khomun": {
    "th": "dữ liệu",
-   "rom": "zou lieou",
+   "rom": "ngã · nặng",
    "fr": "données / informations",
    "en": "data, information",
    "emoji": "🗂️"
   },
   "rahat": {
    "th": "mật khẩu",
-   "rom": "mate khâou",
+   "rom": "nặng · hỏi",
    "fr": "mot de passe",
    "en": "password",
    "emoji": "🔒"
   },
   "khonha": {
    "th": "tìm kiếm",
-   "rom": "time kième",
+   "rom": "huyền · sắc",
    "fr": "rechercher",
    "en": "to search",
    "emoji": "🔎"
   },
   "daorot": {
    "th": "tải về",
-   "rom": "taï vê",
+   "rom": "hỏi · huyền",
    "fr": "télécharger",
    "en": "to download",
    "emoji": "⬇️"
   },
   "ban_thuek": {
    "th": "lưu",
-   "rom": "louou",
+   "rom": "ngang",
    "fr": "enregistrer",
    "en": "to save, record",
    "emoji": "💾"
   },
   "sangkhom": {
    "th": "xã hội",
-   "rom": "sa hoy",
+   "rom": "ngã · nặng",
    "fr": "société",
    "en": "society",
    "emoji": "🏛️"
   },
   "wathanatham": {
    "th": "văn hóa",
-   "rom": "vane hwa",
+   "rom": "ngang · sắc",
    "fr": "culture",
    "en": "culture",
    "emoji": "🎎"
   },
   "prapheni": {
    "th": "truyền thống",
-   "rom": "trouiène tong",
+   "rom": "huyền · sắc",
    "fr": "tradition",
    "en": "tradition",
    "emoji": "🎏"
   },
   "sasana": {
    "th": "tôn giáo",
-   "rom": "tone zao",
+   "rom": "ngang · sắc",
    "fr": "religion",
    "en": "religion",
    "emoji": "🛐"
   },
   "ratthaban": {
    "th": "chính phủ",
-   "rom": "tchine fou",
+   "rom": "sắc · hỏi",
    "fr": "gouvernement",
    "en": "government",
    "emoji": "🏛️"
   },
   "kotmai": {
    "th": "luật",
-   "rom": "louate",
+   "rom": "nặng",
    "fr": "loi",
    "en": "law",
    "emoji": "⚖️"
   },
   "sitthi": {
    "th": "quyền",
-   "rom": "kouiène",
+   "rom": "huyền",
    "fr": "droit",
    "en": "right (entitlement)",
    "emoji": "📜"
   },
   "chuailuea": {
    "th": "cứu giúp",
-   "rom": "kiou zioupe",
+   "rom": "sắc · sắc",
    "fr": "porter secours",
    "en": "to assist",
    "emoji": "🤲"
   },
   "khopkhun_jing": {
    "th": "cảm động",
-   "rom": "came dong",
+   "rom": "hỏi · nặng",
    "fr": "touché, reconnaissant",
    "en": "moved, grateful",
    "emoji": "🥹"
   },
   "wai_respect": {
    "th": "cúi chào",
-   "rom": "couy tchao",
+   "rom": "sắc · huyền",
    "fr": "s’incliner pour saluer",
    "en": "s’incliner pour saluer",
    "emoji": "🙏"
   },
   "suphap": {
    "th": "lịch sự",
-   "rom": "like seu",
+   "rom": "nặng · nặng",
    "fr": "poli",
    "en": "polite",
    "emoji": "🎩"
   },
   "kreng_jai": {
    "th": "ngại",
-   "rom": "ngaï",
+   "rom": "nặng",
    "fr": "hésiter à déranger",
    "en": "hésiter à déranger",
    "emoji": "😌"
   },
   "thammachat": {
    "th": "thiên nhiên",
-   "rom": "tiène gniène",
+   "rom": "ngang · ngang",
    "fr": "nature",
    "en": "nature",
    "emoji": "🌿"
   },
   "ton_mai": {
    "th": "cây",
-   "rom": "kây",
+   "rom": "ngang",
    "fr": "arbre",
    "en": "tree",
    "emoji": "🌳"
   },
   "dokmai": {
    "th": "hoa",
-   "rom": "hwa",
+   "rom": "ngang",
    "fr": "fleur",
    "en": "flower",
    "emoji": "🌺"
   },
   "maenam": {
    "th": "sông",
-   "rom": "song",
+   "rom": "ngang",
    "fr": "rivière",
    "en": "river",
    "emoji": "🏞️"
   },
   "pa": {
    "th": "rừng",
-   "rom": "reung",
+   "rom": "huyền",
    "fr": "forêt",
    "en": "forest",
    "emoji": "🌲"
   },
   "satliang": {
    "th": "động vật",
-   "rom": "dong vate",
+   "rom": "nặng · nặng",
    "fr": "animal",
    "en": "animal",
    "emoji": "🐾"
   },
   "singwaetlom": {
    "th": "môi trường",
-   "rom": "moy trououeng",
+   "rom": "ngang · huyền",
    "fr": "environnement",
    "en": "environment",
    "emoji": "♻️"
   },
   "malaphit": {
    "th": "ô nhiễm",
-   "rom": "o gnième",
+   "rom": "ngang · ngã",
    "fr": "pollution",
    "en": "pollution",
    "emoji": "🏭"
   },
   "raksa": {
    "th": "bảo vệ",
-   "rom": "bao vè",
+   "rom": "hỏi · nặng",
    "fr": "préserver / soigner",
    "en": "to preserve, treat",
    "emoji": "🛡️"
   },
   "tham_ahan": {
    "th": "nấu ăn",
-   "rom": "nâou ane",
+   "rom": "sắc · ngang",
    "fr": "cuisiner",
    "en": "to cook",
    "emoji": "🍳"
   },
   "suan_phasom": {
    "th": "nguyên liệu",
-   "rom": "ngouiène lieou",
+   "rom": "ngang · nặng",
    "fr": "ingrédient",
    "en": "ingredient",
    "emoji": "🥄"
   },
   "tom": {
    "th": "luộc",
-   "rom": "louoc",
+   "rom": "nặng",
    "fr": "bouillir",
    "en": "to boil",
    "emoji": "🍲"
   },
   "phat": {
    "th": "xào",
-   "rom": "sao",
+   "rom": "huyền",
    "fr": "faire sauter",
    "en": "to stir-fry",
    "emoji": "🍳"
   },
   "thot": {
    "th": "rán",
-   "rom": "rane",
+   "rom": "sắc",
    "fr": "frire",
    "en": "to fry",
    "emoji": "🍤"
   },
   "ping": {
    "th": "nướng",
-   "rom": "nououeng",
+   "rom": "sắc",
    "fr": "griller",
    "en": "to grill",
    "emoji": "🔥"
   },
   "han": {
    "th": "cắt",
-   "rom": "cate",
+   "rom": "sắc",
    "fr": "couper",
    "en": "to slice",
    "emoji": "🔪"
   },
   "chim": {
    "th": "nếm",
-   "rom": "néme",
+   "rom": "sắc",
    "fr": "goûter",
    "en": "to taste",
    "emoji": "👅"
   },
   "jaan": {
    "th": "đĩa",
-   "rom": "dia",
+   "rom": "ngã",
    "fr": "assiette",
    "en": "plate",
    "emoji": "🍽️"
   },
   "chon": {
    "th": "thìa",
-   "rom": "tia",
+   "rom": "huyền",
    "fr": "cuillère",
    "en": "spoon",
    "emoji": "🥄"
   },
   "som": {
    "th": "nĩa",
-   "rom": "nia",
+   "rom": "ngã",
    "fr": "fourchette",
    "en": "fork",
    "emoji": "🍴"
   },
   "takiap": {
    "th": "đũa",
-   "rom": "doua",
+   "rom": "ngã",
    "fr": "baguettes",
    "en": "chopsticks",
    "emoji": "🥢"
   },
   "rokphai": {
    "th": "bệnh",
-   "rom": "bègne",
+   "rom": "nặng",
    "fr": "maladie",
    "en": "disease",
    "emoji": "🦠"
   },
   "attrai": {
    "th": "nguy hiểm",
-   "rom": "ngouy hième",
+   "rom": "ngang · hỏi",
    "fr": "dangereux",
    "en": "dangerous",
    "emoji": "☠️"
   },
   "plotphai": {
    "th": "an toàn",
-   "rom": "ane twane",
+   "rom": "ngang · huyền",
    "fr": "en sécurité",
    "en": "safe",
    "emoji": "🛟"
   },
   "chak": {
    "th": "tiêm",
-   "rom": "tième",
+   "rom": "ngang",
    "fr": "injecter / vacciner",
    "en": "to inject",
    "emoji": "💉"
   },
   "truat": {
    "th": "kiểm tra",
-   "rom": "kième tra",
+   "rom": "hỏi · ngang",
    "fr": "examiner, vérifier",
    "en": "to check, examine",
    "emoji": "🔬"
   },
   "hai_kamlang": {
    "th": "hồi phục",
-   "rom": "hoy fouc",
+   "rom": "huyền · nặng",
    "fr": "convalescence",
    "en": "to recover",
    "emoji": "🛌"
   },
   "ubattihet": {
    "th": "tai nạn",
-   "rom": "taï nane",
+   "rom": "ngang · nặng",
    "fr": "accident",
    "en": "accident",
    "emoji": "🚑"
   },
   "jonkrathang": {
    "th": "cho đến khi",
-   "rom": "tcho dène khi",
+   "rom": "ngang · sắc · ngang",
    "fr": "jusqu’à ce que",
    "en": "until",
    "emoji": "⏱️"
   },
   "thammai_mai": {
    "th": "sao lại",
-   "rom": "sao laï",
+   "rom": "ngang · nặng",
    "fr": "pourquoi donc",
    "en": "why exactly",
    "emoji": "❔"
   },
   "yangrai_kotam": {
    "th": "dù sao",
-   "rom": "zou sao",
+   "rom": "huyền · ngang",
    "fr": "quoi qu’il en soit",
    "en": "in any case",
    "emoji": "🌀"
   },
   "samkhan": {
    "th": "quan trọng",
-   "rom": "kouane trong",
+   "rom": "ngang · nặng",
    "fr": "important",
    "en": "important",
    "emoji": "⭐"
   },
   "ngai": {
    "th": "dễ",
-   "rom": "zê",
+   "rom": "ngã",
    "fr": "facile",
    "en": "easy",
    "emoji": "🟢"
   },
   "yak_hard": {
    "th": "khó",
-   "rom": "kho",
+   "rom": "sắc",
    "fr": "difficile",
    "en": "difficult",
    "emoji": "🔴"
   },
   "narak": {
    "th": "dễ thương",
-   "rom": "zê tououeng",
+   "rom": "ngã · ngang",
    "fr": "mignon",
    "en": "cute",
    "emoji": "🐣"
   },
   "nasonjai": {
    "th": "thú vị",
-   "rom": "tou vi",
+   "rom": "sắc · nặng",
    "fr": "intéressant",
    "en": "interesting",
    "emoji": "🔍"
   },
   "chalat": {
    "th": "thông minh",
-   "rom": "tong mine",
+   "rom": "ngang · ngang",
    "fr": "intelligent",
    "en": "clever",
    "emoji": "🧠"
   },
   "khayan": {
    "th": "chăm chỉ",
-   "rom": "tchame tchi",
+   "rom": "ngang · hỏi",
    "fr": "travailleur",
    "en": "hard-working",
    "emoji": "🐝"
   },
   "khiikiat": {
    "th": "lười",
-   "rom": "loueï",
+   "rom": "huyền",
    "fr": "paresseux",
    "en": "lazy",
    "emoji": "🦥"
   },
   "jing": {
    "th": "thật",
-   "rom": "tate",
+   "rom": "nặng",
    "fr": "vrai",
    "en": "true",
    "emoji": "✔️"
   },
   "plom": {
    "th": "giả",
-   "rom": "za",
+   "rom": "hỏi",
    "fr": "faux, contrefait",
    "en": "fake",
    "emoji": "❌"
   },
   "sanit": {
    "th": "thân",
-   "rom": "teune",
+   "rom": "ngang",
    "fr": "proche (ami)",
    "en": "close (friend)",
    "emoji": "👬"
   },
   "bok": {
    "th": "bảo",
-   "rom": "bao",
+   "rom": "hỏi",
    "fr": "dire, annoncer",
    "en": "to tell",
    "emoji": "📢"
   },
   "keng": {
    "th": "giỏi",
-   "rom": "zoy",
+   "rom": "hỏi",
    "fr": "doué",
    "en": "skilled",
    "emoji": "🏅"
   },
   "poet": {
    "th": "mở",
-   "rom": "meu",
+   "rom": "hỏi",
    "fr": "ouvrir",
    "en": "to open",
    "emoji": "🔓"
   },
   "pit": {
    "th": "đóng",
-   "rom": "dong",
+   "rom": "sắc",
    "fr": "fermer",
    "en": "to close",
    "emoji": "🔒"
   },
   "thi_ni": {
    "th": "ở đây",
-   "rom": "eu dây",
+   "rom": "hỏi · ngang",
    "fr": "ici",
    "en": "here",
    "emoji": "📍"
   },
   "sonjai": {
    "th": "quan tâm",
-   "rom": "kouane tame",
+   "rom": "ngang · ngang",
    "fr": "s’intéresser à",
    "en": "to be interested in",
    "emoji": "👀"
   },
   "bang_some": {
    "th": "một ít",
-   "rom": "mote ite",
+   "rom": "nặng · sắc",
    "fr": "quelques-uns, un peu",
    "en": "some, any",
    "emoji": "🔹"
   },
   "thaang": {
    "th": "đường đi",
-   "rom": "dououeng di",
+   "rom": "huyền · ngang",
    "fr": "chemin, voie",
    "en": "way, path",
    "emoji": "🛤️"
   },
   "hen_see": {
    "th": "thấy",
-   "rom": "tây",
+   "rom": "sắc",
    "fr": "voir",
    "en": "to see",
    "emoji": "👁️"
   },
   "yut": {
    "th": "dừng",
-   "rom": "zeung",
+   "rom": "huyền",
    "fr": "s’arrêter",
    "en": "to stop",
    "emoji": "🛑"
   },
   "riaproi": {
    "th": "gọn gàng",
-   "rom": "gone gang",
+   "rom": "nặng · huyền",
    "fr": "en ordre, comme il faut",
    "en": "tidy, all set",
    "emoji": "✨"
@@ -808,7 +808,7 @@ ajouterPalier({
    ],
    "fr": "Je pense que la cuisine vietnamienne est bonne",
    "en": "I think Vietnamese food is good",
-   "rom": "toy ngui rang theuc ane viète name ngone"
+   "rom": "ngang ngã huyền sắc · ngang nặng · ngang ngang"
   },
   "b1_agree": {
    "chunks": [
@@ -819,7 +819,7 @@ ajouterPalier({
    ],
    "fr": "Je suis d’accord avec toi",
    "en": "I agree with you",
-   "rom": "toy dong i voy bane"
+   "rom": "ngang huyền · sắc sắc nặng"
   },
   "b1_explain": {
    "chunks": [
@@ -829,7 +829,7 @@ ajouterPalier({
    ],
    "fr": "Explique encore une fois",
    "en": "Please explain once more",
-   "rom": "zaï tike laï mote tchoute"
+   "rom": "hỏi · sắc laï nặng · sắc"
   },
   "b1_problem": {
    "chunks": [
@@ -841,7 +841,7 @@ ajouterPalier({
    ],
    "fr": "Nous avons un petit problème",
    "en": "We have a small problem",
-   "rom": "tchoung toy co mote veune dè gno"
+   "rom": "sắc · ngang sắc nặng sắc · huyền hỏi"
   },
   "b1_decide": {
    "chunks": [
@@ -851,7 +851,7 @@ ajouterPalier({
    ],
    "fr": "J’ai pris ma décision",
    "en": "I have made my decision",
-   "rom": "toy kouiéte dine roy"
+   "rom": "ngang sắc · nặng huyền"
   },
   "b1_because_that": {
    "chunks": [
@@ -864,7 +864,7 @@ ajouterPalier({
    ],
    "fr": "Il dit qu’il est occupé",
    "en": "He says he is busy",
-   "rom": "agne ây bao rang agne ây rate beune"
+   "rom": "ngang · sắc hỏi huyền ngang · sắc sắc nặng"
   },
   "b1_which": {
    "chunks": [
@@ -877,7 +877,7 @@ ajouterPalier({
    ],
    "fr": "La personne qui parle bien vietnamien",
    "en": "The person who speaks Vietnamese well",
-   "rom": "ngoueï ma noy tiègne viète zoy"
+   "rom": "huyền huyền sắc sắc viète hỏi"
   },
   "b1_inorder": {
    "chunks": [
@@ -890,7 +890,7 @@ ajouterPalier({
    ],
    "fr": "J’étudie pour travailler au Viêt Nam",
    "en": "I study in order to work in Vietnam",
-   "rom": "toy hoc dê lame viec eu viète name"
+   "rom": "ngang nặng hỏi huyền · nặng hỏi nặng · ngang"
   },
   "b1_although": {
    "chunks": [
@@ -903,7 +903,7 @@ ajouterPalier({
    ],
    "fr": "Bien qu’il pleuve, j’y vais",
    "en": "Although it rains, I am going",
-   "rom": "mac zou treuy moua toy veune di"
+   "rom": "nặng · huyền treuy ngang ngang ngã ngang"
   },
   "b1_therefore": {
    "chunks": [
@@ -917,7 +917,7 @@ ajouterPalier({
    ],
    "fr": "Je suis fatigué, donc je vais dormir",
    "en": "I am tired, so I will sleep",
-   "rom": "toy rate mète nène toy di ngou"
+   "rom": "ngang sắc nặng ngang ngang ngang hỏi"
   },
   "b1_story": {
    "chunks": [
@@ -929,7 +929,7 @@ ajouterPalier({
    ],
    "fr": "Je vais raconter cette histoire",
    "en": "I will tell this story",
-   "rom": "toy sè ké tchouiène naï"
+   "rom": "ngang ngã hỏi nặng huyền"
   },
   "b1_after": {
    "chunks": [
@@ -941,7 +941,7 @@ ajouterPalier({
    ],
    "fr": "Après avoir mangé, nous sommes sortis",
    "en": "After eating, we went out",
-   "rom": "saou khi ane tchoung toy di tcheuy"
+   "rom": "ngang · ngang ngang sắc · ngang ngang ngang"
   },
   "b1_finally": {
    "chunks": [
@@ -952,7 +952,7 @@ ajouterPalier({
    ],
    "fr": "Finalement, nous avons compris",
    "en": "In the end, we understood",
-   "rom": "couoy coung tchoung toy hieou roy"
+   "rom": "sắc · huyền sắc · ngang hỏi huyền"
   },
   "b1_bank": {
    "chunks": [
@@ -965,7 +965,7 @@ ajouterPalier({
    ],
    "fr": "Je voudrais ouvrir un compte en banque",
    "en": "I would like to open a bank account",
-   "rom": "toy mouone meu taï khwane eu ngueune hang"
+   "rom": "ngang sắc hỏi huyền · hỏi hỏi ngang · huyền"
   },
   "b1_pay": {
    "chunks": [
@@ -978,7 +978,7 @@ ajouterPalier({
    ],
    "fr": "Puis-je payer par carte ?",
    "en": "Can I pay by card?",
-   "rom": "toy tra bang tè dououc khong"
+   "rom": "ngang hỏi huyền hỏi nặng ngang"
   },
   "b1_receipt": {
    "chunks": [
@@ -987,7 +987,7 @@ ajouterPalier({
    ],
    "fr": "Le reçu, s’il vous plaît",
    "en": "The receipt, please",
-   "rom": "tcho toy hwa deune"
+   "rom": "ngang · ngang sắc · ngang"
   },
   "b1_send": {
    "chunks": [
@@ -999,7 +999,7 @@ ajouterPalier({
    ],
    "fr": "Je dois envoyer les documents aujourd’hui",
    "en": "I must send the documents today",
-   "rom": "home naï toy faï gueuy zây teu"
+   "rom": "ngang · ngang ngang hỏi hỏi sắc · huyền"
   },
   "b1_password": {
    "chunks": [
@@ -1009,7 +1009,7 @@ ajouterPalier({
    ],
    "fr": "J’ai oublié le mot de passe",
    "en": "I forgot the password",
-   "rom": "toy kouène mate khâou"
+   "rom": "ngang ngang nặng · hỏi"
   },
   "b1_internet": {
    "chunks": [
@@ -1020,7 +1020,7 @@ ajouterPalier({
    ],
    "fr": "Y a-t-il internet ici ?",
    "en": "Is there internet here?",
-   "rom": "eu dây co mang khong"
+   "rom": "hỏi · ngang sắc nặng ngang"
   },
   "b1_culture": {
    "chunks": [
@@ -1031,7 +1031,7 @@ ajouterPalier({
    ],
    "fr": "La culture vietnamienne m’intéresse",
    "en": "I am interested in Vietnamese culture",
-   "rom": "toy kouane tame vane hwa viète name"
+   "rom": "ngang ngang · ngang ngang · sắc nặng · ngang"
   },
   "b1_tradition": {
    "chunks": [
@@ -1042,7 +1042,7 @@ ajouterPalier({
    ],
    "fr": "C’est une vieille tradition",
    "en": "This is an old tradition",
-   "rom": "dây la trouiène tong cou"
+   "rom": "dây huyền huyền · sắc ngã"
   },
   "b1_polite": {
    "chunks": [
@@ -1053,7 +1053,7 @@ ajouterPalier({
    ],
    "fr": "Les Vietnamiens sont très polis",
    "en": "Vietnamese people are very polite",
-   "rom": "ngoueï viète name rate like seu"
+   "rom": "huyền nặng · ngang sắc nặng · nặng"
   },
   "b1_cook": {
    "chunks": [
@@ -1064,7 +1064,7 @@ ajouterPalier({
    ],
    "fr": "Je sais cuisiner vietnamien",
    "en": "I know how to cook Vietnamese food",
-   "rom": "toy biète nâou ane viète name"
+   "rom": "ngang sắc sắc · ngang nặng · ngang"
   },
   "b1_taste": {
    "chunks": [
@@ -1073,7 +1073,7 @@ ajouterPalier({
    ],
    "fr": "Goûte, s’il te plaît",
    "en": "Please taste it",
-   "rom": "néme mote tchoute"
+   "rom": "sắc nặng · sắc"
   },
   "b1_ingredient": {
    "chunks": [
@@ -1083,7 +1083,7 @@ ajouterPalier({
    ],
    "fr": "Quels sont les ingrédients ?",
    "en": "What are the ingredients?",
-   "rom": "ngouiène lieou la zi"
+   "rom": "ngang · nặng huyền huyền"
   },
   "b1_nature": {
    "chunks": [
@@ -1094,7 +1094,7 @@ ajouterPalier({
    ],
    "fr": "J’aime beaucoup la nature",
    "en": "I love nature",
-   "rom": "toy rate tike tiène gniène"
+   "rom": "ngang sắc sắc ngang · ngang"
   },
   "b1_pollution": {
    "chunks": [
@@ -1105,7 +1105,7 @@ ajouterPalier({
    ],
    "fr": "La pollution est un gros problème",
    "en": "Pollution is a big problem",
-   "rom": "o gnième la veune dè to"
+   "rom": "ngang · ngã huyền sắc · huyền ngang"
   },
   "b1_dangerous": {
    "chunks": [
@@ -1114,7 +1114,7 @@ ajouterPalier({
    ],
    "fr": "C’est dangereux ici",
    "en": "It is dangerous here",
-   "rom": "eu dây ngouy hième"
+   "rom": "hỏi · ngang ngang · hỏi"
   },
   "b1_safe": {
    "chunks": [
@@ -1124,7 +1124,7 @@ ajouterPalier({
    ],
    "fr": "C’est sûr maintenant",
    "en": "It is safe now",
-   "rom": "bây zeu ane twane roy"
+   "rom": "ngang · huyền ngang · huyền huyền"
   },
   "b1_accident": {
    "chunks": [
@@ -1135,7 +1135,7 @@ ajouterPalier({
    ],
    "fr": "Il y a eu un accident dans la rue",
    "en": "There was an accident in the street",
-   "rom": "co taï nane trène dououeng di"
+   "rom": "sắc ngang · nặng trène huyền · ngang"
   },
   "b1_important": {
    "chunks": [
@@ -1146,7 +1146,7 @@ ajouterPalier({
    ],
    "fr": "Cette affaire est très importante",
    "en": "This matter is very important",
-   "rom": "tchouiène naï rate kouane trong"
+   "rom": "nặng huyền sắc ngang · nặng"
   },
   "b1_difficult": {
    "chunks": [
@@ -1158,7 +1158,7 @@ ajouterPalier({
    ],
    "fr": "Le vietnamien est difficile mais amusant",
    "en": "Vietnamese is hard but fun",
-   "rom": "tiègne viète kho gneung vouy vè"
+   "rom": "sắc viète sắc ngang ngang · hỏi"
   },
   "b1_interesting": {
    "chunks": [
@@ -1169,7 +1169,7 @@ ajouterPalier({
    ],
    "fr": "Ce livre est intéressant",
    "en": "This book is interesting",
-   "rom": "kouiène sake naï tou vi"
+   "rom": "hỏi sắc huyền sắc · nặng"
   },
   "b1_close_friend": {
    "chunks": [
@@ -1179,7 +1179,7 @@ ajouterPalier({
    ],
    "fr": "Nous sommes très proches",
    "en": "We are very close",
-   "rom": "tchoung toy rate teune"
+   "rom": "sắc · ngang sắc ngang"
   },
   "b1_during": {
    "chunks": [
@@ -1191,7 +1191,7 @@ ajouterPalier({
    ],
    "fr": "En chemin, j’ai vu un éléphant",
    "en": "On the way, I saw an elephant",
-   "rom": "trène dououeng di toy tây cone voy"
+   "rom": "trène huyền · ngang ngang sắc ngang · ngang"
   },
   "b1_until": {
    "chunks": [
@@ -1202,7 +1202,7 @@ ajouterPalier({
    ],
    "fr": "Attends jusqu’à ce que la pluie cesse",
    "en": "Wait until the rain stops",
-   "rom": "deuy tcho dène khi moua zeung"
+   "rom": "nặng ngang · sắc · ngang ngang huyền"
   },
   "b1_apartfrom": {
    "chunks": [
@@ -1214,7 +1214,7 @@ ajouterPalier({
    ],
    "fr": "En dehors de cela, il y en a encore",
    "en": "Apart from this, there is more",
-   "rom": "ngwaï caï naï veune cone"
+   "rom": "huyền sắc huyền ngã huyền"
   },
   "b1_true": {
    "chunks": [
@@ -1226,7 +1226,7 @@ ajouterPalier({
    ],
    "fr": "Cette histoire est-elle vraie ?",
    "en": "Is this story true?",
-   "rom": "tchouiène naï co tate khong"
+   "rom": "nặng huyền sắc nặng ngang"
   },
   "b1_misunderstand": {
    "chunks": [
@@ -1236,7 +1236,7 @@ ajouterPalier({
    ],
    "fr": "J’ai mal compris, désolé",
    "en": "I misunderstood, sorry",
-   "rom": "toy hieou leume sine loy"
+   "rom": "ngang hỏi · huyền ngang · ngã"
   },
   "b1_maybe": {
    "chunks": [
@@ -1247,7 +1247,7 @@ ajouterPalier({
    ],
    "fr": "Peut-être qu’il ne viendra pas",
    "en": "Maybe he will not come",
-   "rom": "agne ây co tê khong dène"
+   "rom": "ngang · sắc sắc · hỏi ngang sắc"
   }
  },
  "romanisations": {

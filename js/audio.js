@@ -6,11 +6,39 @@ const Audio_ = (()=>{
   function etiquette(){
     try{ return (coursActif().voix) || 'th-TH'; }catch(e){ return 'th-TH'; }
   }
+  /* Voix fantaisie d'Apple : elles répondent à la bonne langue mais sonnent
+     comme un dessin animé. Sans ce filtre, le chinois tombait sur « Eddy ». */
+  const FANTAISIE = /^(eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley|bubbles|jester|superstar|trinoids|bells|boing|bad news|good news|wobble|whisper|organ|cellos|zarvox|albert|bahh|junior|ralph|kathy|fred|princess|deranged|hysterical|alice|bruce)\b/i;
+  const SOIGNEE  = /(siri|premium|enhanced|neural|natural|amélior)/i;
+
+  function noteVoix(v, tag){
+    let n = 0;
+    if(v.lang.toLowerCase() === tag.toLowerCase()) n += 10;        // zh-CN, pas zh-TW
+    if(SOIGNEE.test(v.name)) n += 4;
+    if(FANTAISIE.test(v.name)) n -= 20;
+    if(v.default) n += 1;
+    return n;
+  }
+  /* liste des voix utilisables pour la langue du cours, la meilleure d'abord */
+  function voixDisponibles(){
+    if(!('speechSynthesis' in window)) return [];
+    const tag = etiquette(), racine = tag.split('-')[0];
+    const toutes = speechSynthesis.getVoices()
+      .filter(v => new RegExp('^'+racine+'(-|_|$)','i').test(v.lang));
+    /* les voix fantaisie ne sont jamais un bon choix pour apprendre : on ne les
+       propose pas du tout, sauf s'il ne restait rien d'autre */
+    const serieuses = toutes.filter(v => !FANTAISIE.test(v.name));
+    return (serieuses.length ? serieuses : toutes)
+      .sort((a,b) => noteVoix(b,tag) - noteVoix(a,tag));
+  }
+  function voixChoisie(){
+    try{ return (Store.get().voix || {})[etiquette()] || null; }catch(e){ return null; }
+  }
   function pickVoice(){
     if(!('speechSynthesis' in window)) return;
-    const vs = speechSynthesis.getVoices();
-    const racine = etiquette().split('-')[0];
-    const found = vs.find(v=>new RegExp('^'+racine+'(-|_)?','i').test(v.lang)) || null;
+    const dispo = voixDisponibles();
+    const voulue = voixChoisie();
+    const found = (voulue && dispo.find(v=>v.name === voulue)) || dispo[0] || null;
     const changed = !!found !== !!voice;
     voice = found;
     if(changed && typeof window.onThaiVoiceChange === 'function') window.onThaiVoiceChange();
@@ -86,6 +114,8 @@ const Audio_ = (()=>{
   return {
     speak, canListen, listen, unlock,
     hasThaiVoice(){ return !!voice; },
+    voixDisponibles, rafraichirVoix:pickVoice,
+    voixActuelle(){ return voice ? voice.name : null; },
     /* validation : deux notes qui montent, timbre doux */
     good(){ unlock(); tone(784,.11,'triangle',.16); tone(1175,.20,'triangle',.14,.09); },
     /* erreur : note grave qui retombe */

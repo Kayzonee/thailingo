@@ -930,6 +930,41 @@ ajouterPalier({
    "fr": "heure (durée)",
    "en": "hour",
    "emoji": "⏳"
+  },
+  "zh_wei": {
+   "th": "喂",
+   "rom": "wéi",
+   "fr": "allô",
+   "en": "hello (phone)",
+   "emoji": "📞"
+  },
+  "zh_tongxue": {
+   "th": "同学",
+   "rom": "tóngxué",
+   "fr": "camarade de classe",
+   "en": "classmate",
+   "emoji": "🎒"
+  },
+  "zh_dou": {
+   "th": "都",
+   "rom": "dōu",
+   "fr": "tous, tout",
+   "en": "all",
+   "emoji": "💯"
+  },
+  "zh_dianshi": {
+   "th": "电视",
+   "rom": "diànshì",
+   "fr": "télévision",
+   "en": "television",
+   "emoji": "📺"
+  },
+  "zh_yifu": {
+   "th": "衣服",
+   "rom": "yīfu",
+   "fr": "vêtement",
+   "en": "clothes",
+   "emoji": "👚"
   }
  }
 });
@@ -1529,7 +1564,8 @@ ajouterPalier({
       "suea",
       "kangkeng",
       "krapong",
-      "rongthao"
+      "rongthao",
+      "zh_yifu"
      ],
      "sentences": [
       "a2_wear",
@@ -1595,7 +1631,8 @@ ajouterPalier({
       "tiang",
       "fai",
       "kunjae",
-      "khong"
+      "khong",
+      "zh_dianshi"
      ],
      "sentences": [
       "a2_key"
@@ -1694,7 +1731,8 @@ ajouterPalier({
       "tho",
       "khokhwam",
       "sadaeng",
-      "ha_seek"
+      "ha_seek",
+      "zh_wei"
      ],
      "sentences": [
       "a2_call",
@@ -1726,7 +1764,8 @@ ajouterPalier({
       "mahawitthayalai",
       "wicha",
       "kanban",
-      "sop"
+      "sop",
+      "zh_tongxue"
      ],
      "sentences": [
       "a2_homework",
@@ -2041,7 +2080,8 @@ ajouterPalier({
       "muean",
       "tangkan",
       "thuknai",
-      "bang"
+      "bang",
+      "zh_dou"
      ],
      "sentences": [
       "a2_same"
