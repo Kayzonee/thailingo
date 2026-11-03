@@ -238,9 +238,13 @@ function renderProfile(){
     <div class="card"><div class="ic">🔥</div><div><h4>${T('serie_jours',{n:s.streak})}</h4><small>${T('serie_detail')}</small></div></div>
     <div class="card"><div class="ic">👑</div><div><h4>${T('couronnes_n',{n:Store.totalCrowns()})}</h4><small>${T('couronnes_detail',{max:totalLessons*5, lecons:totalLessons})}</small></div></div>
     <div class="card"><div class="ic">🧠</div><div><h4>${T('mots_rencontres',{n:known})}</h4><small>${T('mots_a_revoir',{n:due})}</small></div></div>
+    ${coursActif().choixVoix ? `
     <div class="card"><div class="ic">🔊</div><div style="flex:1"><h4>${T('voix_titre',{etat:Audio_.hasThaiVoice()?T('voix_dispo'):T('voix_absente')})}</h4>
       <small>${Audio_.hasThaiVoice()? esc(Audio_.voixActuelle()||'') : T('voix_detail_ko')}</small></div>
-      ${Audio_.voixDisponibles().length>1?`<button class="btn ghost" id="choix-voix">${T('changer')}</button>`:''}</div>
+      ${Audio_.voixDisponibles().length>1?`<button class="btn ghost" id="choix-voix">${T('changer')}</button>`:''}</div>`
+    : /* le thaï garde la carte d'origine, à l'identique */ `
+    <div class="card"><div class="ic">🔊</div><div><h4>${T('voix_thaie',{etat:Audio_.hasThaiVoice()?T('voix_dispo'):T('voix_absente')})}</h4>
+      <small>${Audio_.hasThaiVoice()?T('voix_detail_ok'):T('voix_detail_ko')}</small></div></div>`}
     <div class="card"><div class="ic">🐢</div><div style="flex:1"><h4>${T('audio_lent')}</h4><small>${T('audio_lent_detail')}</small></div>
       <button class="btn ${s.slowAudio?'':'ghost'}" id="slow">${s.slowAudio?T('active'):T('desactive')}</button></div>
     <div class="card"><div class="ic">🔔</div><div style="flex:1"><h4>${T('effets_sonores')}</h4><small>${T('effets_detail')}</small></div>

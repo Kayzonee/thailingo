@@ -22,7 +22,7 @@ statiques et l'API du navigateur.
 | Paliers | A1 Débutant, A2 Élémentaire, B1 Intermédiaire |
 | Écriture | alphabet complet (44 consonnes avec classe de ton, 10 voyelles, 4 signes) + 11 règles de ton |
 | Sauvegarde | locale + en ligne (Firebase), avec un code de récupération |
-| Tests | 96 tests Node + 23 tests d'interface, tous verts |
+| Tests | 98 tests Node + 23 tests d'interface, tous verts |
 
 **Il reste deux chantiers**, décrits en §7 : les cours `th-fr` / `th-en`, et les paliers B2 / C1.
 
@@ -38,7 +38,7 @@ python3 -m http.server 8777        # depuis la racine du dépôt
 - tests d'interface : <http://localhost:8777/tests/ui.html> (ils jouent des scénarios dans l'app réelle, dans une iframe)
 
 ```bash
-node tests/run.js                  # 96 tests : contenu, traductions, exercices, révision, progression, sauvegarde
+node tests/run.js                  # 98 tests : contenu, traductions, exercices, révision, progression, sauvegarde
 ```
 
 **Les deux suites doivent passer avant tout déploiement.** Celle de Node contient des
@@ -176,7 +176,8 @@ la correction serait perdue au prochain passage. Corriger les tables, puis rég�
 `script` (expression régulière de l'écriture enseignée, `null` si elle est latine),
 `clavier` (lettres de l'exercice « épeler », `null` pour le désactiver),
 `separateur` (`''` sans espace pour le thaï et le chinois, `' '` pour le vietnamien),
-`prononciation` (`false` retire les exercices où l'on répète à voix haute).
+`prononciation` (`false` retire les exercices où l'on répète à voix haute — `false` partout),
+`choixVoix` et `distracteursParFamille` (réservés au chinois et au vietnamien).
 
 **La parité est celle du CHEMIN, pas du vocabulaire.** `supplements.json` ajoute à
 chaque langue les mots qu'elle réclame et que le thaï n'a pas, chacun rattaché à une
@@ -323,6 +324,12 @@ lui demander serait une régression :
   couronne), toutes confondues, et sa longueur suit l'avancement : une leçon ordinaire
   (15 exercices) plus 5 par leçon terminée supplémentaire, sans plafond. Voir
   `buildPractice()` et `tailleSeanceRevision()` dans `js/engine.js` ;
+- **aucun exercice de prononciation** (répéter le mot à voix haute), dans aucun cours —
+  coupé le 2026-11-03 ; la voix qui LIT les mots reste, elle ;
+- **le thaï ne reçoit pas les nouveautés faites pour le chinois et le vietnamien** :
+  choix automatique de la voix, sélecteur de voix, distracteurs d'alphabet par famille.
+  Ils sont activés cours par cours (`choixVoix`, `distracteursParFamille`) et un test
+  vérifie que le thaï en reste exempt ;
 - **la révision donne sept vies**, la leçon en garde trois. Elle est plus longue, et
   composer une phrase coûte plus cher qu'un QCM ;
 - **au-delà de dix leçons terminées, la révision bascule à 70 % de composition de

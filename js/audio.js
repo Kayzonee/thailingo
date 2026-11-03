@@ -25,6 +25,11 @@ const Audio_ = (()=>{
     const tag = etiquette(), racine = tag.split('-')[0];
     const toutes = speechSynthesis.getVoices()
       .filter(v => new RegExp('^'+racine+'(-|_|$)','i').test(v.lang));
+    /* cours sans choixVoix (le thaï) : règle d'origine, la première voix de la
+       langue, sans tri ni filtre — rien ne doit changer pour lui */
+    let avance = false;
+    try{ avance = !!coursActif().choixVoix; }catch(e){}
+    if(!avance) return toutes;
     /* les voix fantaisie ne sont jamais un bon choix pour apprendre : on ne les
        propose pas du tout, sauf s'il ne restait rien d'autre */
     const serieuses = toutes.filter(v => !FANTAISIE.test(v.name));
@@ -32,7 +37,10 @@ const Audio_ = (()=>{
       .sort((a,b) => noteVoix(b,tag) - noteVoix(a,tag));
   }
   function voixChoisie(){
-    try{ return (Store.get().voix || {})[etiquette()] || null; }catch(e){ return null; }
+    try{
+      if(!coursActif().choixVoix) return null;
+      return (Store.get().voix || {})[etiquette()] || null;
+    }catch(e){ return null; }
   }
   function pickVoice(){
     if(!('speechSynthesis' in window)) return;

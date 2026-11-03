@@ -10,24 +10,30 @@
    `separateur` : ce qui sépare deux mots à l'écrit. Le thaï et le chinois
               s'écrivent sans espace ; le vietnamien en met entre chaque mot.
    `prononciation` : false retire les exercices où l'on répète le mot à voix
-              haute (reconnaissance vocale). */
+              haute (reconnaissance vocale). Coupée partout, à la demande du user.
+   `choixVoix` : true = meilleure voix choisie automatiquement + sélecteur dans
+              le Profil. Absent = règle d'origine (première voix de la langue).
+   `distracteursParFamille` : true = les leçons d'alphabet tirent leurs
+              distracteurs dans la même famille de lettres.
+   Les deux derniers sont réservés au chinois et au vietnamien : le thaï reste
+   tel que le user l'utilise, sans aucun changement. */
 const COURS = {
-  'fr-th': { id:'fr-th', interface:'fr', cible:'th', drapeau:'🇹🇭', voix:'th-TH', separateur:'',
+  'fr-th': { id:'fr-th', interface:'fr', cible:'th', drapeau:'🇹🇭', voix:'th-TH', separateur:'', prononciation:false,
              script:/[\u0E00-\u0E7F]/,
              clavier:'ก ข ค ง จ ช ด ต ท น บ ป ผ พ ม ย ร ล ว ส ห อ า ิ ี ุ ู เ แ โ ไ ่ ้ ั ำ'.split(' '),
              nom:{fr:'Thaï — depuis le français', en:'Thai — from French'},
              fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js','cours/revision-thai.js'] },
-  'en-th': { id:'en-th', interface:'en', cible:'th', drapeau:'🇹🇭', voix:'th-TH', separateur:'',
+  'en-th': { id:'en-th', interface:'en', cible:'th', drapeau:'🇹🇭', voix:'th-TH', separateur:'', prononciation:false,
              script:/[\u0E00-\u0E7F]/,
              clavier:'ก ข ค ง จ ช ด ต ท น บ ป ผ พ ม ย ร ล ว ส ห อ า ิ ี ุ ู เ แ โ ไ ่ ้ ั ำ'.split(' '),
              nom:{fr:'Thaï — depuis l’anglais', en:'Thai — from English'},
              fichiers:['cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js','cours/revision-thai.js'] },
-  'fr-zh': { id:'fr-zh', interface:'fr', cible:'zh', drapeau:'🇨🇳', voix:'zh-CN', separateur:'', prononciation:false,
+  'fr-zh': { id:'fr-zh', interface:'fr', cible:'zh', drapeau:'🇨🇳', voix:'zh-CN', separateur:'', prononciation:false, choixVoix:true, distracteursParFamille:true,
              script:/[\u4E00-\u9FFF]/,
              clavier:null,          /* on n'épelle pas un caractère chinois au clavier */
              nom:{fr:'Chinois — depuis le français', en:'Chinese — from French'},
              fichiers:['cours/chinois-a1.js','cours/chinois-a2.js','cours/chinois-b1.js','cours/revision-chinois.js'] },
-  'fr-vi': { id:'fr-vi', interface:'fr', cible:'vi', drapeau:'🇻🇳', voix:'vi-VN', separateur:' ', prononciation:false,
+  'fr-vi': { id:'fr-vi', interface:'fr', cible:'vi', drapeau:'🇻🇳', voix:'vi-VN', separateur:' ', prononciation:false, choixVoix:true, distracteursParFamille:true,
              script:null,           /* écriture latine : indiscernable du français */
              clavier:'a ă â b c d đ e ê g h i k l m n o ô ơ p q r s t u ư v x y'.split(' '),
              nom:{fr:'Vietnamien — depuis le français', en:'Vietnamese — from French'},

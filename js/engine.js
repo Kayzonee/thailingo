@@ -132,7 +132,8 @@ function exScript(L){
   /* on tire les distracteurs dans la même famille que la lettre (consonne,
      voyelle, clé, digramme…) : comparer une initiale de pinyin à une clé de
      caractère ne demande aucune connaissance, seulement de la reconnaissance */
-  const memeFamille = SCRIPT.filter(x => x.cls === L.cls);
+  const parFamille = (()=>{ try{ return !!coursActif().distracteursParFamille; }catch(e){ return false; } })();
+  const memeFamille = parFamille ? SCRIPT.filter(x => x.cls === L.cls) : [];
   const vivier = memeFamille.length >= 4 ? memeFamille : SCRIPT;
   const a = { type:'script', prompt:T('c_son_lettre',{lettre:L.th}),
     options: shuffle([L, ...sample(vivier.filter(x=>x.rom!==L.rom),3)])

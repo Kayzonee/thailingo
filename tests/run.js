@@ -16,7 +16,11 @@ ctx.window = ctx; ctx.globalThis = ctx;
 vm.createContext(ctx);
 
 const charger = f => vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'), ctx, {filename:f});
-['i18n/strings.js','js/contenu.js','cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js',
+/* registre.js d'abord : sans lui, coursActif() n'existe pas et le moteur
+   retombe sur ses valeurs par défaut — on testerait un thaï qui n'est pas
+   celui de l'application (c'est ainsi qu'un test de prononciation passait
+   encore alors que la prononciation était coupée) */
+['i18n/strings.js','js/contenu.js','cours/registre.js','cours/thai-a1.js','cours/thai-a2.js','cours/thai-b1.js',
  'cours/revision-thai.js']
   .forEach(charger);
 vm.runInContext('finaliserContenu()', ctx);
@@ -506,9 +510,27 @@ t('la romanisation accompagne le thaï à tous les niveaux', ()=>{
     buildExercises(lecon, unite, lv).filter(e=>e.type==='pick').forEach(e=>
       e.options.forEach(o=>ok(o.sub, `niveau ${lv} : « ${o.label} » sans romanisation`)));
 });
-t('niveau ≥ 3 : l’exercice de prononciation survit à la troncature', ()=>{
-  for(let i=0;i<15;i++)
-    ok(buildExercises(lecon, unite, 3).some(e=>e.type==='speak'), 'exercice « speak » perdu au tirage '+i);
+t('le thaï garde ses comportements d’origine', ()=>{
+  /* le user ne veut AUCUN changement sur le thaï : les nouveautés faites pour
+     le chinois et le vietnamien doivent rester hors de son chemin */
+  const c = g('coursActif()');
+  eq(c.id, 'fr-th', 'cours par défaut — ');
+  ok(!c.choixVoix, 'le thaï a reçu le choix de voix automatique');
+  ok(!c.distracteursParFamille, 'le thaï a reçu les distracteurs par famille');
+  eq(g('joindreMots(["ผม","กิน"])'), 'ผมกิน', 'séparateur thaï — ');
+  /* sans tri par famille, une leçon d'alphabet doit pouvoir mêler les familles */
+  const u = UNITES_ECRITURE.find(x=>x.lessons.some(l=>l.script));
+  const vus = new Set();
+  for(let i=0;i<40;i++) buildExercises(u.lessons.find(l=>l.script), u, 0)
+    .forEach(e=> e.options.forEach(o=>{ const L = SCRIPT.find(x=>x.th===o.label||x.rom===o.label); if(L) vus.add(L.cls); }));
+  ok(vus.size > 1, 'les distracteurs thaïs ne viennent plus que d’une famille');
+});
+
+t('le thaï ne demande jamais de parler à voix haute, à aucun niveau', ()=>{
+  /* coupé à la demande du user (2026-11-03) ; avant, il apparaissait dès la 3e couronne */
+  eq(g('coursActif().prononciation'), false, 'le cours thaï réclame la prononciation — ');
+  for(let lv=0; lv<=5; lv++) for(let i=0;i<10;i++)
+    ok(!buildExercises(lecon, unite, lv).some(e=>e.type==='speak'), 'exercice « speak » au niveau '+lv);
 });
 t('une leçon ne dépasse jamais 15 exercices', ()=>{
   for(let lv=0; lv<=5; lv++) ok(buildExercises(lecon, unite, lv).length <= 15, 'niveau '+lv);
